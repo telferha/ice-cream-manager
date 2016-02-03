@@ -28,7 +28,7 @@ public class SimpleGreetingControllerTest {
     @Value("${local.server.port}")
     private int port;
     
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
     
     @Before
     public void setup() {
