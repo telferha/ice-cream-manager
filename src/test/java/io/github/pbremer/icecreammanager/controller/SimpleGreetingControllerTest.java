@@ -16,14 +16,14 @@ import io.github.pbremer.icecreammanager.Application;
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest(randomPort = true)
 public class SimpleGreetingControllerTest {
-    
-	@Autowired
+
+    @Autowired
     private SimpleGreetingController controller;
-    
+
     @Test
     public void helloTest() {
-        
-        assertThat("String was not the same", controller.hello(), equalTo(SimpleGreetingController.HELLO));
+
+	assertThat("String was not the same", controller.hello(), equalTo(SimpleGreetingController.HELLO));
     }
-    
+
 }
