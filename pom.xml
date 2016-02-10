@@ -14,6 +14,7 @@
 	</parent>
 
 	<properties>
+		<finalName>ice-cream-manager</finalName>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 	</properties>
@@ -35,6 +36,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<finalName>${finalName}</finalName>
+				</configuration>
 			</plugin>
 			<!-- For code coverate repot -->
 			<plugin>
