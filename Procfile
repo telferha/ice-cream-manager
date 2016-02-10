@@ -1,1 +1,1 @@
-web: java -Dport=$PORT -jar  target/ice-cream-manager.jar
+web: java -jar  target/ice-cream-manager.jar
