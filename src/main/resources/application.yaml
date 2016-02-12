@@ -1,2 +1,19 @@
 server:
   port: ${port:8080}
+
+spring:
+  thymeleaf:
+    prefix: classpath:/web/
+    
+logging:
+  level:
+    root: warn
+    io.github.pbremer.icecreammanager: info
+---
+spring:
+  profiles: dev
+
+logging:
+  level:
+    root: info
+    io.github.pbremer.icecreammanager: debug
