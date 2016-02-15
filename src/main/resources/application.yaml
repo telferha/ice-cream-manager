@@ -4,6 +4,9 @@ server:
 spring:
   thymeleaf:
     prefix: classpath:/web/
+  datasource:
+    url: jdbc:${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
     
 logging:
   level:
@@ -11,9 +14,24 @@ logging:
     io.github.pbremer.icecreammanager: info
 ---
 spring:
-  profiles: dev
+  profiles: debug
 
 logging:
   level:
     root: info
     io.github.pbremer.icecreammanager: debug
+    org.hibernate.tool.hbm2ddl.SchemaExport: debug
+---
+spring:
+  profiles: h2-db
+  jpa:
+    generate-ddl: true
+    show-sql: true
+  datasource:
+    url: jdbc:h2:~/local
+    username: sa
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /database

@@ -37,8 +37,9 @@ public class SimpleGreetingControllerIT {
     @Test
     public void helloIT() {
         try {
-            mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
-        } catch (Exception e) {
+            mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(
+                    content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
+        } catch (final Exception e) {
             fail();
         }
     }

@@ -10,8 +10,9 @@ public class SimpleGreetingController {
     
     public static final String HELLO = "Hello, team formally known as 'Team 6'!";
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleGreetingController.class);
-    
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(SimpleGreetingController.class);
+            
     @RequestMapping("/")
     public String hello() {
         LOGGER.debug("At index");

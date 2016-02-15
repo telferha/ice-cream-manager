@@ -20,7 +20,8 @@ public class SimpleGreetingControllerTest {
     
     @Test
     public void helloTest() {
-        assertThat("String was not the same", controller.hello(), equalTo("public/index"));
+        assertThat("String was not the same", controller.hello(),
+                equalTo("public/index"));
     }
     
 }
