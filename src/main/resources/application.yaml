@@ -1,2 +1,44 @@
 server:
   port: ${port:8080}
+
+spring:
+  thymeleaf:
+    prefix: classpath:/web/
+  datasource:
+    url: ${JDBC_DATASOURCE_URL}
+    username: ${JDBC_DATASOURCE_USER}
+    password: ${JDBC_DATASOURCE_PASSWORD}
+    driver-class-name: ${JDBC_DRIVER_CLASS}
+  jpa:
+    hibernate:
+      ddl-auto: ${DLL_GENERATE:none}
+    database-platform: ${JPA_DIALECT}
+    
+logging:
+  level:
+    root: warn
+    io.github.pbremer.icecreammanager: info
+---
+spring:
+  profiles: debug
+
+logging:
+  level:
+    root: info
+    io.github.pbremer.icecreammanager: debug
+    org.hibernate.tool.hbm2ddl.SchemaExport: debug
+---
+spring:
+  profiles: h2-db
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  datasource:
+    url: jdbc:h2:~/local
+    username: sa
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /database

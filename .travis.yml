@@ -1,2 +1,9 @@
 language: java
 jdk: oraclejdk8
+cache:
+  directories:
+    - $HOME/.ccache
+before_install:
+  - pip install --user codecov
+after_success:
+  - codecov

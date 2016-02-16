@@ -1,0 +1,13 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        Ice Cream Manager
+    -------------------------
+
+  ::Team Formally Known as 'Team 6'::
+	
+  Credits:
+    -Patrick Bremer
+    -John Calhoun
+    -Alex Myers (Project Manager)
+    -Matthew Stockert (Team Lead)
+    -Harrison Telfer
+++++++++++++++++++++++++++++++++++++++++++++++

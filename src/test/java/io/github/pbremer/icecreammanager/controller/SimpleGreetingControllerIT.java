@@ -1,22 +1,21 @@
 package io.github.pbremer.icecreammanager.controller;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-
-import java.util.Collections;
+import static org.junit.Assert.fail;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import io.github.pbremer.icecreammanager.Application;
 
@@ -25,24 +24,24 @@ import io.github.pbremer.icecreammanager.Application;
 @WebIntegrationTest(randomPort = true)
 public class SimpleGreetingControllerIT {
     
-    @Value("${local.server.port}")
-    private int port;
+    @Autowired
+    private WebApplicationContext webContext;
     
-    private RestTemplate restTemplate;
+    private MockMvc mockMvc;
     
     @Before
-    public void setup() {
-        restTemplate = new TestRestTemplate();
+    public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
     }
     
     @Test
     public void helloIT() {
-        
-        @SuppressWarnings("unchecked")
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port, String.class, Collections.EMPTY_MAP);
-        
-        assertThat("Response body was not the same", response.getBody(), containsString(SimpleGreetingController.HELLO));
-        assertThat("HTTP response code was not 200 - OK", response.getStatusCode(), equalTo(HttpStatus.OK));
+        try {
+            mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(
+                    content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
+        } catch (final Exception e) {
+            fail();
+        }
     }
     
 }
