@@ -1,12 +1,17 @@
 package io.github.pbremer.icecreammanager.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Entity
 @Table(name = "ROOMS")
@@ -21,8 +26,8 @@ public class Room implements Serializable {
     @Column(name = "NAME", nullable = false)
     private String name;
     
-    // @OneToMany(orphanRemoval = true, mappedBy = "room")
-    // private List<Chair> chair;
+    @OneToMany(orphanRemoval = true, mappedBy = "room", fetch = FetchType.EAGER)
+    private List<Chair> chair;
     
     public long getId() {
         return id;
@@ -40,11 +45,18 @@ public class Room implements Serializable {
         this.name = name;
     }
     
+    public List<Chair> getChair() {
+        return chair;
+    }
+    
+    public void setChair(List<Chair> chair) {
+        this.chair = chair;
+    }
+    
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Room [id=").append(id).append(", name=").append(name);
-        // .append(", chair=").append(chair).append("]");
+        ToStringBuilder builder = new ToStringBuilder(this);
+        builder.append("id", id).append("name", name);
         return builder.toString();
     }
     
@@ -52,7 +64,7 @@ public class Room implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        // result = prime * result + ((chair == null) ? 0 : chair.hashCode());
+        result = prime * result + ((chair == null) ? 0 : chair.hashCode());
         result = prime * result + (int) (id ^ (id >>> 32));
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
@@ -70,15 +82,14 @@ public class Room implements Serializable {
             return false;
         }
         Room other = (Room) obj;
-        /*
-         * if (chair == null) {
-         * if (other.chair != null) {
-         * return false;
-         * }
-         * } else if (!chair.equals(other.chair)) {
-         * return false;
-         * }
-         */ if (id != other.id) {
+        if (chair == null) {
+            if (other.chair != null) {
+                return false;
+            }
+        } else if (!chair.equals(other.chair)) {
+            return false;
+        }
+        if (id != other.id) {
             return false;
         }
         if (name == null) {

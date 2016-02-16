@@ -4,16 +4,12 @@ server:
 spring:
   thymeleaf:
     prefix: classpath:/web/
-#  datasource:
-#    url: jdbc:${DATABASE_URL}
-#    driver-class-name: org.postgresql.Driver
-  jpa:
-    generate-ddl: true
-    show-sql: true
   datasource:
-    url: jdbc:h2:~/local
-    username: sa
-    driver-class-name: org.h2.Driver
+    url: jdbc:${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
     
 logging:
   level:
@@ -32,7 +28,8 @@ logging:
 spring:
   profiles: h2-db
   jpa:
-    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
     show-sql: true
   datasource:
     url: jdbc:h2:~/local

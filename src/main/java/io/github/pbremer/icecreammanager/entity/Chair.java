@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 @Entity
 @Table(name = "CHAIRS")
 public class Chair implements Serializable {
@@ -65,10 +67,9 @@ public class Chair implements Serializable {
     
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Chair [id=").append(id).append(", type=").append(type)
-                .append(", numberOfLegs=").append(numberOfLegs)
-                .append(", room=").append(room).append("]");
+        ToStringBuilder builder = new ToStringBuilder(this);
+        builder.append("id", id).append("type", type)
+                .append("numberOfLegs", numberOfLegs).append("room", room);
         return builder.toString();
     }
     

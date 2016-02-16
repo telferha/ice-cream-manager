@@ -31,12 +31,11 @@ public class ChairRepositoryTest {
     
     private Chair chair;
     private Chair stool;
-    private Room room;
     
     @Before
     public void setUp() {
         
-        room = new Room();
+        Room room = new Room();
         room = new Room();
         room.setName("Classroom A1");
         room = roomRepository.save(room);
@@ -57,12 +56,14 @@ public class ChairRepositoryTest {
     @Test
     public void findByNumberOfLegsTest() {
         Chair dbStool = chairRepository.findByNumberOfLegs(3).get(0);
-        assertThat("Didn't return Stool entry", dbStool, equalTo(stool));
-        
+        assertThat("Didn't return Stool entry", dbStool.getNumberOfLegs(),
+                equalTo(stool.getNumberOfLegs()));
+                
         Chair dbChair = chairRepository.findByNumberOfLegs(4).get(0);
-        assertThat("Didn't return Chair entry", dbChair, equalTo(chair));
-        
-        assertThat("Rooms do not math",
-                dbStool.getRoom().equals(dbChair.getRoom()));
+        assertThat("Didn't return Chair entry", dbChair.getNumberOfLegs(),
+                equalTo(chair.getNumberOfLegs()));
+                
+        assertThat("Rooms do not math", dbStool.getRoom().getName()
+                .equalsIgnoreCase(dbChair.getRoom().getName()));
     }
 }

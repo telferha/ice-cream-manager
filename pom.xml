@@ -63,6 +63,13 @@
 			<version>3.3.6</version>
 		</dependency>
 		<!-- /FrontendResources -->
+		<!-- Apache Commons -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+		<!-- /Apache Commons -->
 	</dependencies>
 
 	<build>
