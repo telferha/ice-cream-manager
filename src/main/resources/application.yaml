@@ -5,12 +5,12 @@ spring:
   thymeleaf:
     prefix: classpath:/web/
   datasource:
-    url: jdbc:${DATABASE_URL}
-    driver-class-name: org.postgresql.Driver
+    url: ${JDBC_DATASOURCE_URL}
+    driver-class-name: ${JDBC_DRIVER_CLASS}
   jpa:
     hibernate:
-      ddl-auto: create
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: ${DLL_GENERATE:none}
+    database-platform: ${JPA_DIALECT}
     
 logging:
   level:
