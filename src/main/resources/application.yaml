@@ -6,6 +6,8 @@ spring:
     prefix: classpath:/web/
   datasource:
     url: ${JDBC_DATASOURCE_URL}
+    username: ${JDBC_DATASOURCE_USER}
+    password: ${JDBC_DATASOURCE_PASSWORD}
     driver-class-name: ${JDBC_DRIVER_CLASS}
   jpa:
     hibernate:
