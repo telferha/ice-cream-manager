@@ -13,6 +13,10 @@ spring:
     hibernate:
       ddl-auto: ${DLL_GENERATE:none}
     database-platform: ${JPA_DIALECT}
+  batch:
+    job:
+      enabled: false
+#      names: processContents
     
 logging:
   level:
@@ -35,8 +39,9 @@ spring:
       ddl-auto: create-drop
     show-sql: true
   datasource:
-    url: jdbc:h2:~/local
+    url: jdbc:h2:~/test
     username: sa
+    password: sa
     driver-class-name: org.h2.Driver
   h2:
     console:
