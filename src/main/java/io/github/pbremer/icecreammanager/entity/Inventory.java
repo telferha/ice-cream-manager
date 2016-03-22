@@ -11,6 +11,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 @MappedSuperclass
 public abstract class Inventory extends EntitySupport {
 
@@ -30,5 +35,58 @@ public abstract class Inventory extends EntitySupport {
 
     @Column(name = "AMMOUNT")
     private int ammount;
+
+    public Inventory() {
+	ammount = 0;
+    }
+
+    public Date getInventoryDay() {
+	return inventoryDay;
+    }
+
+    public void setInventoryDay(Date inventoryDay) {
+	this.inventoryDay = inventoryDay;
+    }
+
+    public TruckInstance getTruckInstance() {
+	return truckInstance;
+    }
+
+    public void setTruckInstance(TruckInstance truckInstance) {
+	this.truckInstance = truckInstance;
+    }
+
+    public IceCream getIceCream() {
+	return iceCream;
+    }
+
+    public void setIceCream(IceCream iceCream) {
+	this.iceCream = iceCream;
+    }
+
+    public int getAmmount() {
+	return ammount;
+    }
+
+    public void setAmmount(int ammount) {
+	this.ammount = ammount;
+    }
+
+    @Override
+    public String toString() {
+	return ToStringBuilder
+	        .reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE)
+	        .toString();
+    }
+
+    @Override
+    public int hashCode() {
+	return HashCodeBuilder.reflectionHashCode(this, false);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	return EqualsBuilder.reflectionEquals(this, obj, false);
+    }
 
 }

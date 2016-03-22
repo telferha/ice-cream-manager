@@ -10,6 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 @Entity
 @Table(name = "DRIVER")
 public class Driver extends EntitySupport {
@@ -26,5 +31,46 @@ public class Driver extends EntitySupport {
 
     @Column(name = "WAGE")
     private BigDecimal wage;
+
+    public String getDriverId() {
+	return driverId;
+    }
+
+    public void setDriverId(String driverId) {
+	this.driverId = driverId;
+    }
+
+    public List<DriverInstance> getDriverInstances() {
+	return driverInstances;
+    }
+
+    public void setDriverInstances(List<DriverInstance> driverInstances) {
+	this.driverInstances = driverInstances;
+    }
+
+    public BigDecimal getWage() {
+	return wage;
+    }
+
+    public void setWage(BigDecimal wage) {
+	this.wage = wage;
+    }
+
+    @Override
+    public String toString() {
+	return ToStringBuilder
+	        .reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE)
+	        .toString();
+    }
+
+    @Override
+    public int hashCode() {
+	return HashCodeBuilder.reflectionHashCode(this, false);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	return EqualsBuilder.reflectionEquals(this, obj, false);
+    }
 
 }

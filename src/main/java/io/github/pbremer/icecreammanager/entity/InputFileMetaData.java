@@ -56,6 +56,12 @@ public class InputFileMetaData extends EntitySupport {
 
     private int parsedAmmountOfData;
 
+    public InputFileMetaData() {
+	fileSize = 0L;
+	contents = new byte[0];
+	ammountOfData = 0;
+    }
+
     public String getFileName() {
 	return fileName;
     }
