@@ -15,6 +15,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 @Entity
 @Table(name = "DRIVER_INSTANCE")
 public class DriverInstance extends EntitySupport {
@@ -31,7 +36,7 @@ public class DriverInstance extends EntitySupport {
     private Date driverDay;
 
     @OneToOne
-    @JoinColumn(name = "TRUCK_DAY")
+    @JoinColumn(name = "TRUCK_INSTANCE_ID")
     private TruckInstance truckInstance;
 
     @ManyToOne
@@ -40,4 +45,57 @@ public class DriverInstance extends EntitySupport {
 
     @Column(name = "HOURS")
     private BigDecimal hours;
+
+    public long getDriverInstanceId() {
+	return driverInstanceId;
+    }
+
+    public Date getDriverDay() {
+	return driverDay;
+    }
+
+    public void setDriverDay(Date driverDay) {
+	this.driverDay = driverDay;
+    }
+
+    public TruckInstance getTruckInstance() {
+	return truckInstance;
+    }
+
+    public void setTruckInstance(TruckInstance truckInstance) {
+	this.truckInstance = truckInstance;
+    }
+
+    public Driver getDriver() {
+	return driver;
+    }
+
+    public void setDriver(Driver driver) {
+	this.driver = driver;
+    }
+
+    public BigDecimal getHours() {
+	return hours;
+    }
+
+    public void setHours(BigDecimal hours) {
+	this.hours = hours;
+    }
+
+    @Override
+    public String toString() {
+	return ToStringBuilder
+	        .reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE)
+	        .toString();
+    }
+
+    @Override
+    public int hashCode() {
+	return HashCodeBuilder.reflectionHashCode(this, false);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	return EqualsBuilder.reflectionEquals(this, obj, false);
+    }
 }

@@ -17,6 +17,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 @Entity
 @Table(name = "TRUCK_INSTANCE")
 public class TruckInstance extends EntitySupport {
@@ -40,14 +45,83 @@ public class TruckInstance extends EntitySupport {
     private List<TruckInventory> inventory;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "truckInstance")
-    private List<TruckInventory> inventoryLoss;
+    private List<InventoryLoss> inventoryLoss;
 
     @OneToOne
-    @JoinColumn(name = "ROUTE_DAY")
+    @JoinColumn(name = "ROUTE_INSTANCE_ID")
     private RouteInstance routeInstance;
 
     @OneToOne
-    @JoinColumn(name = "DRIVER_DAY")
+    @JoinColumn(name = "DRIVER_INSTANCE_ID")
     private DriverInstance driverInstance;
+
+    public long getTruckInstanceId() {
+	return truckInstanceId;
+    }
+
+    public Date getTruckDay() {
+	return truckDay;
+    }
+
+    public void setTruckDay(Date truckDay) {
+	this.truckDay = truckDay;
+    }
+
+    public Truck getTruck() {
+	return truck;
+    }
+
+    public void setTruck(Truck truck) {
+	this.truck = truck;
+    }
+
+    public List<TruckInventory> getInventory() {
+	return inventory;
+    }
+
+    public void setInventory(List<TruckInventory> inventory) {
+	this.inventory = inventory;
+    }
+
+    public List<InventoryLoss> getInventoryLoss() {
+	return inventoryLoss;
+    }
+
+    public void setInventoryLoss(List<InventoryLoss> inventoryLoss) {
+	this.inventoryLoss = inventoryLoss;
+    }
+
+    public RouteInstance getRouteInstance() {
+	return routeInstance;
+    }
+
+    public void setRouteInstance(RouteInstance routeInstance) {
+	this.routeInstance = routeInstance;
+    }
+
+    public DriverInstance getDriverInstance() {
+	return driverInstance;
+    }
+
+    public void setDriverInstance(DriverInstance driverInstance) {
+	this.driverInstance = driverInstance;
+    }
+
+    @Override
+    public String toString() {
+	return ToStringBuilder
+	        .reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE)
+	        .toString();
+    }
+
+    @Override
+    public int hashCode() {
+	return HashCodeBuilder.reflectionHashCode(this, false);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	return EqualsBuilder.reflectionEquals(this, obj, false);
+    }
 
 }

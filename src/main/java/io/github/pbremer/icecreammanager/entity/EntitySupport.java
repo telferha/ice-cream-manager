@@ -51,10 +51,6 @@ public abstract class EntitySupport implements Serializable {
 	return version;
     }
 
-    public void setVersion(int version) {
-	this.version = version;
-    }
-
     @Override
     public String toString() {
 	return ToStringBuilder
