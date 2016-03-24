@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -14,7 +15,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@Entity(name = "INPUT_FILE_META_DATA")
+@Entity
+@Table(name = "INPUT_FILE_META_DATA")
 public class InputFileMetaData extends EntitySupport {
 
     private static final long serialVersionUID = 9145706372486551880L;

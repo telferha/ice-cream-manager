@@ -16,14 +16,23 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
-@Table(name = "TRUCK_INSTANCE")
+@Table(name = "TRUCK_INSTANCE", uniqueConstraints = @UniqueConstraint(
+        columnNames = { "TRUCK_DAY", "TRUCK_NUMBER" }))
+@JsonInclude(Include.NON_EMPTY)
 public class TruckInstance extends EntitySupport {
 
     private static final long serialVersionUID = 7969346198180317639L;
@@ -39,6 +48,9 @@ public class TruckInstance extends EntitySupport {
 
     @ManyToOne
     @JoinColumn(name = "TRUCK_NUMBER")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "truckNumber")
+    @JsonIdentityReference(alwaysAsId = true)
     private Truck truck;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "truckInstance")
@@ -49,10 +61,16 @@ public class TruckInstance extends EntitySupport {
 
     @OneToOne
     @JoinColumn(name = "ROUTE_INSTANCE_ID")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "routeInstanceId")
+    @JsonIdentityReference(alwaysAsId = true)
     private RouteInstance routeInstance;
 
     @OneToOne
     @JoinColumn(name = "DRIVER_INSTANCE_ID")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "dirverInstanceId")
+    @JsonIdentityReference(alwaysAsId = true)
     private DriverInstance driverInstance;
 
     public long getTruckInstanceId() {

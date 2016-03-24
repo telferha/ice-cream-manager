@@ -5,13 +5,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@Entity(name = "TRUCK_INVENTORY")
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@Entity
+@Table(name = "TRUCK_INVENTORY")
+@JsonInclude(Include.NON_EMPTY)
 public class TruckInventory extends Inventory {
 
     private static final long serialVersionUID = 1155957628079417625L;

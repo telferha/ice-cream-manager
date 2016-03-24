@@ -14,8 +14,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 @Entity
 @Table(name = "TRUCK")
+@JsonInclude(Include.NON_EMPTY)
 public class Truck extends EntitySupport {
 
     private static final long serialVersionUID = -4092699031897866819L;

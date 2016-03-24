@@ -16,6 +16,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @MappedSuperclass
 public abstract class Inventory extends EntitySupport {
 
@@ -27,11 +31,14 @@ public abstract class Inventory extends EntitySupport {
 
     @ManyToOne
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "truckInstanceId")
+    @JsonIdentityReference(alwaysAsId = true)
     private TruckInstance truckInstance;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ICE_CREAM_ID")
-    private IceCream iceCream;
+    @JoinColumn(name = "ICE_CREAM_INSTANCE_ID")
+    private IceCreamInstance iceCreamInstance;
 
     @Column(name = "AMMOUNT")
     private int ammount;
@@ -56,12 +63,12 @@ public abstract class Inventory extends EntitySupport {
 	this.truckInstance = truckInstance;
     }
 
-    public IceCream getIceCream() {
-	return iceCream;
+    public IceCreamInstance getIceCreamInstance() {
+	return iceCreamInstance;
     }
 
-    public void setIceCream(IceCream iceCream) {
-	this.iceCream = iceCream;
+    public void setIceCreamInstance(IceCreamInstance iceCreamInstance) {
+	this.iceCreamInstance = iceCreamInstance;
     }
 
     public int getAmmount() {

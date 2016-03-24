@@ -16,14 +16,24 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
-@Table(name = "ROUTE_INSTANCE")
+@Table(name = "ROUTE_INSTANCE", uniqueConstraints = @UniqueConstraint(
+        columnNames = { "ROUTE_DAY", "ROUTE_ID" }))
+@JsonInclude(Include.NON_EMPTY)
 public class RouteInstance extends EntitySupport {
 
     private static final long serialVersionUID = 6686558272033820280L;
@@ -33,22 +43,30 @@ public class RouteInstance extends EntitySupport {
     @Column(name = "ROUTE_INSTANCE_ID")
     private long routeInstanceId;
 
-    @Column(name = "ROUTE_DAY")
+    @Column(name = "ROUTE_DAY", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date routeDay;
 
     @ManyToOne
     @JoinColumn(name = "ROUTE_ID")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "routeId")
+    @JsonIdentityReference(alwaysAsId = true)
     private Route route;
 
     @ManyToMany
     @JoinTable(name = "ROUTE_ZONES",
             joinColumns = @JoinColumn(name = "ROUTE_INSTANCE_ID"),
             inverseJoinColumns = @JoinColumn(name = "ZONE_NAME"))
+    @JsonIgnoreProperties({ "routeInstances", "createdDate",
+            "lastModifiedDate" })
     private List<Zone> zones;
 
     @OneToOne
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "truckInstanceId")
+    @JsonIdentityReference(alwaysAsId = true)
     private TruckInstance truckInstance;
 
     public long getRouteInstanceId() {

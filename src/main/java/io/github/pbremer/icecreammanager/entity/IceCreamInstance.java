@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,73 +27,73 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
-@Table(name = "DRIVER_INSTANCE", uniqueConstraints = @UniqueConstraint(
-        columnNames = { "DRIVER_DAY", "DRIVER_ID" }))
+@Table(name = "ICE_CREAM_INSTANCE", uniqueConstraints = @UniqueConstraint(
+        columnNames = { "ICE_CREAM_DAY", "ICE_CREAM_NAME" }))
 @JsonInclude(Include.NON_EMPTY)
-public class DriverInstance extends EntitySupport {
+public class IceCreamInstance extends EntitySupport {
 
-    private static final long serialVersionUID = -5196627091470377041L;
+    private static final long serialVersionUID = -3761916152395485693L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "DRIVER_INSTANCE_ID")
-    private long driverInstanceId;
+    @Column(name = "ICE_CREAM_INSTANCE_ID")
+    private long iceCreamInstanceId;
 
+    @Column(name = "SALES_PRICE")
+    private BigDecimal salesPrice;
+
+    @Column(name = "SUPPLIER_PRICE")
+    private BigDecimal supplierPrice;
+
+    @Column(name = "ICE_CREAM_DAY", nullable = false)
     @Temporal(TemporalType.DATE)
-    @Column(name = "DRIVER_DAY")
-    private Date driverDay;
-
-    @OneToOne
-    @JoinColumn(name = "TRUCK_INSTANCE_ID")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "truckInstanceId")
-    @JsonIdentityReference(alwaysAsId = true)
-    private TruckInstance truckInstance;
+    private Date iceCreamDay;
 
     @ManyToOne
-    @JoinColumn(name = "DRIVER_ID")
+    @JoinColumn(name = "ICE_CREAM_NAME")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "driverId")
+            property = "iceCreamName")
     @JsonIdentityReference(alwaysAsId = true)
-    private Driver driver;
+    private IceCream iceCream;
 
-    @Column(name = "HOURS")
-    private BigDecimal hours;
-
-    public long getDriverInstanceId() {
-	return driverInstanceId;
+    public long getIceCreamInstanceId() {
+	return iceCreamInstanceId;
     }
 
-    public Date getDriverDay() {
-	return driverDay;
+    public void setIceCreamInstanceId(long iceCreamInstanceId) {
+	this.iceCreamInstanceId = iceCreamInstanceId;
     }
 
-    public void setDriverDay(Date driverDay) {
-	this.driverDay = driverDay;
+    public BigDecimal getSalesPrice() {
+	return salesPrice;
     }
 
-    public TruckInstance getTruckInstance() {
-	return truckInstance;
+    public void setSalesPrice(BigDecimal salesPrice) {
+	this.salesPrice = salesPrice;
     }
 
-    public void setTruckInstance(TruckInstance truckInstance) {
-	this.truckInstance = truckInstance;
+    public BigDecimal getSupplierPrice() {
+	return supplierPrice;
     }
 
-    public Driver getDriver() {
-	return driver;
+    public void setSupplierPrice(BigDecimal supplierPrice) {
+	this.supplierPrice = supplierPrice;
     }
 
-    public void setDriver(Driver driver) {
-	this.driver = driver;
+    public Date getIceCreamDay() {
+	return iceCreamDay;
     }
 
-    public BigDecimal getHours() {
-	return hours;
+    public void setIceCreamDay(Date iceCreamDay) {
+	this.iceCreamDay = iceCreamDay;
     }
 
-    public void setHours(BigDecimal hours) {
-	this.hours = hours;
+    public IceCream getIceCream() {
+	return iceCream;
+    }
+
+    public void setIceCream(IceCream iceCream) {
+	this.iceCream = iceCream;
     }
 
     @Override

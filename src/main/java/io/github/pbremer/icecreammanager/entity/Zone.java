@@ -9,13 +9,26 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@Entity(name = "ZONE")
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@Entity
+@Table(name = "ZONE", uniqueConstraints = @UniqueConstraint(
+        columnNames = { "CITY_NAME", "ZONE_NAME" }))
+@JsonInclude(Include.NON_EMPTY)
 public class Zone extends EntitySupport {
 
     private static final long serialVersionUID = 1497610113204826980L;
@@ -26,12 +39,16 @@ public class Zone extends EntitySupport {
 
     @ManyToOne
     @JoinColumn(name = "CITY_NAME")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "cityName")
+    @JsonIdentityReference(alwaysAsId = true)
     private City city;
 
     @ManyToMany
     @JoinTable(name = "ROUTE_ZONES",
             inverseJoinColumns = @JoinColumn(name = "ROUTE_INSTANCE_ID"),
             joinColumns = @JoinColumn(name = "ZONE_NAME"))
+    @JsonProperty(access = Access.WRITE_ONLY)
     private List<RouteInstance> routeInstances;
 
     public String getZoneName() {
