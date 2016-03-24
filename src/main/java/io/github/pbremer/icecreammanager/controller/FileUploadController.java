@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.pbremer.icecreammanager.entity.InputFileMetaData;
+import io.github.pbremer.icecreammanager.service.InputFileMetaDataService;
 
 @Controller
 @PropertySource("classpath:ice-cream-manager.properties")
@@ -31,6 +33,9 @@ public class FileUploadController implements InitializingBean {
             LoggerFactory.getLogger(FileUploadController.class);
 
     private DateFormat dateFormat;
+
+    @Autowired
+    private InputFileMetaDataService inputFileMetaDataSerice;
 
     @Value("${dateFormat}")
     private String dateFormatString;
@@ -44,7 +49,7 @@ public class FileUploadController implements InitializingBean {
 	if (file.getOriginalFilename().contains("/")) {
 	    redirectAttributes.addFlashAttribute("errorMessage",
 	            "Folder seperators not allowed");
-	    return "redirect:upload";
+	    return "redirect:/upload";
 	}
 
 	if (!file.isEmpty()) {
@@ -59,7 +64,7 @@ public class FileUploadController implements InitializingBean {
 		        String.format(
 		                "There was an issue uploading %s, please try again",
 		                file.getOriginalFilename()));
-		return "redirect:upload";
+		return "redirect:/upload";
 	    } catch (ParseException pe) {
 		log.error(
 		        String.format(
@@ -70,13 +75,13 @@ public class FileUploadController implements InitializingBean {
 		redirectAttributes.addFlashAttribute("errorMessage",
 		        String.format("Date format is not in correct format",
 		                file.getOriginalFilename()));
-		return "redirect:upload";
+		return "redirect:/upload";
 	    }
 	} else {
 	    log.debug("File {} is empty", file.getOriginalFilename());
 	    redirectAttributes.addFlashAttribute("errorMessage", String
 	            .format("File %s is empty", file.getOriginalFilename()));
-	    return "redirect:upload";
+	    return "redirect:/upload";
 	}
 
 	return null;
@@ -101,7 +106,7 @@ public class FileUploadController implements InitializingBean {
 	if (metaData.getAmmountOfData() != 0) {
 	    metaData.setParsedAmmountOfData(reader.read());
 	}
-	// metaData.setFileType(determineFileType(file));
+	metaData.setFileType(determineFileType(file));
 
 	return metaData;
     }
@@ -111,10 +116,16 @@ public class FileUploadController implements InitializingBean {
 	return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
 	Assert.notNull(dateFormatString, "You must specify the date format");
 	log.info("Date format pattern: {}", dateFormatString);
 	dateFormat = new SimpleDateFormat(dateFormatString);
+	Assert.notNull(inputFileMetaDataSerice);
     }
 }
