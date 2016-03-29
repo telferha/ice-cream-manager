@@ -54,6 +54,10 @@ public class City extends EntitySupport {
 	this.zones = zones;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see io.github.pbremer.icecreammanager.entity.EntitySupport#toString()
+     */
     @Override
     public String toString() {
 	return ToStringBuilder
@@ -61,11 +65,21 @@ public class City extends EntitySupport {
 	        .toString();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see io.github.pbremer.icecreammanager.entity.EntitySupport#hashCode()
+     */
     @Override
     public int hashCode() {
 	return HashCodeBuilder.reflectionHashCode(this, false);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see
+     * io.github.pbremer.icecreammanager.entity.EntitySupport#equals(java.lang.
+     * Object)
+     */
     @Override
     public boolean equals(Object obj) {
 	return EqualsBuilder.reflectionEquals(this, obj, false);
