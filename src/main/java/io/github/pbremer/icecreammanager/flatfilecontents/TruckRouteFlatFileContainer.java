@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * @author Patrick Bremer
  */
-public class TruckRouteFlatFileContainer {
+public class TruckRouteFlatFileContainer extends AbstractFlatFileContainer {
 
     private String truckNumeber;
     private String routeNumber;
@@ -24,7 +24,8 @@ public class TruckRouteFlatFileContainer {
     }
 
     /**
-     * @param truckNumeber the truckNumeber to set
+     * @param truckNumeber
+     *            the truckNumeber to set
      */
     public void setTruckNumeber(String truckNumeber) {
 	this.truckNumeber = truckNumeber;
@@ -38,7 +39,8 @@ public class TruckRouteFlatFileContainer {
     }
 
     /**
-     * @param routeNumber the routeNumber to set
+     * @param routeNumber
+     *            the routeNumber to set
      */
     public void setRouteNumber(String routeNumber) {
 	this.routeNumber = routeNumber;

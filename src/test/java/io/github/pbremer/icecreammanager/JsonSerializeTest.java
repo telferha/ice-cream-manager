@@ -20,7 +20,7 @@ import io.github.pbremer.icecreammanager.entity.Zone;
  */
 public class JsonSerializeTest {
 
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @Before
     public void setup() {
