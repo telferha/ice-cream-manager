@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -14,7 +15,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@Entity(name = "INPUT_FILE_META_DATA")
+@Entity
+@Table(name = "INPUT_FILE_META_DATA")
 public class InputFileMetaData extends EntitySupport {
 
     private static final long serialVersionUID = 9145706372486551880L;
@@ -24,7 +26,7 @@ public class InputFileMetaData extends EntitySupport {
     }
 
     public enum Status {
-	READY, WAITING, ERROR
+	READY, WAITING, PROCESSED, NOT_READY
     }
 
     @Id
@@ -55,6 +57,12 @@ public class InputFileMetaData extends EntitySupport {
     private int ammountOfData;
 
     private int parsedAmmountOfData;
+
+    public InputFileMetaData() {
+	fileSize = 0L;
+	contents = new byte[0];
+	ammountOfData = 0;
+    }
 
     public String getFileName() {
 	return fileName;
@@ -92,7 +100,7 @@ public class InputFileMetaData extends EntitySupport {
 	return status;
     }
 
-    public void setComplete(Status status) {
+    public void setStatus(Status status) {
 	this.status = status;
     }
 
