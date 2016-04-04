@@ -1,6 +1,5 @@
 package io.github.pbremer.icecreammanager.entity;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,8 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -31,9 +28,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "TRUCK_INSTANCE", uniqueConstraints = @UniqueConstraint(
-        columnNames = { "TRUCK_DAY", "TRUCK_NUMBER" }))
+        columnNames = { "DAY", "TRUCK_NUMBER" }))
 @JsonInclude(Include.NON_EMPTY)
-public class TruckInstance extends EntitySupport {
+public class TruckInstance extends InstanceEntitySupport {
 
     private static final long serialVersionUID = 7969346198180317639L;
 
@@ -41,10 +38,6 @@ public class TruckInstance extends EntitySupport {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "TRUCK_INSTANCE_ID")
     private long truckInstanceId;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "TRUCK_DAY")
-    private Date truckDay;
 
     @ManyToOne
     @JoinColumn(name = "TRUCK_NUMBER")
@@ -54,7 +47,10 @@ public class TruckInstance extends EntitySupport {
     private Truck truck;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "truckInstance")
-    private List<TruckInventory> inventory;
+    private List<BeginDayInventory> beginDayInventory;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "truckInstance")
+    private List<EndDayInventory> endDayInventory;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "truckInstance")
     private List<InventoryLoss> inventoryLoss;
@@ -77,14 +73,6 @@ public class TruckInstance extends EntitySupport {
 	return truckInstanceId;
     }
 
-    public Date getTruckDay() {
-	return truckDay;
-    }
-
-    public void setTruckDay(Date truckDay) {
-	this.truckDay = truckDay;
-    }
-
     public Truck getTruck() {
 	return truck;
     }
@@ -93,12 +81,35 @@ public class TruckInstance extends EntitySupport {
 	this.truck = truck;
     }
 
-    public List<TruckInventory> getInventory() {
-	return inventory;
+    /**
+     * @return the beginDayInventory
+     */
+    public List<BeginDayInventory> getBeginDayInventory() {
+	return beginDayInventory;
     }
 
-    public void setInventory(List<TruckInventory> inventory) {
-	this.inventory = inventory;
+    /**
+     * @param beginDayInventory
+     *            the beginDayInventory to set
+     */
+    public void
+            setBeginDayInventory(List<BeginDayInventory> beginDayInventory) {
+	this.beginDayInventory = beginDayInventory;
+    }
+
+    /**
+     * @return the endDayInventory
+     */
+    public List<EndDayInventory> getEndDayInventory() {
+	return endDayInventory;
+    }
+
+    /**
+     * @param endDayInventory
+     *            the endDayInventory to set
+     */
+    public void setEndDayInventory(List<EndDayInventory> endDayInventory) {
+	this.endDayInventory = endDayInventory;
     }
 
     public List<InventoryLoss> getInventoryLoss() {

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Entity
 @Table(name = "ROUTE")
 @JsonInclude(Include.NON_EMPTY)
-public class Route extends EntitySupport {
+public class Route extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = 4315982774076916956L;
 

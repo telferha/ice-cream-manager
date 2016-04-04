@@ -1,34 +1,45 @@
+/**
+ * 
+ */
 package io.github.pbremer.icecreammanager.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+/**
+ * @author Patrick Bremer
+ */
+@MappedSuperclass
+public class InstanceEntitySupport extends EntitySupport {
 
-@Entity
-@Table(name = "TRUCK_INVENTORY")
-@JsonInclude(Include.NON_EMPTY)
-public class TruckInventory extends Inventory {
+    private static final long serialVersionUID = 9068366936195264820L;
 
-    private static final long serialVersionUID = 1155957628079417625L;
+    @Column(name = "DAY")
+    @Temporal(TemporalType.DATE)
+    private Date day;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "TRUCK_INVENTORY_ID")
-    private long id;
+    /**
+     * @return the day
+     */
+    public Date getDay() {
+	return day;
+    }
 
-    public long getId() {
-	return id;
+    /**
+     * @param day
+     *            the day to set
+     */
+    public void setDay(Date day) {
+	this.day = day;
     }
 
     @Override
@@ -47,5 +58,4 @@ public class TruckInventory extends Inventory {
     public boolean equals(Object obj) {
 	return EqualsBuilder.reflectionEquals(this, obj, false);
     }
-
 }

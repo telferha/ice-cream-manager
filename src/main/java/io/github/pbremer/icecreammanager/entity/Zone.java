@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Table(name = "ZONE", uniqueConstraints = @UniqueConstraint(
         columnNames = { "CITY_NAME", "ZONE_NAME" }))
 @JsonInclude(Include.NON_EMPTY)
-public class Zone extends EntitySupport {
+public class Zone extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = 1497610113204826980L;
 

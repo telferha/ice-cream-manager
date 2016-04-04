@@ -1,6 +1,5 @@
 package io.github.pbremer.icecreammanager.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import io.github.pbremer.icecreammanager.entity.DriverInstance;
@@ -13,6 +12,6 @@ import io.github.pbremer.icecreammanager.entity.DriverInstance;
  */
 @Repository
 public interface DriverInstanceRepository
-        extends JpaRepository<DriverInstance, Long> {
+        extends DateRangeSearchable<DriverInstance, Long> {
 
 }

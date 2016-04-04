@@ -1,6 +1,5 @@
 package io.github.pbremer.icecreammanager.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import io.github.pbremer.icecreammanager.entity.InventoryLoss;
@@ -13,6 +12,6 @@ import io.github.pbremer.icecreammanager.entity.InventoryLoss;
  */
 @Repository
 public interface InventoryLossRepository
-        extends JpaRepository<InventoryLoss, Long> {
+        extends DateRangeSearchable<InventoryLoss, Long> {
 
 }

@@ -1,6 +1,6 @@
 package io.github.pbremer.icecreammanager.entity;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,8 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -21,13 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @MappedSuperclass
-public abstract class Inventory extends EntitySupport {
+public abstract class Inventory extends InstanceEntitySupport {
 
     private static final long serialVersionUID = 1440448106184050947L;
-
-    @Column(name = "INVENTORY_DAY")
-    @Temporal(TemporalType.DATE)
-    private Date inventoryDay;
 
     @ManyToOne
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
@@ -35,6 +29,9 @@ public abstract class Inventory extends EntitySupport {
             property = "truckInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
     private TruckInstance truckInstance;
+
+    @Column(name = "SALES_PRICE")
+    private BigDecimal salesPrice;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ICE_CREAM_INSTANCE_ID")
@@ -45,14 +42,6 @@ public abstract class Inventory extends EntitySupport {
 
     public Inventory() {
 	ammount = 0;
-    }
-
-    public Date getInventoryDay() {
-	return inventoryDay;
-    }
-
-    public void setInventoryDay(Date inventoryDay) {
-	this.inventoryDay = inventoryDay;
     }
 
     public TruckInstance getTruckInstance() {
@@ -69,6 +58,21 @@ public abstract class Inventory extends EntitySupport {
 
     public void setIceCreamInstance(IceCreamInstance iceCreamInstance) {
 	this.iceCreamInstance = iceCreamInstance;
+    }
+
+    /**
+     * @return the salesPrice
+     */
+    public BigDecimal getSalesPrice() {
+	return salesPrice;
+    }
+
+    /**
+     * @param salesPrice
+     *            the salesPrice to set
+     */
+    public void setSalesPrice(BigDecimal salesPrice) {
+	this.salesPrice = salesPrice;
     }
 
     public int getAmmount() {

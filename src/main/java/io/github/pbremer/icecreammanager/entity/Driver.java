@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Entity
 @Table(name = "DRIVER")
 @JsonInclude(Include.NON_EMPTY)
-public class Driver extends EntitySupport {
+public class Driver extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = -4384329683864675619L;
 
