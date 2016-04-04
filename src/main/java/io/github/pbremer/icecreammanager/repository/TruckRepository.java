@@ -1,6 +1,5 @@
 package io.github.pbremer.icecreammanager.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import io.github.pbremer.icecreammanager.entity.Truck;
@@ -12,6 +11,6 @@ import io.github.pbremer.icecreammanager.entity.Truck;
  * @author Patrick Bremer
  */
 @Repository
-public interface TruckRepository extends JpaRepository<Truck, String> {
+public interface TruckRepository extends IsActiveSerchable<Truck, String> {
 
 }

@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package io.github.pbremer.icecreammanager.entity;
 
 import javax.persistence.Column;
@@ -16,17 +19,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+/**
+ * @author Patrick Bremer
+ */
 @Entity
-@Table(name = "INVENTORY_LOSS", uniqueConstraints = @UniqueConstraint(
+@Table(name = "END_DAY_INVENTORY", uniqueConstraints = @UniqueConstraint(
         columnNames = { "DAY", "TRUCK_INSTANCE_ID", "ICE_CREAM_INSTANCE_ID" }))
 @JsonInclude(Include.NON_EMPTY)
-public class InventoryLoss extends Inventory {
+public class EndDayInventory extends Inventory {
 
-    private static final long serialVersionUID = -5579994285032744293L;
+    private static final long serialVersionUID = 8251593985434934794L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "INVENTORY_LOSS_ID")
+    @Column(name = "END_DAY_INVENTORY_ID")
     private long id;
 
     public long getId() {

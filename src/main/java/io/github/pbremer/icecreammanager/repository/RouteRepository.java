@@ -1,6 +1,5 @@
 package io.github.pbremer.icecreammanager.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import io.github.pbremer.icecreammanager.entity.Route;
@@ -12,6 +11,6 @@ import io.github.pbremer.icecreammanager.entity.Route;
  * @author Patrick Bremer
  */
 @Repository
-public interface RouteRepository extends JpaRepository<Route, String> {
+public interface RouteRepository extends IsActiveSerchable<Route, String> {
 
 }

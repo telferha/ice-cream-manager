@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name = "CITY")
 @JsonInclude(Include.NON_EMPTY)
-public class City extends EntitySupport {
+public class City extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = -9099709758530437246L;
 

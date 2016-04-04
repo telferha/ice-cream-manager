@@ -1,20 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:batch="http://www.springframework.org/schema/batch"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
-	<!-- <batch:job id="processInputFile">
-		<batch:step id="getFile">
-			<batch:tasklet throttle-limit="1">
-				<batch:chunk reader="" writer="" commit-interval="1"/>
-			</batch:tasklet>
-		</batch:step>
-	</batch:job> -->
-	
+	<bean id="jobLauncher"
+		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository">
+			<bean
+				class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean" />
+		</property>
+	</bean>
+
+	<bean id="customEditorConfigurer"
+		class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="org.springframework.batch.item.file.transform.Range[]"
+					value="org.springframework.batch.item.file.transform.RangeArrayPropertyEditor" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- <batch:job id="processInputFile"> <batch:step id="getFile"> <batch:tasklet 
+		throttle-limit="1"> <batch:chunk reader="" writer="" commit-interval="1"/> 
+		</batch:tasklet> </batch:step> </batch:job> -->
+
 	<!-- <bean id="processInputFileReader" class="" /> -->
 
+	<bean id="headerTokenizer"
+		class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+		<property name="names" value="${inputfile.header.names}" />
+		<property name="columns" value="${inputfile.header.columns}" />
+		<property name="strict" value="false" />
+	</bean>
+
+	<bean id="trailerTokenizer"
+		class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+		<property name="names" value="${inputfile.trailer.names}" />
+		<property name="columns" value="${inputfile.trailer.columns}" />
+		<property name="strict" value="false" />
+	</bean>
+
+	<bean id="truckSalesItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.TruckSalesItemReader"
+		scope="job">
+		<description>Item reader that maps the lines to a single
+			InputFileContents class</description>
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="resource" value="#{jobParameters['input.file.name']}" />
+				<property name="lineMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+						<property name="fieldSetMapper">
+							<bean
+								class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper" />
+						</property>
+						<property name="lineTokenizer">
+							<bean
+								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								<property name="tokenizers">
+									<map>
+										<entry key="HD*" value-ref="headerTokenizer" />
+										<entry key="TR*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names" value="${inputfile.trucksales.truckrow.names}" />
+												<property name="columns" value="${inputfile.trucksales.truckrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key="SR*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names" value="${inputfile.trucksales.salesrow.names}" />
+												<property name="columns" value="${inputfile.trucksales.salesrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key="T*" value-ref="trailerTokenizer" />
+										<entry key="*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names" value="${inputfile.trucksales.inventoryrow.names}" />
+												<property name="columns" value="${inputfile.trucksales.inventoryrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+									</map>
+								</property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 </beans>

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Entity
 @Table(name = "ICE_CREAM")
 @JsonInclude(Include.NON_EMPTY)
-public class IceCream extends EntitySupport {
+public class IceCream extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = 2908680501990930010L;
 

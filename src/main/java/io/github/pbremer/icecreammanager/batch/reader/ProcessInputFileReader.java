@@ -7,13 +7,14 @@ import javax.batch.api.chunk.AbstractItemReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import io.github.pbremer.icecreammanager.entity.InputFileMetaData;
+import io.github.pbremer.icecreammanager.entity.InputFileMetaData.Status;
 import io.github.pbremer.icecreammanager.service.InputFileMetaDataService;
 
 /**
  * @author Patrick Bremer
  */
-public class ProcessInputFileReader<InputFileMetaData>
-        extends AbstractItemReader {
+public class ProcessInputFileReader extends AbstractItemReader {
 
     @Autowired
     private InputFileMetaDataService service;
@@ -24,8 +25,7 @@ public class ProcessInputFileReader<InputFileMetaData>
      */
     @Override
     public InputFileMetaData readItem() throws Exception {
-	// TODO Auto-generated method stub
-	return null;
+	return service.getMostRecentInputFileByStatus(Status.READY);
     }
 
 }
