@@ -1,5 +1,6 @@
 package io.github.pbremer.icecreammanager.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -32,6 +33,9 @@ public class IceCream extends ActivatableEntitySupport {
             mappedBy = "iceCream")
     private List<IceCreamInstance> iceCreamInstances;
 
+    @Column(name = "CURRENT_SUPPLIER_PRICE")
+    private BigDecimal currentSupplierPrice;
+
     public String getIceCreamName() {
 	return iceCreamName;
     }
@@ -46,6 +50,21 @@ public class IceCream extends ActivatableEntitySupport {
 
     public void setIceCreamInstances(List<IceCreamInstance> iceCreamInstances) {
 	this.iceCreamInstances = iceCreamInstances;
+    }
+
+    /**
+     * @return the currentSupplierPrice
+     */
+    public BigDecimal getCurrentSupplierPrice() {
+	return currentSupplierPrice;
+    }
+
+    /**
+     * @param currentSupplierPrice
+     *            the currentSupplierPrice to set
+     */
+    public void setCurrentSupplierPrice(BigDecimal currentSupplierPrice) {
+	this.currentSupplierPrice = currentSupplierPrice;
     }
 
     @Override

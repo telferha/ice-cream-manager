@@ -36,15 +36,22 @@ public class TruckSalesItemReader extends
 		Assert.isNull(inputFile, "Header file encountered twice");
 		inputFile =
 		        new InputFileContents<TruckSalesFlatFileContainer>();
+		inputFile.setSequenceNumber(line.readShort("Sequence Number"));
+		inputFile.setDay(line.readDate("Date"));
 	    } else if ("TR".equalsIgnoreCase(prefix)) {
+		Assert.notNull(inputFile,
+		        "Truck header record encountered before file header record");
 		Assert.isNull(truckSales,
 		        "Truck header record encountered twice without a closing adjustment row");
 		truckSales = new TruckSalesFlatFileContainer();
 		truckSales.setTruckNumber(line.readString("Truck Number"));
 	    } else if ("SR".equalsIgnoreCase(prefix)) {
+		Assert.notNull(inputFile,
+		        "Sales row encountered before file header record");
 		Assert.notNull(truckSales,
-		        "Closing adjustment row encountered without a truck header row");
-		// TODO (Patrick Bremer): fix flat file entity classes....
+		        "Sales row encountered without a truck header row");
+		truckSales
+		        .setInventoryRowNumber(line.readString("Sales Count"));
 		inputFile.add(truckSales);
 		truckSales = null;
 	    } else if ("T".equalsIgnoreCase(prefix)) {
@@ -52,11 +59,16 @@ public class TruckSalesItemReader extends
 		        "Encountered trailer record before the header");
 		Assert.isNull(truckSales,
 		        "Encountered file trailer without ending the truck sales record");
+		inputFile.setFooterNumber(line.readInt("Record Count"));
 		return inputFile;
 	    } else if (null != prefix && prefix.matches("[0-9]*")) {
 		Assert.notNull(truckSales,
 		        "Encountered item row without seeing truck number");
-		// TODO (Patrick Bremer): fix flat file entity classes...
+		TruckSalesFlatFileContainer.EndOfDayInventoryFlatFileContainer inventory =
+		        truckSales.new EndOfDayInventoryFlatFileContainer();
+		inventory.setItemNumber(line.readString("Item Number"));
+		inventory.setFinalQuantity(line.readString("Final Quantity"));
+		truckSales.addInventory(inventory);
 
 	    }
 	}
