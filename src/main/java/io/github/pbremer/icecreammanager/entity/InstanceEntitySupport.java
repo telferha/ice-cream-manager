@@ -19,7 +19,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author Patrick Bremer
  */
 @MappedSuperclass
-public class InstanceEntitySupport extends EntitySupport {
+public abstract class InstanceEntitySupport extends EntitySupport {
 
     private static final long serialVersionUID = 9068366936195264820L;
 

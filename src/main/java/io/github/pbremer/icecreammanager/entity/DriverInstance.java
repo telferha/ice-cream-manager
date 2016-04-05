@@ -54,6 +54,9 @@ public class DriverInstance extends InstanceEntitySupport {
     @Column(name = "HOURS")
     private BigDecimal hours;
 
+    @Column(name = "WAGE")
+    private BigDecimal wage;
+
     public long getDriverInstanceId() {
 	return driverInstanceId;
     }
@@ -80,6 +83,21 @@ public class DriverInstance extends InstanceEntitySupport {
 
     public void setHours(BigDecimal hours) {
 	this.hours = hours;
+    }
+
+    /**
+     * @return the wage
+     */
+    public BigDecimal getWage() {
+	return wage;
+    }
+
+    /**
+     * @param wage
+     *            the wage to set
+     */
+    public void setWage(BigDecimal wage) {
+	this.wage = wage;
     }
 
     @Override

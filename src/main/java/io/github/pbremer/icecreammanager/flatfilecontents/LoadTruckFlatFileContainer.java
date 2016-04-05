@@ -64,16 +64,6 @@ public class LoadTruckFlatFileContainer extends AbstractFlatFileContainer {
     }
 
     @Override
-    public boolean containsValueInErrorColumn() {
-	boolean containsValueInErrorColumn = false;
-	for (LoadTruckFlatFileContainer.ItemAdjustmentFlatFileContainer itemAdjustmentContainer : itemAdjustments) {
-	    containsValueInErrorColumn = containsValueInErrorColumn
-	            || itemAdjustmentContainer.containsValueInErrorColumn();
-	}
-	return super.containsValueInErrorColumn();
-    }
-
-    @Override
     public String toString() {
 	return ToStringBuilder
 	        .reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE)

@@ -33,8 +33,8 @@ public class Driver extends ActivatableEntitySupport {
             mappedBy = "driver")
     private List<DriverInstance> driverInstances;
 
-    @Column(name = "WAGE")
-    private BigDecimal wage;
+    @Column(name = "CURRENT_WAGE")
+    private BigDecimal currentWage;
 
     public String getDriverId() {
 	return driverId;
@@ -52,12 +52,12 @@ public class Driver extends ActivatableEntitySupport {
 	this.driverInstances = driverInstances;
     }
 
-    public BigDecimal getWage() {
-	return wage;
+    public BigDecimal getCurrentWage() {
+	return currentWage;
     }
 
-    public void setWage(BigDecimal wage) {
-	this.wage = wage;
+    public void setCurrentWage(BigDecimal wage) {
+	this.currentWage = wage;
     }
 
     @Override

@@ -6,14 +6,13 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
-	<bean id="jobLauncher"
-		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
-		<property name="jobRepository">
-			<bean
-				class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean" />
-		</property>
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:batch/input-file-descriptor.properties" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
-
+	
+	<bean class="org.springframework.batch.core.scope.StepScope" />
+	
 	<bean id="customEditorConfigurer"
 		class="org.springframework.beans.factory.config.CustomEditorConfigurer">
 		<property name="customEditors">
@@ -46,7 +45,7 @@
 
 	<bean id="truckSalesItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.TruckSalesItemReader"
-		scope="job">
+		scope="step">
 		<description>Item reader that maps the lines to a single
 			InputFileContents class</description>
 		<property name="delegate">
