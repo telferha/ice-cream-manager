@@ -6,13 +6,15 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:batch/input-file-descriptor.properties" />
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location"
+			value="classpath:batch/input-file-descriptor.properties" />
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
-	
+
 	<bean class="org.springframework.batch.core.scope.StepScope" />
-	
+
 	<bean id="customEditorConfigurer"
 		class="org.springframework.beans.factory.config.CustomEditorConfigurer">
 		<property name="customEditors">
@@ -29,25 +31,62 @@
 
 	<!-- <bean id="processInputFileReader" class="" /> -->
 
-	<bean id="headerTokenizer"
-		class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-		<property name="names" value="${inputfile.header.names}" />
-		<property name="columns" value="${inputfile.header.columns}" />
-		<property name="strict" value="false" />
-	</bean>
+	<!-- <bean id="processFileStepListener"
+		class="io.github.pbremer.icecreammanager.batch.listener.ProcessFileStepListener" /> -->
 
-	<bean id="trailerTokenizer"
-		class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-		<property name="names" value="${inputfile.trailer.names}" />
-		<property name="columns" value="${inputfile.trailer.columns}" />
-		<property name="strict" value="false" />
+	<bean id="inputFileHeaderAndTrailerItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.InputFileHeaderAndTrailerItemReader"
+		scope="step">
+		<description>Item reader that maps the lines to a single
+			HeaderTrailerContainer for processing
+		</description>
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="resource" value="#{stepExecutionContext['input.file.name']}" />
+				<property name="lineMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+						<property name="fieldSetMapper">
+							<bean
+								class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper" />
+						</property>
+						<property name="lineTokenizer">
+							<bean
+								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								<property name="tokenizers">
+									<map>
+										<entry key="HD*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names" value="${inputfile.trailer.names}" />
+												<property name="columns" value="${inputfile.trailer.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key="T*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names" value="${inputfile.trailer.names}" />
+												<property name="columns" value="${inputfile.trailer.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+									</map>
+								</property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
 	</bean>
 
 	<bean id="truckSalesItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.TruckSalesItemReader"
 		scope="step">
-		<description>Item reader that maps the lines to a single
-			InputFileContents class</description>
+		<description>Item reader that maps the lines to multiple
+			TruckSalesFlatFileContainer
+		</description>
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
@@ -63,29 +102,33 @@
 								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
-										<entry key="HD*" value-ref="headerTokenizer" />
 										<entry key="TR*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="names" value="${inputfile.trucksales.truckrow.names}" />
-												<property name="columns" value="${inputfile.trucksales.truckrow.columns}" />
+												<property name="names"
+													value="${inputfile.trucksales.truckrow.names}" />
+												<property name="columns"
+													value="${inputfile.trucksales.truckrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
 										<entry key="SR*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="names" value="${inputfile.trucksales.salesrow.names}" />
-												<property name="columns" value="${inputfile.trucksales.salesrow.columns}" />
+												<property name="names"
+													value="${inputfile.trucksales.salesrow.names}" />
+												<property name="columns"
+													value="${inputfile.trucksales.salesrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
-										<entry key="T*" value-ref="trailerTokenizer" />
 										<entry key="*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="names" value="${inputfile.trucksales.inventoryrow.names}" />
-												<property name="columns" value="${inputfile.trucksales.inventoryrow.columns}" />
+												<property name="names"
+													value="${inputfile.trucksales.inventoryrow.names}" />
+												<property name="columns"
+													value="${inputfile.trucksales.inventoryrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>

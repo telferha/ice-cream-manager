@@ -3,9 +3,7 @@
  */
 package io.github.pbremer.icecreammanager.flatfilecontents;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -15,24 +13,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * @author Patrick Bremer
  */
-public class InputFileContents<T> {
+public class HeaderTrailerContainer {
 
     private int sequenceNumber;
     private Date day;
-    private List<T> contents;
     private int footerNumber;
-
-    public InputFileContents() {
-	contents = new ArrayList<T>();
-    }
-
-    public void add(T line) {
-	contents.add(line);
-    }
-
-    public List<T> getContents() {
-	return contents;
-    }
 
     /**
      * @return the sequenceNumber
@@ -77,14 +62,6 @@ public class InputFileContents<T> {
      */
     public void setFooterNumber(int footerNumber) {
 	this.footerNumber = footerNumber;
-    }
-
-    /**
-     * @param contents
-     *            the contents to set
-     */
-    public void setContents(List<T> contents) {
-	this.contents = contents;
     }
 
     @Override
