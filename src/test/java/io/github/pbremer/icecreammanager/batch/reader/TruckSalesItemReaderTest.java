@@ -16,20 +16,15 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.test.JobLauncherTestUtils;
-import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 /**
  * @author Patrick Bremer
  */
 @ContextConfiguration(locations = { "classpath:batch/batch.xml",
         "classpath:test-batch-configuration.xml" })
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
-        StepScopeTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TruckSalesItemReaderTest {
 
