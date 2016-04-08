@@ -4,6 +4,7 @@
 package io.github.pbremer.icecreammanager.flatfilecontents;
 
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -18,6 +19,11 @@ public class HeaderTrailerContainer {
     private int sequenceNumber;
     private Date day;
     private int footerNumber;
+    private AtomicInteger actualCount;
+
+    public HeaderTrailerContainer() {
+	actualCount = new AtomicInteger();
+    }
 
     /**
      * @return the sequenceNumber
@@ -62,6 +68,17 @@ public class HeaderTrailerContainer {
      */
     public void setFooterNumber(int footerNumber) {
 	this.footerNumber = footerNumber;
+    }
+
+    /**
+     * @return the actualCount
+     */
+    public int getActualCount() {
+	return actualCount.get();
+    }
+
+    public int incrimentCount() {
+	return actualCount.incrementAndGet();
     }
 
     @Override

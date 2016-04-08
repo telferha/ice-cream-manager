@@ -14,7 +14,7 @@ public abstract class AbstractFlatFileContainer {
     private boolean isValid;
 
     public AbstractFlatFileContainer() {
-	isValid = true;
+	isValid = false;
     }
 
     /**
