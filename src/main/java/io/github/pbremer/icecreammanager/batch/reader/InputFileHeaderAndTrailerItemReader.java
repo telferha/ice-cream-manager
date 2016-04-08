@@ -24,6 +24,8 @@ public class InputFileHeaderAndTrailerItemReader
 
     private HeaderTrailerContainer returnContainer;
 
+    private String countRowRegex;
+
     /*
      * (non-Javadoc)
      * @see org.springframework.batch.item.ItemReader#read()
@@ -58,12 +60,24 @@ public class InputFileHeaderAndTrailerItemReader
 		        .setFooterNumber(line.readInt("Record Count"));
 		returnContainer = headerTrailerContainer;
 		return returnContainer;
+	    } else if (prefix.matches(countRowRegex)) {
+		headerTrailerContainer.incrimentCount();
+		log.trace("Current actual count: {}",
+		        headerTrailerContainer.getActualCount());
 	    }
 
 	}
 	Assert.isNull(headerTrailerContainer,
 	        "No ending trailer row was found");
 	return null;
+    }
+
+    /**
+     * @param countRowRegex
+     *            the countRowRegex to set
+     */
+    public void setCountRowRegex(String countRowRegex) {
+	this.countRowRegex = countRowRegex;
     }
 
 }

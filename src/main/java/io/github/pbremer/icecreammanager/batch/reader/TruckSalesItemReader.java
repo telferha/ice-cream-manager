@@ -41,7 +41,7 @@ public class TruckSalesItemReader
 		truckSales
 		        .setInventoryRowNumber(line.readString("Sales Count"));
 		return truckSales;
-	    } else if (null != prefix && prefix.matches("[0-9]*")) {
+	    } else if (prefix.matches("[0-9]+")) {
 		Assert.notNull(truckSales,
 		        "Encountered item row without seeing truck number");
 		TruckSalesFlatFileContainer.EndOfDayInventoryFlatFileContainer inventory =
