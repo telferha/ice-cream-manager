@@ -16,7 +16,7 @@ public class LoadInventoryFlatFileContainer extends AbstractFlatFileContainer {
     private String itemNumber;
     private String wareHouseQuantity;
     private String price;
-    private String quantity;
+    private String description;
 
     /**
      * @return the itemNumber
@@ -64,18 +64,18 @@ public class LoadInventoryFlatFileContainer extends AbstractFlatFileContainer {
     }
 
     /**
-     * @return the quantity
+     * @return the description
      */
-    public String getQuantity() {
-	return quantity;
+    public String getDescription() {
+	return description;
     }
 
     /**
-     * @param quantity
-     *            the quantity to set
+     * @param description
+     *            the description to set
      */
-    public void setQuantity(String quantity) {
-	this.quantity = quantity;
+    public void setDescription(String description) {
+	this.description = description;
     }
 
     @Override

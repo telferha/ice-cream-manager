@@ -10,11 +10,12 @@ import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.util.Assert;
 
 import io.github.pbremer.icecreammanager.flatfilecontents.TruckSalesFlatFileContainer;
+import io.github.pbremer.icecreammanager.flatfilecontents.TruckSalesFlatFileContainer.EndOfDayInventoryFlatFileContainer;
 
 /**
  * @author Patrick Bremer
  */
-public class TruckSalesItemReader
+public class TruckSalesInputFileReader
         extends MultilineFlatFileItemReader<TruckSalesFlatFileContainer> {
 
     /*
@@ -25,6 +26,7 @@ public class TruckSalesItemReader
     public TruckSalesFlatFileContainer read()
             throws Exception, UnexpectedInputException, ParseException,
             NonTransientResourceException {
+
 	TruckSalesFlatFileContainer truckSales = null;
 
 	for (FieldSet line; (line = this.delegate.read()) != null;) {
@@ -41,10 +43,10 @@ public class TruckSalesItemReader
 		truckSales
 		        .setInventoryRowNumber(line.readString("Sales Count"));
 		return truckSales;
-	    } else if (prefix.matches("[0-9]+")) {
+	    } else if (prefix.matches("^[0-9]+")) {
 		Assert.notNull(truckSales,
 		        "Encountered item row without seeing truck number");
-		TruckSalesFlatFileContainer.EndOfDayInventoryFlatFileContainer inventory =
+		EndOfDayInventoryFlatFileContainer inventory =
 		        truckSales.new EndOfDayInventoryFlatFileContainer();
 		inventory.setItemNumber(line.readString("Item Number"));
 		inventory.setFinalQuantity(line.readString("Final Quantity"));

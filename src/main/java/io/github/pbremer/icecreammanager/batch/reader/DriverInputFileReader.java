@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package io.github.pbremer.icecreammanager.batch.reader;
 
 import org.springframework.batch.item.NonTransientResourceException;
@@ -5,20 +8,20 @@ import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.item.file.transform.FieldSet;
 
-import io.github.pbremer.icecreammanager.flatfilecontents.CityFlatFileContainer;
+import io.github.pbremer.icecreammanager.flatfilecontents.DriverFlatFileContainer;
 
 /**
  * @author Patrick Bremer
  */
-public class CityInputFileReader
-        extends MultilineFlatFileItemReader<CityFlatFileContainer> {
+public class DriverInputFileReader
+        extends MultilineFlatFileItemReader<DriverFlatFileContainer> {
 
     /*
      * (non-Javadoc)
      * @see org.springframework.batch.item.ItemReader#read()
      */
     @Override
-    public CityFlatFileContainer read()
+    public DriverFlatFileContainer read()
             throws Exception, UnexpectedInputException, ParseException,
             NonTransientResourceException {
 
@@ -26,11 +29,10 @@ public class CityInputFileReader
 	    String prefix = line.readRawString(0);
 
 	    if (prefix.length() > 1) {
-		CityFlatFileContainer city = new CityFlatFileContainer();
-		city.setCityLabel(line.readString("City Label"));
-		city.setCityName(line.readString("City Name"));
-		city.setState(line.readString("State"));
-		return city;
+		DriverFlatFileContainer driver = new DriverFlatFileContainer();
+		driver.setDriverNumber(line.readString("Driver Number"));
+		driver.setHourlyWage(line.readString("Wage"));
+		return driver;
 	    }
 	}
 	return null;
