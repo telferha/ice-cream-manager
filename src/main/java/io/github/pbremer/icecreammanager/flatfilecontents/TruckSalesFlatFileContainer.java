@@ -52,8 +52,7 @@ public class TruckSalesFlatFileContainer extends AbstractFlatFileContainer {
      * @param endOfDayInventory
      *            the endOfDayInventory to set
      */
-    public void addInventory(
-            TruckSalesFlatFileContainer.EndOfDayInventoryFlatFileContainer inventory) {
+    public void addInventory(EndOfDayInventoryFlatFileContainer inventory) {
 	endOfDayInventory.add(inventory);
     }
 

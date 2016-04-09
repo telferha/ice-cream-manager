@@ -19,13 +19,20 @@ public class ProcessInputFileReader extends AbstractItemReader {
     @Autowired
     private InputFileMetaDataService service;
 
+    private InputFileMetaData returnData;
+
     /*
      * (non-Javadoc)
      * @see javax.batch.api.chunk.AbstractItemReader#readItem()
      */
     @Override
     public InputFileMetaData readItem() throws Exception {
-	return service.getMostRecentInputFileByStatus(Status.READY);
+
+	if (returnData != null) {
+	    return null;
+	}
+	returnData = service.getMostRecentInputFileByStatus(Status.READY);
+	return returnData;
     }
 
 }

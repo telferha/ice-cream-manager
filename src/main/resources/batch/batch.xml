@@ -37,9 +37,6 @@
 	<bean id="inputFileHeaderAndTrailerItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.InputFileHeaderAndTrailerItemReader"
 		scope="step">
-		<description>Item reader that maps the lines to a single
-			HeaderTrailerContainer for processing
-		</description>
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
 				<property name="resource" value="#{stepExecutionContext['input.file.name']}" />
@@ -91,11 +88,9 @@
 	<bean id="cityItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.CityInputFileReader"
 		scope="step">
-		<description>Item reader that maps the lines to multiple
-			CityFlatFileContainer
-		</description>
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="linesToSkip" value="1" />
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
 				<property name="lineMapper">
 					<bean
@@ -109,7 +104,7 @@
 								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
-										<entry key="^[\S]{3,}.*">
+										<entry key="^(?!T\s)(?!HD\s).*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.city.names}" />
@@ -137,9 +132,6 @@
 	<bean id="routeItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.RouteInputFileReader"
 		scope="step">
-		<description>Item reader that maps the lines to multiple
-			RouteFlatFileContainer
-		</description>
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
@@ -183,11 +175,9 @@
 	<bean id="truckItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.TruckInputFileReader"
 		scope="step">
-		<description>Item reader that maps the lines to multiple
-			TruckFlatFileContainer
-		</description>
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="linesToSkip" value="1" />
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
 				<property name="lineMapper">
 					<bean
@@ -201,7 +191,7 @@
 								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
-										<entry key="^[0-9]{4}">
+										<entry key="^(?!T\s)(?!HD\s).*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.truck.names}" />
@@ -225,13 +215,112 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="truckRouteItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.TruckRouteInputFileReader"
+		scope="step">
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="linesToSkip" value="1" />
+				<property name="resource" value="#{jobParameters['input.file.name']}" />
+				<property name="lineMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+						<property name="fieldSetMapper">
+							<bean
+								class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper" />
+						</property>
+						<property name="lineTokenizer">
+							<bean
+								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								<property name="tokenizers">
+									<map>
+										<entry key="^(?!T\s)(?!HD\s).*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names" value="${inputfile.truckroute.names}" />
+												<property name="columns" value="${inputfile.truckroute.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key=".*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="columns" value="${inputfile.process.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+									</map>
+								</property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="loadTruckItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.LoadTruckInputFileReader"
+		scope="step">
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="resource" value="#{jobParameters['input.file.name']}" />
+				<property name="lineMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+						<property name="fieldSetMapper">
+							<bean
+								class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper" />
+						</property>
+						<property name="lineTokenizer">
+							<bean
+								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								<property name="tokenizers">
+									<map>
+										<entry key="TR*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names"
+													value="${inputfile.loadtruck.truckrow.names}" />
+												<property name="columns"
+													value="${inputfile.loadtruck.truckrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key="IR*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names"
+													value="${inputfile.loadtruck.adjustmentrow.names}" />
+												<property name="columns"
+													value="${inputfile.loadtruck.adjustmentrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key="*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names"
+													value="${inputfile.loadtruck.inventoryrow.names}" />
+												<property name="columns"
+													value="${inputfile.loadtruck.inventoryrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+									</map>
+								</property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 	<bean id="truckSalesItemReader"
-		class="io.github.pbremer.icecreammanager.batch.reader.TruckSalesItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.TruckSalesInputFileReader"
 		scope="step">
-		<description>Item reader that maps the lines to multiple
-			TruckSalesFlatFileContainer
-		</description>
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
@@ -274,6 +363,210 @@
 													value="${inputfile.trucksales.inventoryrow.names}" />
 												<property name="columns"
 													value="${inputfile.trucksales.inventoryrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+									</map>
+								</property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="driverItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.DriverInputFileReader"
+		scope="step">
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="linesToSkip" value="1" />
+				<property name="resource" value="#{jobParameters['input.file.name']}" />
+				<property name="lineMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+						<property name="fieldSetMapper">
+							<bean
+								class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper" />
+						</property>
+						<property name="lineTokenizer">
+							<bean
+								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								<property name="tokenizers">
+									<map>
+										<entry key="^(?!T\s)(?!HD\s).*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names" value="${inputfile.driver.names}" />
+												<property name="columns" value="${inputfile.driver.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key=".*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="columns" value="${inputfile.process.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+									</map>
+								</property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="driverTruckItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.DriverTruckInputFileReader"
+		scope="step">
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="linesToSkip" value="1" />
+				<property name="resource" value="#{jobParameters['input.file.name']}" />
+				<property name="lineMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+						<property name="fieldSetMapper">
+							<bean
+								class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper" />
+						</property>
+						<property name="lineTokenizer">
+							<bean
+								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								<property name="tokenizers">
+									<map>
+										<entry key="^(?!T\s)(?!HD\s).*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names" value="${inputfile.drivertruck.names}" />
+												<property name="columns" value="${inputfile.drivertruck.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key=".*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="columns" value="${inputfile.process.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+									</map>
+								</property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="routePriceItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.RoutePriceInputFileReader"
+		scope="step">
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="resource" value="#{jobParameters['input.file.name']}" />
+				<property name="lineMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+						<property name="fieldSetMapper">
+							<bean
+								class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper" />
+						</property>
+						<property name="lineTokenizer">
+							<bean
+								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								<property name="tokenizers">
+									<map>
+										<entry key="R*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names"
+													value="${inputfile.routeprice.routerow.names}" />
+												<property name="columns"
+													value="${inputfile.routeprice.routerow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key="C*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names"
+													value="${inputfile.routeprice.itemrow.names}" />
+												<property name="columns"
+													value="${inputfile.routeprice.itemrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key="*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names"
+													value="${inputfile.routeprice.countrow.names}" />
+												<property name="columns"
+													value="${inputfile.routeprice.countrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+									</map>
+								</property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="costsItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.CostsInputFileReader"
+		scope="step">
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="resource" value="#{jobParameters['input.file.name']}" />
+				<property name="lineMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+						<property name="fieldSetMapper">
+							<bean
+								class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper" />
+						</property>
+						<property name="lineTokenizer">
+							<bean
+								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								<property name="tokenizers">
+									<map>
+										<entry key="R*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names"
+													value="${inputfile.costs.truckrow.names}" />
+												<property name="columns"
+													value="${inputfile.costs.truckrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key="C*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names"
+													value="${inputfile.costs.itemrow.names}" />
+												<property name="columns"
+													value="${inputfile.costs.itemrow.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+										<entry key="*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names"
+													value="${inputfile.costs.countrow.names}" />
+												<property name="columns"
+													value="${inputfile.costs.countrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>

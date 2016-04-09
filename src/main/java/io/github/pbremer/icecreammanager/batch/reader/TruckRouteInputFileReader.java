@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package io.github.pbremer.icecreammanager.batch.reader;
 
 import org.springframework.batch.item.NonTransientResourceException;
@@ -5,20 +8,20 @@ import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.item.file.transform.FieldSet;
 
-import io.github.pbremer.icecreammanager.flatfilecontents.CityFlatFileContainer;
+import io.github.pbremer.icecreammanager.flatfilecontents.TruckRouteFlatFileContainer;
 
 /**
  * @author Patrick Bremer
  */
-public class CityInputFileReader
-        extends MultilineFlatFileItemReader<CityFlatFileContainer> {
+public class TruckRouteInputFileReader
+        extends MultilineFlatFileItemReader<TruckRouteFlatFileContainer> {
 
     /*
      * (non-Javadoc)
      * @see org.springframework.batch.item.ItemReader#read()
      */
     @Override
-    public CityFlatFileContainer read()
+    public TruckRouteFlatFileContainer read()
             throws Exception, UnexpectedInputException, ParseException,
             NonTransientResourceException {
 
@@ -26,13 +29,14 @@ public class CityInputFileReader
 	    String prefix = line.readRawString(0);
 
 	    if (prefix.length() > 1) {
-		CityFlatFileContainer city = new CityFlatFileContainer();
-		city.setCityLabel(line.readString("City Label"));
-		city.setCityName(line.readString("City Name"));
-		city.setState(line.readString("State"));
-		return city;
+		TruckRouteFlatFileContainer truckRoute =
+		        new TruckRouteFlatFileContainer();
+		truckRoute.setTruckNumber(line.readString("Truck Number"));
+		truckRoute.setRouteNumber(line.readString("Route Number"));
+		return truckRoute;
 	    }
 	}
+
 	return null;
     }
 

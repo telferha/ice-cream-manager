@@ -14,15 +14,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * @author Patrick Bremer
  */
-public class RoutePriceFlatFileContainer extends AbstractFlatFileContainer {
+public class LoadRoutePriceFlatFileContainer extends AbstractFlatFileContainer {
 
     private String routeNumber;
-    private List<RoutePriceFlatFileContainer.ItemPriceAdjustmentFlatFileContainer> adjustmentPrices;
-    private String count;
+    private List<LoadRoutePriceFlatFileContainer.ItemPriceAdjustmentFlatFileContainer> priceAdjustments;
+    private String itemsCount;
 
-    public RoutePriceFlatFileContainer() {
-	adjustmentPrices =
-	        new ArrayList<RoutePriceFlatFileContainer.ItemPriceAdjustmentFlatFileContainer>();
+    public LoadRoutePriceFlatFileContainer() {
+	priceAdjustments =
+	        new ArrayList<LoadRoutePriceFlatFileContainer.ItemPriceAdjustmentFlatFileContainer>();
     }
 
     /**
@@ -41,40 +41,40 @@ public class RoutePriceFlatFileContainer extends AbstractFlatFileContainer {
     }
 
     /**
-     * @return the adjustmentPrices
+     * @return the priceAdjustments
      */
-    public List<RoutePriceFlatFileContainer.ItemPriceAdjustmentFlatFileContainer>
-            getAdjustmentPrices() {
-	return adjustmentPrices;
+    public List<LoadRoutePriceFlatFileContainer.ItemPriceAdjustmentFlatFileContainer>
+            getPriceAdjustments() {
+	return priceAdjustments;
     }
 
     /**
-     * @param adjustmentPrices
-     *            the adjustmentPrices to set
+     * @param priceAdjustments
+     *            the priceAdjustments to set
      */
-    public void setAdjustmentPrices(
-            List<RoutePriceFlatFileContainer.ItemPriceAdjustmentFlatFileContainer> adjustmentPrices) {
-	this.adjustmentPrices = adjustmentPrices;
+    public void setPriceAdjustments(
+            List<LoadRoutePriceFlatFileContainer.ItemPriceAdjustmentFlatFileContainer> priceAdjustments) {
+	this.priceAdjustments = priceAdjustments;
     }
 
     public void addPriceAdjustment(
             ItemPriceAdjustmentFlatFileContainer adjustment) {
-	adjustmentPrices.add(adjustment);
+	priceAdjustments.add(adjustment);
     }
 
     /**
-     * @return the count
+     * @return the itemsCount
      */
-    public String getCount() {
-	return count;
+    public String getItemsCount() {
+	return itemsCount;
     }
 
     /**
-     * @param count
-     *            the count to set
+     * @param itemsCount
+     *            the itemsCount to set
      */
-    public void setCount(String count) {
-	this.count = count;
+    public void setItemsCount(String itemsCount) {
+	this.itemsCount = itemsCount;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.github.pbremer.icecreammanager.flatfilecontents;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,6 +16,11 @@ public class LoadTruckFlatFileContainer extends AbstractFlatFileContainer {
     private String truckNumber;
     private List<LoadTruckFlatFileContainer.ItemAdjustmentFlatFileContainer> itemAdjustments;
     private String adjustmentRowNumber;
+
+    public LoadTruckFlatFileContainer() {
+	itemAdjustments =
+	        new ArrayList<LoadTruckFlatFileContainer.ItemAdjustmentFlatFileContainer>();
+    }
 
     /**
      * @return the truckNumber
@@ -46,6 +52,10 @@ public class LoadTruckFlatFileContainer extends AbstractFlatFileContainer {
     public void setItemAdjustments(
             List<LoadTruckFlatFileContainer.ItemAdjustmentFlatFileContainer> itemAdjustments) {
 	this.itemAdjustments = itemAdjustments;
+    }
+
+    public void addAdjustment(ItemAdjustmentFlatFileContainer adjustment) {
+	itemAdjustments.add(adjustment);
     }
 
     /**

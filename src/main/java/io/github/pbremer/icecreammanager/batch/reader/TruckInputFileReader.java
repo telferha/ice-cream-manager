@@ -26,9 +26,9 @@ public class TruckInputFileReader
             NonTransientResourceException {
 
 	for (FieldSet line; (line = this.delegate.read()) != null;) {
-	    String prefix = line.readString(0);
+	    String prefix = line.readRawString(0);
 
-	    if (prefix.matches("^[0-9]{4}")) {
+	    if (prefix.length() > 1) {
 		TruckFlatFileContainer truck = new TruckFlatFileContainer();
 		truck.setTruckNumber(line.readString("Truck Number"));
 		return truck;
