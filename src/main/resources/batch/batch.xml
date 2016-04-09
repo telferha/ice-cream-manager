@@ -101,7 +101,7 @@
 						</property>
 						<property name="lineTokenizer">
 							<bean
-								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								class="io.github.pbremer.icecreammanager.batch.item.file.transform.RegexMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
 										<entry key="^(?!T\s)(?!HD\s).*">
@@ -109,13 +109,6 @@
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.city.names}" />
 												<property name="columns" value="${inputfile.city.columns}" />
-												<property name="strict" value="false" />
-											</bean>
-										</entry>
-										<entry key=".*">
-											<bean
-												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="columns" value="${inputfile.process.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
@@ -144,7 +137,7 @@
 						</property>
 						<property name="lineTokenizer">
 							<bean
-								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								class="io.github.pbremer.icecreammanager.batch.item.file.transform.RegexMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
 										<entry key="^[ACD].*">
@@ -152,13 +145,6 @@
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.route.names}" />
 												<property name="columns" value="${inputfile.route.columns}" />
-												<property name="strict" value="false" />
-											</bean>
-										</entry>
-										<entry key=".*">
-											<bean
-												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="columns" value="${inputfile.process.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
@@ -188,7 +174,7 @@
 						</property>
 						<property name="lineTokenizer">
 							<bean
-								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								class="io.github.pbremer.icecreammanager.batch.item.file.transform.RegexMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
 										<entry key="^(?!T\s)(?!HD\s).*">
@@ -196,13 +182,6 @@
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.truck.names}" />
 												<property name="columns" value="${inputfile.truck.columns}" />
-												<property name="strict" value="false" />
-											</bean>
-										</entry>
-										<entry key=".*">
-											<bean
-												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="columns" value="${inputfile.process.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
@@ -232,7 +211,7 @@
 						</property>
 						<property name="lineTokenizer">
 							<bean
-								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								class="io.github.pbremer.icecreammanager.batch.item.file.transform.RegexMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
 										<entry key="^(?!T\s)(?!HD\s).*">
@@ -240,13 +219,6 @@
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.truckroute.names}" />
 												<property name="columns" value="${inputfile.truckroute.columns}" />
-												<property name="strict" value="false" />
-											</bean>
-										</entry>
-										<entry key=".*">
-											<bean
-												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="columns" value="${inputfile.process.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
@@ -392,7 +364,7 @@
 						</property>
 						<property name="lineTokenizer">
 							<bean
-								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								class="io.github.pbremer.icecreammanager.batch.item.file.transform.RegexMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
 										<entry key="^(?!T\s)(?!HD\s).*">
@@ -400,13 +372,6 @@
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.driver.names}" />
 												<property name="columns" value="${inputfile.driver.columns}" />
-												<property name="strict" value="false" />
-											</bean>
-										</entry>
-										<entry key=".*">
-											<bean
-												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="columns" value="${inputfile.process.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
@@ -436,7 +401,7 @@
 						</property>
 						<property name="lineTokenizer">
 							<bean
-								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								class="io.github.pbremer.icecreammanager.batch.item.file.transform.RegexMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
 										<entry key="^(?!T\s)(?!HD\s).*">
@@ -444,13 +409,6 @@
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.drivertruck.names}" />
 												<property name="columns" value="${inputfile.drivertruck.columns}" />
-												<property name="strict" value="false" />
-											</bean>
-										</entry>
-										<entry key=".*">
-											<bean
-												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="columns" value="${inputfile.process.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
