@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Table(name = "INVENTORY_LOSS", uniqueConstraints = @UniqueConstraint(
         columnNames = { "DAY", "TRUCK_INSTANCE_ID", "ICE_CREAM_INSTANCE_ID" }))
 @JsonInclude(Include.NON_EMPTY)
-public class InventoryLoss extends Inventory {
+public class InventoryLoss extends SellableInventory {
 
     private static final long serialVersionUID = -5579994285032744293L;
 

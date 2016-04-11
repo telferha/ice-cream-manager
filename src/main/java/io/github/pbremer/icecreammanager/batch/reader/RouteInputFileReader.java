@@ -35,16 +35,13 @@ public class RouteInputFileReader
 		RouteFlatFileContainer route = new RouteFlatFileContainer();
 		route.setActionCode(line.readString("Action Code"));
 		List<String> cities = new ArrayList<String>();
-		cities.add(line.readString("City Label 0"));
-		cities.add(line.readString("City Label 1"));
-		cities.add(line.readString("City Label 2"));
-		cities.add(line.readString("City Label 3"));
-		cities.add(line.readString("City Label 4"));
-		cities.add(line.readString("City Label 5"));
-		cities.add(line.readString("City Label 6"));
-		cities.add(line.readString("City Label 7"));
-		cities.add(line.readString("City Label 8"));
-		cities.add(line.readString("City Label 9"));
+		for (int i = 0; i < 10; i++) {
+		    String city =
+		            line.readString(String.format("City Label %d", i));
+		    if (!city.isEmpty()) {
+			cities.add(city);
+		    }
+		}
 		route.setCityLabel(cities);
 		route.setRouteNumber(line.readString("Route Number"));
 		return route;

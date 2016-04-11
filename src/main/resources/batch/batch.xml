@@ -37,9 +37,11 @@
 	<bean id="inputFileHeaderAndTrailerItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.InputFileHeaderAndTrailerItemReader"
 		scope="step">
+		<property name="countableRowRegex"
+			value="#{jobParameters['input.file.countablerow.regex]}" />
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
-				<property name="resource" value="#{stepExecutionContext['input.file.name']}" />
+				<property name="resource" value="#{jobParameters['input.file.name']}" />
 				<property name="lineMapper">
 					<bean
 						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -121,7 +123,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="routeItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.RouteInputFileReader"
 		scope="step">
@@ -157,7 +159,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="truckItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.TruckInputFileReader"
 		scope="step">
@@ -194,7 +196,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="truckRouteItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.TruckRouteInputFileReader"
 		scope="step">
@@ -231,7 +233,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="loadTruckItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.LoadTruckInputFileReader"
 		scope="step">
@@ -347,7 +349,44 @@
 			</bean>
 		</property>
 	</bean>
-	
+
+	<bean id="inventoryItemReader"
+		class="io.github.pbremer.icecreammanager.batch.reader.LoadInventoryInputFileReader"
+		scope="step">
+		<property name="delegate">
+			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
+				<property name="linesToSkip" value="1" />
+				<property name="resource" value="#{jobParameters['input.file.name']}" />
+				<property name="lineMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+						<property name="fieldSetMapper">
+							<bean
+								class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper" />
+						</property>
+						<property name="lineTokenizer">
+							<bean
+								class="io.github.pbremer.icecreammanager.batch.item.file.transform.RegexMatchingCompositeLineTokenizer">
+								<property name="tokenizers">
+									<map>
+										<entry key="^(?!T\s)(?!HD\s).*">
+											<bean
+												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+												<property name="names" value="${inputfile.inventory.names}" />
+												<property name="columns" value="${inputfile.inventory.columns}" />
+												<property name="strict" value="false" />
+											</bean>
+										</entry>
+									</map>
+								</property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
 	<bean id="driverItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.DriverInputFileReader"
 		scope="step">
@@ -384,7 +423,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="driverTruckItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.DriverTruckInputFileReader"
 		scope="step">
@@ -421,7 +460,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="routePriceItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.RoutePriceInputFileReader"
 		scope="step">
@@ -479,7 +518,7 @@
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="costsItemReader"
 		class="io.github.pbremer.icecreammanager.batch.reader.CostsInputFileReader"
 		scope="step">
@@ -501,8 +540,7 @@
 										<entry key="R*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="names"
-													value="${inputfile.costs.truckrow.names}" />
+												<property name="names" value="${inputfile.costs.truckrow.names}" />
 												<property name="columns"
 													value="${inputfile.costs.truckrow.columns}" />
 												<property name="strict" value="false" />
@@ -511,18 +549,15 @@
 										<entry key="C*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="names"
-													value="${inputfile.costs.itemrow.names}" />
-												<property name="columns"
-													value="${inputfile.costs.itemrow.columns}" />
+												<property name="names" value="${inputfile.costs.itemrow.names}" />
+												<property name="columns" value="${inputfile.costs.itemrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
 										<entry key="*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="names"
-													value="${inputfile.costs.countrow.names}" />
+												<property name="names" value="${inputfile.costs.countrow.names}" />
 												<property name="columns"
 													value="${inputfile.costs.countrow.columns}" />
 												<property name="strict" value="false" />
@@ -538,4 +573,53 @@
 		</property>
 	</bean>
 
+	<bean id="parseInputFileReader"
+		class="io.github.pbremer.icecreammanager.batch.FileNameMatchingCompositeItemReader"
+		scope="step">
+		<property name="resource" value="#{jobParameters['input.file.name']}" />
+		<property name="delegates">
+			<map>
+				<entry key="${inputfile.city.filename}" value-ref="cityItemReader" />
+				<entry key="${inputfile.route.filename}" value-ref="routeItemReader" />
+				<entry key="${inputfile.truck.filename}" value-ref="truckItemReader" />
+				<entry key="${inputfile.truckroute.filename}" value-ref="truckRouteItemReader" />
+				<entry key="${inputfile.loadtruck.filename}" value-ref="loadTruckItemReader" />
+				<entry key="${inputfile.trucksales.filename}" value-ref="truckSalesItemReader" />
+				<entry key="${inputfile.inventory.filename}" value-ref="inventoryItemReader" />
+				<entry key="${inputfile.driver.filename}" value-ref="driverItemReader" />
+				<entry key="${inputfile.routeprice.filename}" value-ref="routePriceItemReader" />
+				<entry key="${inputfile.costs.filename}" value-ref="costsItemReader" />
+				<entry key="${inputfile.drivertruck.filename}" value-ref="driverTruckItemReader" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="trailerCountValidator"
+		class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+		<property name="validator">
+			<bean class="org.springframework.batch.item.validator.SpringValidator">
+				<property name="validator">
+					<bean
+						class="io.github.pbremer.icecreammanager.validator.TrailerValidator" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+<!-- 
+	<batch:job id="processInputFiles">
+		<batch:step id="verifyFile">
+			<batch:tasklet throttle-limit="1">
+				<batch:chunk reader="" processor="" writer="" />
+			</batch:tasklet>
+			<batch:next on="COMPLETED" to="parseInputFile" />
+			<batch:fail on="*" />
+		</batch:step>
+		<batch:step id="parseInputFile">
+			<batch:tasklet throttle-limit="1">
+				<batch:chunk reader="parseInputFileReader" processor=""
+					writer="" />
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+ -->
 </beans>

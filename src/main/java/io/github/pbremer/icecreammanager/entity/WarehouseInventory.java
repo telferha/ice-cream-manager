@@ -23,20 +23,20 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author Patrick Bremer
  */
 @Entity
-@Table(name = "BEGIN_DAY_INVENTORY", uniqueConstraints = @UniqueConstraint(
-        columnNames = { "DAY", "TRUCK_INSTANCE_ID", "ICE_CREAM_INSTANCE_ID" }))
+@Table(name = "WAREHOUSE_INVENTORY_ID", uniqueConstraints = @UniqueConstraint(
+        columnNames = { "DAY", "ICE_CREAM_INSTANCE_ID" }))
 @JsonInclude(Include.NON_EMPTY)
-public class BeginDayInventory extends SellableInventory {
+public class WarehouseInventory extends Inventory {
 
-    private static final long serialVersionUID = -8037936350364293480L;
+    private static final long serialVersionUID = -8912697085611687702L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "BEGIN_DAY_INVENTORY_ID")
-    private long id;
+    @Column(name = "WAREHOUSE_INVENTORY_ID")
+    private long warehouseInventoryId;
 
     public long getId() {
-	return id;
+	return warehouseInventoryId;
     }
 
     @Override
@@ -55,4 +55,5 @@ public class BeginDayInventory extends SellableInventory {
     public boolean equals(Object obj) {
 	return EqualsBuilder.reflectionEquals(this, obj, false);
     }
+
 }
