@@ -3,6 +3,8 @@
  */
 package io.github.pbremer.icecreammanager.entity;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Table(name = "END_DAY_INVENTORY", uniqueConstraints = @UniqueConstraint(
         columnNames = { "DAY", "TRUCK_INSTANCE_ID", "ICE_CREAM_INSTANCE_ID" }))
 @JsonInclude(Include.NON_EMPTY)
-public class EndDayInventory extends Inventory {
+public class EndDayInventory extends SellableInventory {
 
     private static final long serialVersionUID = 8251593985434934794L;
 
@@ -35,8 +37,26 @@ public class EndDayInventory extends Inventory {
     @Column(name = "END_DAY_INVENTORY_ID")
     private long id;
 
+    @Column(name = "SALES_PRICE")
+    private BigDecimal salesPrice;
+
     public long getId() {
 	return id;
+    }
+
+    /**
+     * @return the salesPrice
+     */
+    public BigDecimal getSalesPrice() {
+	return salesPrice;
+    }
+
+    /**
+     * @param salesPrice
+     *            the salesPrice to set
+     */
+    public void setSalesPrice(BigDecimal salesPrice) {
+	this.salesPrice = salesPrice;
     }
 
     @Override

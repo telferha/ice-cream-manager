@@ -16,5 +16,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface IsActiveSerchable<T, ID>
         extends JpaRepository<T, Serializable> {
 
-    public List<T> findByIsActiveEquals(boolean isActive);
+    public List<T> findByActiveEquals(boolean isActive);
 }

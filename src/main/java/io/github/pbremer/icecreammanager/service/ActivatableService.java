@@ -14,4 +14,8 @@ public interface ActivatableService<T extends Serializable, ID extends Serializa
 
     public List<T> findWhereIsActiveEquals(boolean isActive);
 
+    public void setAllIsActiveFromTo(boolean from, boolean to);
+
+    public boolean existsAndIsActive(ID key);
+
 }

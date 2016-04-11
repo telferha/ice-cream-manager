@@ -24,7 +24,7 @@ public class InputFileHeaderAndTrailerItemReader
 
     private HeaderTrailerContainer returnContainer;
 
-    private String countRowRegex;
+    private String countableRowRegex;
 
     /*
      * (non-Javadoc)
@@ -60,7 +60,7 @@ public class InputFileHeaderAndTrailerItemReader
 		        .setFooterNumber(line.readInt("Record Count"));
 		returnContainer = headerTrailerContainer;
 		return returnContainer;
-	    } else if (prefix.matches(countRowRegex)) {
+	    } else if (prefix.matches(countableRowRegex)) {
 		headerTrailerContainer.incrimentCount();
 		log.trace("Current actual count: {}",
 		        headerTrailerContainer.getActualCount());
@@ -76,8 +76,8 @@ public class InputFileHeaderAndTrailerItemReader
      * @param countRowRegex
      *            the countRowRegex to set
      */
-    public void setCountRowRegex(String countRowRegex) {
-	this.countRowRegex = countRowRegex;
+    public void setCountableRowRegex(String countableRowRegex) {
+	this.countableRowRegex = countableRowRegex;
     }
 
 }
