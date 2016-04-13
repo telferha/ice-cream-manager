@@ -10,10 +10,10 @@ import java.text.SimpleDateFormat;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,6 @@ import io.github.pbremer.icecreammanager.entity.InputFileMetaData;
 import io.github.pbremer.icecreammanager.service.InputFileMetaDataService;
 
 @Controller
-@PropertySource("classpath:ice-cream-manager.properties")
 public class FileUploadController implements InitializingBean {
 
     private static final Logger log =
@@ -37,6 +36,9 @@ public class FileUploadController implements InitializingBean {
     @Autowired
     private InputFileMetaDataService inputFileMetaDataSerice;
 
+    @Autowired
+    private JobExplorer jobExplorer;
+
     @Value("${dateFormat}")
     private String dateFormatString;
 
@@ -44,43 +46,52 @@ public class FileUploadController implements InitializingBean {
     public String upload(@RequestParam("file") MultipartFile file,
             RedirectAttributes redirectAttributes) {
 
-	log.debug("Got file: {}", file.getOriginalFilename());
+	if (jobExplorer.findRunningJobExecutions("processInputFile")
+	        .isEmpty()) {
 
-	if (file.getOriginalFilename().contains("/")) {
-	    redirectAttributes.addFlashAttribute("errorMessage",
-	            "Folder seperators not allowed");
-	    return "redirect:/upload";
-	}
+	    log.debug("Got file: {}", file.getOriginalFilename());
 
-	if (!file.isEmpty()) {
-	    try {
-		InputFileMetaData metaData = parseFileMetaData(file);
-	    } catch (IOException ioe) {
-		log.error(String.format(
-		        "Exception getting byte array from file: %s",
-		        file.getOriginalFilename()), ioe);
-
+	    if (file.getOriginalFilename().contains("/")) {
 		redirectAttributes.addFlashAttribute("errorMessage",
-		        String.format(
-		                "There was an issue uploading %s, please try again",
-		                file.getOriginalFilename()));
+		        "Folder seperators not allowed");
 		return "redirect:/upload";
-	    } catch (ParseException pe) {
-		log.error(
-		        String.format(
-		                "Exception parsing date from file: %s using format: %s",
-		                file.getOriginalFilename(), dateFormatString),
-		        pe);
+	    }
 
+	    if (!file.isEmpty()) {
+		try {
+		    InputFileMetaData metaData = parseFileMetaData(file);
+		} catch (IOException ioe) {
+		    log.error(String.format(
+		            "Exception getting byte array from file: %s",
+		            file.getOriginalFilename()), ioe);
+
+		    redirectAttributes.addFlashAttribute("errorMessage",
+		            String.format(
+		                    "There was an issue uploading %s, please try again",
+		                    file.getOriginalFilename()));
+		    return "redirect:/upload";
+		} catch (ParseException pe) {
+		    log.error(String.format(
+		            "Exception parsing date from file: %s using format: %s",
+		            file.getOriginalFilename(), dateFormatString), pe);
+
+		    redirectAttributes.addFlashAttribute("errorMessage",
+		            String.format(
+		                    "Date format is not in correct format",
+		                    file.getOriginalFilename()));
+		    return "redirect:/upload";
+		}
+	    } else {
+		log.debug("File {} is empty", file.getOriginalFilename());
 		redirectAttributes.addFlashAttribute("errorMessage",
-		        String.format("Date format is not in correct format",
+		        String.format("File %s is empty",
 		                file.getOriginalFilename()));
 		return "redirect:/upload";
 	    }
 	} else {
-	    log.debug("File {} is empty", file.getOriginalFilename());
-	    redirectAttributes.addFlashAttribute("errorMessage", String
-	            .format("File %s is empty", file.getOriginalFilename()));
+	    log.debug("There is a batch job already running");
+	    redirectAttributes.addFlashAttribute("errorMessage",
+	            "System is already processing a file. Please wait");
 	    return "redirect:/upload";
 	}
 

@@ -26,7 +26,7 @@ public class InputFileMetaData extends EntitySupport {
     }
 
     public enum Status {
-	READY, WAITING, ERROR
+	READY, WAITING, PROCESSED, NOT_READY
     }
 
     @Id
@@ -100,7 +100,7 @@ public class InputFileMetaData extends EntitySupport {
 	return status;
     }
 
-    public void setComplete(Status status) {
+    public void setStatus(Status status) {
 	this.status = status;
     }
 

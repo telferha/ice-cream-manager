@@ -1,17 +1,17 @@
+/**
+ * 
+ */
 package io.github.pbremer.icecreammanager.validator;
 
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import io.github.pbremer.icecreammanager.entity.InputFileMetaData;
+import io.github.pbremer.icecreammanager.flatfilecontents.DriverFlatFileContainer;
 
 /**
- * Validator to validate the contents of an {@link InputFileMetaData} object
- * 
  * @author Patrick Bremer
  */
-public class InputFileMetaDataDataValidator implements Validator {
+public class DriverValidator implements Validator {
 
     /*
      * (non-Javadoc)
@@ -19,7 +19,7 @@ public class InputFileMetaDataDataValidator implements Validator {
      */
     @Override
     public boolean supports(Class<?> clazz) {
-	return clazz.isInstance(InputFileMetaData.class);
+	return clazz.isInstance(DriverFlatFileContainer.class);
     }
 
     /*
@@ -28,8 +28,9 @@ public class InputFileMetaDataDataValidator implements Validator {
      * org.springframework.validation.Errors)
      */
     @Override
-    public void validate(Object arg, Errors errors) {
-	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "", "", "");
+    public void validate(Object target, Errors errors) {
+	DriverFlatFileContainer arg = (DriverFlatFileContainer) target;
+
     }
 
 }

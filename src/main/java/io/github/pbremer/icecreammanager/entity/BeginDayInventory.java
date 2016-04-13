@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package io.github.pbremer.icecreammanager.entity;
 
 import javax.persistence.Column;
@@ -6,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -15,16 +19,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+/**
+ * @author Patrick Bremer
+ */
 @Entity
-@Table(name = "TRUCK_INVENTORY")
+@Table(name = "BEGIN_DAY_INVENTORY", uniqueConstraints = @UniqueConstraint(
+        columnNames = { "DAY", "TRUCK_INSTANCE_ID", "ICE_CREAM_INSTANCE_ID" }))
 @JsonInclude(Include.NON_EMPTY)
-public class TruckInventory extends Inventory {
+public class BeginDayInventory extends SellableInventory {
 
-    private static final long serialVersionUID = 1155957628079417625L;
+    private static final long serialVersionUID = -8037936350364293480L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "TRUCK_INVENTORY_ID")
+    @Column(name = "BEGIN_DAY_INVENTORY_ID")
     private long id;
 
     public long getId() {
@@ -47,5 +55,4 @@ public class TruckInventory extends Inventory {
     public boolean equals(Object obj) {
 	return EqualsBuilder.reflectionEquals(this, obj, false);
     }
-
 }
