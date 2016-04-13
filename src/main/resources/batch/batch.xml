@@ -605,21 +605,55 @@
 			</bean>
 		</property>
 	</bean>
-<!-- 
+	<!-- <batch:job id="processInputFiles"> <batch:step id="verifyFile"> <batch:tasklet 
+		throttle-limit="1"> <batch:chunk reader="" processor="" writer="" /> </batch:tasklet> 
+		<batch:next on="COMPLETED" to="parseInputFile" /> <batch:fail on="*" /> </batch:step> 
+		<batch:step id="parseInputFile"> <batch:tasklet throttle-limit="1"> <batch:chunk 
+		reader="parseInputFileReader" processor="" writer="" /> </batch:tasklet> 
+		</batch:step> </batch:job> -->
+	<bean id="cityConverterProcessor"
+		class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+		<property name="converter">
+			<bean class="io.github.pbremer.icecreammanager.convert.CityConverter" />
+		</property>
+	</bean>
+
+	<bean id="cityWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="cityRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+
+	<bean id="itemWriter"
+		class="io.github.pbremer.icecreammanager.batch.FileNameMatchingCompositeItemWriter"
+		scope="step">
+		<property name="delegates">
+			<map>
+				<entry key="${inputfile.city.filename}" value-ref="cityWriter" />
+				<!-- <entry key="${inputfile.route.filename}" value-ref="routeItemReader" 
+					/> <entry key="${inputfile.truck.filename}" value-ref="truckItemReader" /> 
+					<entry key="${inputfile.truckroute.filename}" value-ref="truckRouteItemReader" 
+					/> <entry key="${inputfile.loadtruck.filename}" value-ref="loadTruckItemReader" 
+					/> <entry key="${inputfile.trucksales.filename}" value-ref="truckSalesItemReader" 
+					/> <entry key="${inputfile.inventory.filename}" value-ref="inventoryItemReader" 
+					/> <entry key="${inputfile.driver.filename}" value-ref="driverItemReader" 
+					/> <entry key="${inputfile.routeprice.filename}" value-ref="routePriceItemReader" 
+					/> <entry key="${inputfile.costs.filename}" value-ref="costsItemReader" /> 
+					<entry key="${inputfile.drivertruck.filename}" value-ref="driverTruckItemReader" 
+					/> -->
+			</map>
+		</property>
+	</bean>
+
 	<batch:job id="processInputFiles">
-		<batch:step id="verifyFile">
-			<batch:tasklet throttle-limit="1">
-				<batch:chunk reader="" processor="" writer="" />
-			</batch:tasklet>
-			<batch:next on="COMPLETED" to="parseInputFile" />
-			<batch:fail on="*" />
-		</batch:step>
 		<batch:step id="parseInputFile">
 			<batch:tasklet throttle-limit="1">
-				<batch:chunk reader="parseInputFileReader" processor=""
-					writer="" />
+				<batch:chunk commit-interval="10" reader="parseInputFileReader"
+					processor="cityConverterProcessor" writer="itemWriter" />
+				<batch:listeners>
+					<batch:listener ref="parseInputFileReader" />
+				</batch:listeners>
 			</batch:tasklet>
 		</batch:step>
 	</batch:job>
- -->
 </beans>

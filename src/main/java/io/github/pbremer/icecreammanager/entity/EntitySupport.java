@@ -10,7 +10,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -34,9 +33,9 @@ public abstract class EntitySupport implements Serializable {
     @LastModifiedDate
     private Date lastModifiedDate;
 
-    @Version
-    @Column(name = "VERSION")
-    private int version;
+    // @Version
+    // @Column(name = "VERSION")
+    // private int version;
 
     public Date getCreatedDate() {
 	return createdDate;
@@ -54,9 +53,9 @@ public abstract class EntitySupport implements Serializable {
 	this.lastModifiedDate = lastModifiedDate;
     }
 
-    public int getVersion() {
-	return version;
-    }
+    /*
+     * public int getVersion() { return version; }
+     */
 
     @Override
     public String toString() {
