@@ -4,60 +4,66 @@
 package io.github.pbremer.icecreammanager.batch;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
+import io.github.pbremer.icecreammanager.flatfilecontents.AbstractFlatFileContainer;
+
 /**
  * @author Patrick Bremer
  */
-public class FileNameMatchingCompositeItemWriter
-        implements ItemWriter<Serializable>, InitializingBean {
+public class FileNameMatchingCompositeItemProcessor
+        implements ItemProcessor<AbstractFlatFileContainer, Serializable>,
+        InitializingBean {
 
-    private static final Logger log =
-            LoggerFactory.getLogger(FileNameMatchingCompositeItemWriter.class);
+    private static final Logger log = LoggerFactory
+            .getLogger(FileNameMatchingCompositeItemProcessor.class);
 
-    private Map<String, ItemWriter<Serializable>> delegates;
+    private Map<String, ItemProcessor<AbstractFlatFileContainer, Serializable>> delegates;
     @Value("#{jobParameters['input.file.name']}")
     private String filePath;
 
-    private ItemWriter<Serializable> writer = null;
+    private ItemProcessor<AbstractFlatFileContainer, Serializable> processor =
+            null;
 
     /*
      * (non-Javadoc)
-     * @see org.springframework.batch.item.ItemWriter#write(java.util.List)
+     * @see
+     * org.springframework.batch.item.ItemProcessor#process(java.lang.Object)
      */
     @Override
-    public void write(List<? extends Serializable> items) throws Exception {
+    public Serializable process(AbstractFlatFileContainer item)
+            throws Exception {
 
-	if (null == writer) {
+	if (null == processor) {
 	    for (String fileName : delegates.keySet()) {
-
 		if (fileName.equalsIgnoreCase(
 		        FileUtils.getFile(filePath).getName())) {
 		    log.debug("Found delegate for: {}", fileName);
-		    writer = delegates.get(fileName);
+		    processor = delegates.get(fileName);
 		    break;
 		}
 	    }
 	}
 
-	Assert.notNull(writer, "Could not find delegate to write "
+	Assert.notNull(processor, "Could not find delegate to process "
 	        + FileUtils.getFile(filePath).getName());
-	writer.write(items);
+
+	return processor.process(item);
     }
 
     /**
      * @return the delegates
      */
-    public Map<String, ItemWriter<Serializable>> getDelegates() {
+    public Map<String, ItemProcessor<AbstractFlatFileContainer, Serializable>>
+            getDelegates() {
 	return delegates;
     }
 
@@ -65,7 +71,8 @@ public class FileNameMatchingCompositeItemWriter
      * @param delegates
      *            the delegates to set
      */
-    public void setDelegates(Map<String, ItemWriter<Serializable>> delegates) {
+    public void setDelegates(
+            Map<String, ItemProcessor<AbstractFlatFileContainer, Serializable>> delegates) {
 	this.delegates = delegates;
     }
 
@@ -77,7 +84,7 @@ public class FileNameMatchingCompositeItemWriter
     @Override
     public void afterPropertiesSet() throws Exception {
 	Assert.notEmpty(delegates, "Delegates must not be empty");
-	Assert.notNull(filePath, "Filepath must be set");
+	Assert.notNull(filePath, "File path must be set");
     }
 
 }

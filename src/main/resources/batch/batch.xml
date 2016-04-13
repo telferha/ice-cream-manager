@@ -611,10 +611,85 @@
 		<batch:step id="parseInputFile"> <batch:tasklet throttle-limit="1"> <batch:chunk 
 		reader="parseInputFileReader" processor="" writer="" /> </batch:tasklet> 
 		</batch:step> </batch:job> -->
-	<bean id="cityConverterProcessor"
-		class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
-		<property name="converter">
-			<bean class="io.github.pbremer.icecreammanager.convert.CityConverter" />
+
+	<bean id="cityProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="step">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean class="io.github.pbremer.icecreammanager.convert.CityConverter" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="routeProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="step">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean class="io.github.pbremer.icecreammanager.convert.RouteConverter" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="truckProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="step">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean class="io.github.pbremer.icecreammanager.convert.TruckConverter" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="inventoryProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="step">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean
+							class="io.github.pbremer.icecreammanager.convert.WarehouseInventoryConverter" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="itemProcessor"
+		class="io.github.pbremer.icecreammanager.batch.FileNameMatchingCompositeItemProcessor"
+		scope="step">
+		<property name="delegates">
+			<map>
+				<entry key="${inputfile.city.filename}" value-ref="cityProcessor" />
+				<entry key="${inputfile.route.filename}" value-ref="routeProcessor" />
+				<entry key="${inputfile.truck.filename}" value-ref="truckProcessor" />
+				<entry key="${inputfile.inventory.filename}" value-ref="inventoryProcessor" /> <!-- <entry key="${inputfile.truckroute.filename}" value-ref="truckRouteItemReader" 
+					/> <entry key="${inputfile.loadtruck.filename}" value-ref="loadTruckItemReader" 
+					/> <entry key="${inputfile.trucksales.filename}" value-ref="truckSalesItemReader" 
+					/> <entry key="${inputfile.driver.filename}" value-ref="driverItemReader" 
+					/> <entry key="${inputfile.routeprice.filename}" value-ref="routePriceItemReader" 
+					/> <entry key="${inputfile.costs.filename}" value-ref="costsItemReader" /> 
+					<entry key="${inputfile.drivertruck.filename}" value-ref="driverTruckItemReader" 
+					/> -->
+			</map>
 		</property>
 	</bean>
 
@@ -624,18 +699,36 @@
 		<property name="methodName" value="save" />
 	</bean>
 
+	<bean id="routeWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="routeRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+
+	<bean id="truckWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="truckRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+
+	<bean id="inventoryWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="warehouseRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+
 	<bean id="itemWriter"
 		class="io.github.pbremer.icecreammanager.batch.FileNameMatchingCompositeItemWriter"
 		scope="step">
 		<property name="delegates">
 			<map>
 				<entry key="${inputfile.city.filename}" value-ref="cityWriter" />
-				<!-- <entry key="${inputfile.route.filename}" value-ref="routeItemReader" 
-					/> <entry key="${inputfile.truck.filename}" value-ref="truckItemReader" /> 
+				<entry key="${inputfile.route.filename}" value-ref="routeWriter" />
+				<entry key="${inputfile.truck.filename}" value-ref="truckWriter" />
+				<entry key="${inputfile.inventory.filename}" value-ref="inventoryWriter" /><!-- 
 					<entry key="${inputfile.truckroute.filename}" value-ref="truckRouteItemReader" 
 					/> <entry key="${inputfile.loadtruck.filename}" value-ref="loadTruckItemReader" 
 					/> <entry key="${inputfile.trucksales.filename}" value-ref="truckSalesItemReader" 
-					/> <entry key="${inputfile.inventory.filename}" value-ref="inventoryItemReader" 
 					/> <entry key="${inputfile.driver.filename}" value-ref="driverItemReader" 
 					/> <entry key="${inputfile.routeprice.filename}" value-ref="routePriceItemReader" 
 					/> <entry key="${inputfile.costs.filename}" value-ref="costsItemReader" /> 
@@ -649,7 +742,7 @@
 		<batch:step id="parseInputFile">
 			<batch:tasklet throttle-limit="1">
 				<batch:chunk commit-interval="10" reader="parseInputFileReader"
-					processor="cityConverterProcessor" writer="itemWriter" />
+					processor="itemProcessor" writer="itemWriter" />
 				<batch:listeners>
 					<batch:listener ref="parseInputFileReader" />
 				</batch:listeners>

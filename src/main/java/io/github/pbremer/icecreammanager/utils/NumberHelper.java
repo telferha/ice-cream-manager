@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 /**
  * @author Patrick Bremer
  */
-public class StringHelper {
+public class NumberHelper {
 
     /**
      * Converts the string value of pennies to the string values of dollars. If
@@ -38,8 +38,7 @@ public class StringHelper {
      * @throws NumberFormatException
      *             if the string cannot be parsed into an integer
      */
-    public static String convertPenniesStringToDecimalString(String pennies) {
-	return String.format("%.2f",
-	        new BigDecimal(pennies).movePointLeft(2).doubleValue());
+    public static BigDecimal convertPenniesStringToDecimal(String pennies) {
+	return new BigDecimal(pennies).movePointLeft(2);
     }
 }

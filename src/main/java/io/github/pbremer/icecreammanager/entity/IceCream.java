@@ -29,12 +29,30 @@ public class IceCream extends ActivatableEntitySupport {
     @Column(name = "ICE_CREAM_NAME", updatable = false)
     private String iceCreamName;
 
+    @Column(name = "DESCRIPTION")
+    private String description;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,
             mappedBy = "iceCream")
     private List<IceCreamInstance> iceCreamInstances;
 
     @Column(name = "CURRENT_SUPPLIER_PRICE")
     private BigDecimal currentSupplierPrice;
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+	return description;
+    }
+
+    /**
+     * @param description
+     *            the description to set
+     */
+    public void setDescription(String description) {
+	this.description = description;
+    }
 
     public String getIceCreamName() {
 	return iceCreamName;
