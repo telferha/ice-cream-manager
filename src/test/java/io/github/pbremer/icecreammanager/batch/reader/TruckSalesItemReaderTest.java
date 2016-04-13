@@ -9,22 +9,19 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.runner.RunWith;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * @author Patrick Bremer
  */
-@ContextConfiguration(locations = { "classpath:batch/batch.xml",
-        "classpath:test-batch-configuration.xml" })
-@RunWith(SpringJUnit4ClassRunner.class)
+// @ContextConfiguration(locations = { "classpath:batch/batch.xml",
+// "classpath:test-batch-configuration.xml" })
+// @RunWith(SpringJUnit4ClassRunner.class)
 public class TruckSalesItemReaderTest {
 
     @Autowired
