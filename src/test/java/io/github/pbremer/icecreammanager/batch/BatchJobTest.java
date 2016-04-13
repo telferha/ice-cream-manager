@@ -43,7 +43,8 @@ import io.github.pbremer.icecreammanager.service.ZoneService;
         "spring.datasource.url = jdbc:h2:~/local;DB_CLOSE_ON_EXIT=FALSE" })
 public class BatchJobTest {
 
-    private static final Logger log = LoggerFactory.getLogger(BatchJobIT.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(BatchJobTest.class);
 
     @Autowired
     private JobLauncher launcher;
