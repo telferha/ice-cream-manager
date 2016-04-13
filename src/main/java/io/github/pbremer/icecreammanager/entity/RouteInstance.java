@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,14 +41,14 @@ public class RouteInstance extends InstanceEntitySupport {
     @Column(name = "ROUTE_INSTANCE_ID")
     private long routeInstanceId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ROUTE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "routeId")
     @JsonIdentityReference(alwaysAsId = true)
     private Route route;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "ROUTE_ZONES",
             joinColumns = @JoinColumn(name = "ROUTE_INSTANCE_ID"),
             inverseJoinColumns = @JoinColumn(name = "ZONE_NAME"))
@@ -55,7 +56,7 @@ public class RouteInstance extends InstanceEntitySupport {
             "lastModifiedDate" })
     private List<Zone> zones;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "truckInstanceId")

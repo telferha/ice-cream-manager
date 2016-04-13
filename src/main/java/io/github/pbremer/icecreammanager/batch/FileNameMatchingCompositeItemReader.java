@@ -5,7 +5,6 @@ package io.github.pbremer.icecreammanager.batch;
 
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
@@ -36,6 +35,8 @@ public class FileNameMatchingCompositeItemReader
     private Resource resource;
     private ExecutionContext executionContext;
 
+    private ItemReader<AbstractFlatFileContainer> reader = null;
+
     /*
      * (non-Javadoc)
      * @see org.springframework.batch.item.ItemReader#read()
@@ -45,22 +46,27 @@ public class FileNameMatchingCompositeItemReader
             throws Exception, UnexpectedInputException, ParseException,
             NonTransientResourceException {
 
+	Assert.notNull(executionContext,
+	        "Execution context must be set before read");
+
 	Assert.isTrue(resource.isReadable(),
 	        resource.getDescription() + " must be readable.");
 
-	for (String fileName : delegates.keySet()) {
-	    log.debug("Trying: {}", fileName);
-	    if (fileName.equalsIgnoreCase(resource.getFilename())) {
-		((ItemStream) delegates
-		        .get(FileUtils.getFile(fileName).getName()))
-		                .open(executionContext);
-		return delegates.get(FileUtils.getFile(fileName).getName())
-		        .read();
+	if (reader == null) {
+	    for (String fileName : delegates.keySet()) {
+		if (fileName.equalsIgnoreCase(resource.getFilename())) {
+		    log.debug("Found delegate for: {}", fileName);
+		    reader = delegates.get(fileName);
+		    break;
+		}
 	    }
 	}
 
-	throw new IllegalArgumentException("Could not find delegate to handle "
-	        + FileUtils.getFile(resource.getFilename()).getName());
+	Assert.notNull(reader, "Could not find delegate to read "
+	        + resource.getFile().getName());
+
+	((ItemStream) reader).open(executionContext);
+	return reader.read();
 
     }
 

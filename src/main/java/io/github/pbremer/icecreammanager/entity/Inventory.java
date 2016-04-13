@@ -2,6 +2,7 @@ package io.github.pbremer.icecreammanager.entity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
@@ -16,7 +17,7 @@ public abstract class Inventory extends InstanceEntitySupport {
 
     private static final long serialVersionUID = 1440448106184050947L;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "ICE_CREAM_INSTANCE_ID")
     private IceCreamInstance iceCreamInstance;
 

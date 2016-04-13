@@ -30,6 +30,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import io.github.pbremer.icecreammanager.Application;
 import io.github.pbremer.icecreammanager.service.CityService;
+import io.github.pbremer.icecreammanager.service.RouteService;
+import io.github.pbremer.icecreammanager.service.TruckService;
+import io.github.pbremer.icecreammanager.service.WarehouseInventoryService;
 import io.github.pbremer.icecreammanager.service.ZoneService;
 
 /**
@@ -53,32 +56,83 @@ public class BatchJobTest {
     private Job job;
 
     @Autowired
-    private CityService service;
+    private CityService cityService;
 
     @Autowired
     private ZoneService zoneService;
 
+    @Autowired
+    private RouteService routeService;
+
+    @Autowired
+    private TruckService truckService;
+
+    @Autowired
+    private WarehouseInventoryService warehouseInventoryService;
+
     @Test
-    public void testCityFlow() throws JobExecutionAlreadyRunningException,
+    public void testJobFlow() throws JobExecutionAlreadyRunningException,
             JobRestartException, JobInstanceAlreadyCompleteException,
             JobParametersInvalidException, IOException {
-
+	log.info("Starting city job");
 	JobExecution jobExecution = launcher.run(job, new JobParametersBuilder()
 	        .addLong("time", System.currentTimeMillis(), true)
 	        .addString("input.file.name",
 	                "classpath:input-files/city/cityUpload.txt", false)
 	        .toJobParameters());
-
+	log.info("Starting city job validation");
 	assertThat("Exit status is not COMEPLETE", jobExecution.getExitStatus(),
 	        equalTo(ExitStatus.COMPLETED));
 	assertThat("City data is not stored",
-	        service.existsAndIsActive("Dearborn"), equalTo(true));
+	        cityService.existsAndIsActive("Dearborn"), equalTo(true));
 	assertThat("Zone data is not stored",
 	        zoneService.existsAndIsActive("Dearborn 1"), equalTo(true));
 	assertThat("Zone data is not stored",
 	        zoneService.existsAndIsActive("Dearborn 2"), equalTo(true));
 	assertThat("Zone data is not stored",
 	        zoneService.existsAndIsActive("Dearborn 3"), equalTo(true));
+
+	log.info("Starting route job");
+	jobExecution = launcher.run(job, new JobParametersBuilder()
+	        .addLong("time", System.currentTimeMillis(), true)
+	        .addString("input.file.name",
+	                "classpath:input-files/route/routeUpload.txt", false)
+	        .toJobParameters());
+	log.info("Starting route job validation");
+	assertThat("Exit status is not COMEPLETE", jobExecution.getExitStatus(),
+	        equalTo(ExitStatus.COMPLETED));
+	assertThat("Route data is not stored",
+	        routeService.existsAndIsActive("0001"), equalTo(true));
+
+	log.info("Starting truck job");
+	jobExecution = launcher.run(job, new JobParametersBuilder()
+	        .addLong("time", System.currentTimeMillis(), true)
+	        .addString("input.file.name",
+	                "classpath:input-files/truck/truckUpload.txt", false)
+	        .toJobParameters());
+	log.info("Starting truck job validation");
+	assertThat("Exit status is not COMEPLETE", jobExecution.getExitStatus(),
+	        equalTo(ExitStatus.COMPLETED));
+	assertThat("Truck data is not stored",
+	        truckService.existsAndIsActive("0001"), equalTo(true));
+	assertThat("Truck data is not stored",
+	        truckService.existsAndIsActive("0010"), equalTo(true));
+	assertThat("Truck data is not stored",
+	        truckService.existsAndIsActive("0110"), equalTo(true));
+
+	log.info("Starting warehouse inventory job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis(), true)
+	                .addString("input.file.name",
+	                        "classpath:input-files/inventory/dailyInventory.txt",
+	                        false)
+	                .toJobParameters());
+	log.info("Starting warehouse inventory job validation");
+	assertThat("Exit status is not COMEPLETE", jobExecution.getExitStatus(),
+	        equalTo(ExitStatus.COMPLETED));
+	assertThat("Warehouse inventory data is not stored",
+	        warehouseInventoryService.findAll().size(), equalTo(1));
     }
 
 }

@@ -3,6 +3,7 @@
  */
 package io.github.pbremer.icecreammanager.entity;
 
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -24,7 +25,7 @@ public abstract class SellableInventory extends Inventory {
 
     private static final long serialVersionUID = 227387652797682003L;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "truckInstanceId")
