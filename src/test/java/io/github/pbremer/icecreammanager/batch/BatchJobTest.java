@@ -41,7 +41,7 @@ import io.github.pbremer.icecreammanager.service.ZoneService;
 @ActiveProfiles("local")
 @TestPropertySource(properties = {
         "spring.datasource.url = jdbc:h2:~/local;DB_CLOSE_ON_EXIT=FALSE" })
-public class BatchJobIT {
+public class BatchJobTest {
 
     private static final Logger log = LoggerFactory.getLogger(BatchJobIT.class);
 
