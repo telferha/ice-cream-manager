@@ -47,8 +47,8 @@ public class RouteValidator implements Validator {
 		errors.reject("route.actioncode.delete",
 		        "Action code 'D' must not have any zones listed");
 	    } else if (!routeService.existsAndIsActive(arg.getRouteNumber())) {
-		errors.reject("route.routenumber.dne",
-		        "Route number does not exist");
+		errors.reject("route.routenumber.dne", String.format(
+		        "Route \"%s\" already exists", arg.getRouteNumber()));
 	    }
 	} else {
 	    if (arg.getCityLabel().isEmpty()) {
@@ -56,17 +56,17 @@ public class RouteValidator implements Validator {
 		        "Action code 'A' or 'C' must not have at least one zone listed");
 	    } else if ("A".equalsIgnoreCase(arg.getActionCode())
 	            && !routeService.existsAndIsActive(arg.getRouteNumber())) {
-		errors.reject("route.actioncode.add.dne",
-		        "Route does not exist");
+		errors.reject("route.actioncode.add.dne", String.format(
+		        "Route \"%s\" does not exist", arg.getRouteNumber()));
 	    } else if ("C".equalsIgnoreCase(arg.getActionCode())
 	            && routeService.existsAndIsActive(arg.getRouteNumber())) {
-		errors.reject("route.actioncode.add.dne",
-		        "Route does not exist");
+		errors.reject("route.routenumber.dne", String.format(
+		        "Route \"%s\" already exists", arg.getRouteNumber()));
 	    } else {
 		for (String zone : arg.getCityLabel()) {
 		    if (!zoneService.existsAndIsActive(zone)) {
 			errors.reject("route.citylabel.dne", String.format(
-			        "City label: \"%s\" does not exist", zone));
+			        "City label \"%s\" does not exist", zone));
 			break;
 		    }
 		}
