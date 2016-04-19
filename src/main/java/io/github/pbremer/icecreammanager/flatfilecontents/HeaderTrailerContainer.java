@@ -19,11 +19,7 @@ public class HeaderTrailerContainer {
     private int sequenceNumber;
     private Date day;
     private int footerNumber;
-    private AtomicInteger actualCount;
-
-    public HeaderTrailerContainer() {
-	actualCount = new AtomicInteger();
-    }
+    private AtomicInteger actualCount = new AtomicInteger();
 
     /**
      * @return the sequenceNumber

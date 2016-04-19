@@ -34,8 +34,8 @@ public class RouteConverter
 	Route route = new Route();
 	route.setRouteId(source.getRouteNumber());
 	route.setActive(!"D".equalsIgnoreCase(source.getActionCode()));
-	List<Zone> zones = new ArrayList<Zone>();
 	if (route.isActive()) {
+	    List<Zone> zones = new ArrayList<Zone>();
 	    for (String zoneNum : source.getCityLabel()) {
 		Zone zone = service.getOne(zoneNum);
 		zones.add(zone);

@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.listener.StepListenerSupport;
 import org.springframework.batch.item.ExecutionContext;
@@ -56,12 +57,11 @@ public class ParseInputFileListener
 	for (ObjectError err : ex.getBindingResult().getAllErrors()) {
 	    buffer.append(err.getDefaultMessage()).append("\n");
 	}
-	executionContext
-	        .put("error.msg",
-	                String.format("%s\n%s",
-	                        executionContext.getString("error.msg",
-	                                "***** ERROR LOG *****"),
-	                        buffer.toString()));
+	executionContext.put("error.msg",
+	        String.format("%s\n%s",
+	                executionContext.getString("error.msg",
+	                        "***** PARSING ERROR LOG *****"),
+	                buffer.toString()));
 
     }
 
@@ -79,7 +79,7 @@ public class ParseInputFileListener
 	executionContext.put("error.msg",
 	        String.format("%s\n%s",
 	                executionContext.getString("error.msg",
-	                        "***** ERROR LOG *****"),
+	                        "***** PARSING ERROR LOG *****"),
 	                ExceptionUtils.getRootCauseMessage(t)));
     }
 
@@ -119,6 +119,18 @@ public class ParseInputFileListener
 	super.onWriteError(exception, items);
 	logger.error("Error writing {}\n{}", items.toString(),
 	        ExceptionUtils.getStackTrace(exception));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.springframework.batch.core.listener.StepListenerSupport#afterStep(org
+     * .springframework.batch.core.StepExecution)
+     */
+    @Override
+    public ExitStatus afterStep(StepExecution stepExecution) {
+	return stepExecution.getExitStatus().addExitDescription(executionContext
+	        .getString("error.msg", "***** PARSING ERROR LOG *****\nNone"));
     }
 
 }

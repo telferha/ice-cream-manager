@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.pbremer.icecreammanager.entity.BeginDayInventory;
 import io.github.pbremer.icecreammanager.entity.IceCream;
 import io.github.pbremer.icecreammanager.entity.IceCreamInstance;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author Patrick Bremer
@@ -38,13 +35,9 @@ public class TruckController {
 	return truckIds;
     }
 
-    @ApiOperation(value = "getTruckInventory", nickname = "getTruckInventory")
     @RequestMapping(path = "/getTruckInventory/{truckId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "truckId", value = "The truck's ID",
-                    required = true, dataType = "string", paramType = "path") })
     public @ResponseBody List<BeginDayInventory>
             getTruckInventory(@PathVariable("truckId") String truckId) {
 	List<BeginDayInventory> inventory = new ArrayList<BeginDayInventory>();
