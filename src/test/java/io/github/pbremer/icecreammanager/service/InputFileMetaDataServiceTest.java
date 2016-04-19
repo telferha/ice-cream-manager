@@ -41,6 +41,7 @@ import io.github.pbremer.icecreammanager.testconfig.TestEntityConfiguration;
 @Transactional
 public class InputFileMetaDataServiceTest {
 
+    @SuppressWarnings("unused")
     private static final Logger log =
             LoggerFactory.getLogger(InputFileMetaDataServiceTest.class);
 

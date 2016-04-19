@@ -3,6 +3,7 @@
  */
 package io.github.pbremer.icecreammanager.flatfilecontents;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -18,6 +19,11 @@ public class TruckSalesFlatFileContainer extends AbstractFlatFileContainer {
     private String truckNumber;
     private List<TruckSalesFlatFileContainer.EndOfDayInventoryFlatFileContainer> endOfDayInventory;
     private String inventoryRowNumber;
+
+    public TruckSalesFlatFileContainer() {
+	endOfDayInventory =
+	        new ArrayList<TruckSalesFlatFileContainer.EndOfDayInventoryFlatFileContainer>();
+    }
 
     /**
      * @return the truckNumber
@@ -46,9 +52,8 @@ public class TruckSalesFlatFileContainer extends AbstractFlatFileContainer {
      * @param endOfDayInventory
      *            the endOfDayInventory to set
      */
-    public void setEndOfDayInventory(
-            List<TruckSalesFlatFileContainer.EndOfDayInventoryFlatFileContainer> endOfDayInventory) {
-	this.endOfDayInventory = endOfDayInventory;
+    public void addInventory(EndOfDayInventoryFlatFileContainer inventory) {
+	endOfDayInventory.add(inventory);
     }
 
     /**
@@ -64,16 +69,6 @@ public class TruckSalesFlatFileContainer extends AbstractFlatFileContainer {
      */
     public void setInventoryRowNumber(String inventoryRowNumber) {
 	this.inventoryRowNumber = inventoryRowNumber;
-    }
-
-    @Override
-    public boolean containsValueInErrorColumn() {
-	boolean containsValueInErrorColumn = false;
-	for (TruckSalesFlatFileContainer.EndOfDayInventoryFlatFileContainer endOfDayInventory : this.endOfDayInventory) {
-	    containsValueInErrorColumn = containsValueInErrorColumn
-	            || endOfDayInventory.containsValueInErrorColumn();
-	}
-	return super.containsValueInErrorColumn();
     }
 
     @Override

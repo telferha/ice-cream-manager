@@ -1,7 +1,6 @@
 package io.github.pbremer.icecreammanager.entity;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -29,9 +26,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "DRIVER_INSTANCE", uniqueConstraints = @UniqueConstraint(
-        columnNames = { "DRIVER_DAY", "DRIVER_ID" }))
+        columnNames = { "DAY", "DRIVER_ID" }))
 @JsonInclude(Include.NON_EMPTY)
-public class DriverInstance extends EntitySupport {
+public class DriverInstance extends InstanceEntitySupport {
 
     private static final long serialVersionUID = -5196627091470377041L;
 
@@ -39,10 +36,6 @@ public class DriverInstance extends EntitySupport {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "DRIVER_INSTANCE_ID")
     private long driverInstanceId;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "DRIVER_DAY")
-    private Date driverDay;
 
     @OneToOne
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
@@ -61,16 +54,11 @@ public class DriverInstance extends EntitySupport {
     @Column(name = "HOURS")
     private BigDecimal hours;
 
+    @Column(name = "WAGE")
+    private BigDecimal wage;
+
     public long getDriverInstanceId() {
 	return driverInstanceId;
-    }
-
-    public Date getDriverDay() {
-	return driverDay;
-    }
-
-    public void setDriverDay(Date driverDay) {
-	this.driverDay = driverDay;
     }
 
     public TruckInstance getTruckInstance() {
@@ -95,6 +83,21 @@ public class DriverInstance extends EntitySupport {
 
     public void setHours(BigDecimal hours) {
 	this.hours = hours;
+    }
+
+    /**
+     * @return the wage
+     */
+    public BigDecimal getWage() {
+	return wage;
+    }
+
+    /**
+     * @param wage
+     *            the wage to set
+     */
+    public void setWage(BigDecimal wage) {
+	this.wage = wage;
     }
 
     @Override

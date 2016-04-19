@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -29,7 +30,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Table(name = "ZONE", uniqueConstraints = @UniqueConstraint(
         columnNames = { "CITY_NAME", "ZONE_NAME" }))
 @JsonInclude(Include.NON_EMPTY)
-public class Zone extends EntitySupport {
+public class Zone extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = 1497610113204826980L;
 
@@ -37,7 +38,7 @@ public class Zone extends EntitySupport {
     @Column(name = "ZONE_NAME", updatable = false)
     private String zoneName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CITY_NAME")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "cityName")
