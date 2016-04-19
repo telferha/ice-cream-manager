@@ -3,7 +3,6 @@
  */
 package io.github.pbremer.icecreammanager.service;
 
-import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.apache.commons.lang3.RandomUtils.nextBytes;
 import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -60,7 +59,6 @@ public class InputFileMetaDataServiceTest {
 	InputFileMetaData data = new InputFileMetaData();
 	for (InputFileMetaData.FileType fileType : fileTypes) {
 	    data.setFileType(fileType);
-	    data.setFileName(random(20));
 	    data.setContents(nextBytes(nextInt(10, 20)));
 	    data.setStatus(statuses.get(0));
 	    service.save(data);
@@ -81,7 +79,6 @@ public class InputFileMetaDataServiceTest {
     public void batchUpdateTest() throws InterruptedException {
 	InputFileMetaData data = new InputFileMetaData();
 	data.setFileType(fileTypes.get(0));
-	data.setFileName("Updated");
 	data.setStatus(statuses.get(0));
 	service.save(data);
 	/*
@@ -90,8 +87,6 @@ public class InputFileMetaDataServiceTest {
 	 */
 	assertThat(data.getFileType(),
 	        equalTo(service.getOne(fileTypes.get(0)).getFileType()));
-	assertThat(data.getFileName(),
-	        equalTo(service.getOne(fileTypes.get(0)).getFileName()));
 	assertThat(fileTypes.get(0),
 	        equalTo(service.getMostRecentInputFileByStatus(statuses.get(0))
 	                .getFileType()));

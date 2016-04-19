@@ -7,7 +7,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.EnumSet;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -29,6 +32,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import io.github.pbremer.icecreammanager.Application;
+import io.github.pbremer.icecreammanager.entity.InputFileMetaData;
+import io.github.pbremer.icecreammanager.entity.InputFileMetaData.FileType;
+import io.github.pbremer.icecreammanager.entity.InputFileMetaData.Status;
+import io.github.pbremer.icecreammanager.repository.InputFileMetaDataRepository;
 import io.github.pbremer.icecreammanager.service.CityService;
 import io.github.pbremer.icecreammanager.service.RouteService;
 import io.github.pbremer.icecreammanager.service.TruckService;
@@ -56,6 +63,9 @@ public class BatchJobTest {
     private Job job;
 
     @Autowired
+    private InputFileMetaDataRepository inputFileMetaDataRepository;
+
+    @Autowired
     private CityService cityService;
 
     @Autowired
@@ -70,19 +80,36 @@ public class BatchJobTest {
     @Autowired
     private WarehouseInventoryService warehouseInventoryService;
 
+    @Before
+    public void setup() {
+	for (FileType type : EnumSet.allOf(FileType.class)) {
+	    log.debug("Adding {} entry to database", type.getFileName());
+	    InputFileMetaData data = new InputFileMetaData();
+	    data.setDay(new Date(0L));
+	    data.setSequenceNumber(0);
+	    data.setStatus(Status.WAITING);
+	    data.setFileType(type);
+	    inputFileMetaDataRepository.save(data);
+	}
+    }
+
     @Test
     public void testJobFlow() throws JobExecutionAlreadyRunningException,
             JobRestartException, JobInstanceAlreadyCompleteException,
             JobParametersInvalidException, IOException {
 	log.info("Starting city job");
-	JobExecution jobExecution = launcher.run(job, new JobParametersBuilder()
-	        .addLong("time", System.currentTimeMillis(), true)
-	        .addString("input.file.name",
-	                "classpath:input-files/city/cityUpload.txt", false)
-	        .toJobParameters());
+	JobExecution jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/city/cityUpload.txt")
+	                .addString("input.file.countablerow.regex",
+	                        "^(?!T\\s)(?!HD\\s).*")
+	                .toJobParameters());
 	log.info("Starting city job validation");
-	assertThat("Exit status is not COMEPLETE", jobExecution.getExitStatus(),
-	        equalTo(ExitStatus.COMPLETED));
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
 	assertThat("City data is not stored",
 	        cityService.existsAndIsActive("Dearborn"), equalTo(true));
 	assertThat("Zone data is not stored",
@@ -93,26 +120,32 @@ public class BatchJobTest {
 	        zoneService.existsAndIsActive("Dearborn 3"), equalTo(true));
 
 	log.info("Starting route job");
-	jobExecution = launcher.run(job, new JobParametersBuilder()
-	        .addLong("time", System.currentTimeMillis(), true)
-	        .addString("input.file.name",
-	                "classpath:input-files/route/routeUpload.txt", false)
-	        .toJobParameters());
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/route/routeUpload.txt")
+	                .addString("input.file.countablerow.regex", "^[ACD].*")
+	                .toJobParameters());
 	log.info("Starting route job validation");
-	assertThat("Exit status is not COMEPLETE", jobExecution.getExitStatus(),
-	        equalTo(ExitStatus.COMPLETED));
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
 	assertThat("Route data is not stored",
 	        routeService.existsAndIsActive("0001"), equalTo(true));
 
 	log.info("Starting truck job");
-	jobExecution = launcher.run(job, new JobParametersBuilder()
-	        .addLong("time", System.currentTimeMillis(), true)
-	        .addString("input.file.name",
-	                "classpath:input-files/truck/truckUpload.txt", false)
-	        .toJobParameters());
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/truck/truckUpload.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
 	log.info("Starting truck job validation");
-	assertThat("Exit status is not COMEPLETE", jobExecution.getExitStatus(),
-	        equalTo(ExitStatus.COMPLETED));
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
 	assertThat("Truck data is not stored",
 	        truckService.existsAndIsActive("0001"), equalTo(true));
 	assertThat("Truck data is not stored",
@@ -123,14 +156,15 @@ public class BatchJobTest {
 	log.info("Starting warehouse inventory job");
 	jobExecution = launcher.run(job,
 	        new JobParametersBuilder()
-	                .addLong("time", System.currentTimeMillis(), true)
+	                .addLong("time", System.currentTimeMillis())
 	                .addString("input.file.name",
-	                        "classpath:input-files/inventory/dailyInventory.txt",
-	                        false)
+	                        "classpath:input-files/inventory/dailyInventory.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
 	                .toJobParameters());
 	log.info("Starting warehouse inventory job validation");
-	assertThat("Exit status is not COMEPLETE", jobExecution.getExitStatus(),
-	        equalTo(ExitStatus.COMPLETED));
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
 	assertThat("Warehouse inventory data is not stored",
 	        warehouseInventoryService.findAll().size(), equalTo(1));
     }

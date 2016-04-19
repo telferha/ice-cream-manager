@@ -19,7 +19,7 @@ public class TrailerValidator implements Validator {
      */
     @Override
     public boolean supports(Class<?> clazz) {
-	return clazz.isInstance(HeaderTrailerContainer.class);
+	return clazz.isInstance(new HeaderTrailerContainer());
     }
 
     /*

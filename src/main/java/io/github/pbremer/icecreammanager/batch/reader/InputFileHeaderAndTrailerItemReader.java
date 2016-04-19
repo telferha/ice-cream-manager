@@ -3,12 +3,15 @@
  */
 package io.github.pbremer.icecreammanager.batch.reader;
 
+import java.text.SimpleDateFormat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.item.file.transform.FieldSet;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
 import io.github.pbremer.icecreammanager.flatfilecontents.HeaderTrailerContainer;
@@ -25,6 +28,9 @@ public class InputFileHeaderAndTrailerItemReader
     private HeaderTrailerContainer returnContainer;
 
     private String countableRowRegex;
+
+    @Value("${dateFormat}")
+    private String dateFormat;
 
     /*
      * (non-Javadoc)
@@ -45,24 +51,28 @@ public class InputFileHeaderAndTrailerItemReader
 	    String prefix = line.readString(0);
 
 	    if ("HD".equals(prefix)) {
-		log.trace(line.toString());
+		log.debug(line.toString());
 		Assert.isNull(headerTrailerContainer,
 		        "Encountered header record in the middle of the file");
 		headerTrailerContainer = new HeaderTrailerContainer();
 		headerTrailerContainer
 		        .setSequenceNumber(line.readShort("Sequence Number"));
-		headerTrailerContainer.setDay(line.readDate("Date"));
+		headerTrailerContainer
+		        .setDay(line.readDate("Date", dateFormat));
+		log.debug("Date: {}", new SimpleDateFormat(dateFormat)
+		        .format(headerTrailerContainer.getDay()));
 	    } else if ("T".equalsIgnoreCase(prefix)) {
-		log.trace(line.toString());
+		log.debug(line.toString());
 		Assert.notNull(headerTrailerContainer,
 		        "Encountered trailer record before the header record");
 		headerTrailerContainer
 		        .setFooterNumber(line.readInt("Record Count"));
 		returnContainer = headerTrailerContainer;
+		log.debug("Returning: {}", returnContainer.toString());
 		return returnContainer;
 	    } else if (prefix.matches(countableRowRegex)) {
 		headerTrailerContainer.incrimentCount();
-		log.trace("Current actual count: {}",
+		log.debug("Current actual count: {}",
 		        headerTrailerContainer.getActualCount());
 	    }
 

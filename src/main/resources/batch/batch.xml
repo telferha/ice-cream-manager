@@ -6,12 +6,11 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
-	<bean
+<!-- 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location"
 			value="classpath:batch/input-file-descriptor.properties" />
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-	</bean>
+	</bean> -->
 
 	<bean class="org.springframework.batch.core.scope.StepScope" />
 
@@ -38,7 +37,7 @@
 		class="io.github.pbremer.icecreammanager.batch.reader.InputFileHeaderAndTrailerItemReader"
 		scope="step">
 		<property name="countableRowRegex"
-			value="#{jobParameters['input.file.countablerow.regex]}" />
+			value="#{jobParameters['input.file.countablerow.regex']}" />
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
@@ -57,8 +56,8 @@
 										<entry key="HD*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="names" value="${inputfile.trailer.names}" />
-												<property name="columns" value="${inputfile.trailer.columns}" />
+												<property name="names" value="${inputfile.header.names}" />
+												<property name="columns" value="${inputfile.header.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
@@ -594,24 +593,6 @@
 		</property>
 	</bean>
 
-	<bean id="trailerCountValidator"
-		class="org.springframework.batch.item.validator.ValidatingItemProcessor">
-		<property name="validator">
-			<bean class="org.springframework.batch.item.validator.SpringValidator">
-				<property name="validator">
-					<bean
-						class="io.github.pbremer.icecreammanager.validator.TrailerValidator" />
-				</property>
-			</bean>
-		</property>
-	</bean>
-	<!-- <batch:job id="processInputFiles"> <batch:step id="verifyFile"> <batch:tasklet 
-		throttle-limit="1"> <batch:chunk reader="" processor="" writer="" /> </batch:tasklet> 
-		<batch:next on="COMPLETED" to="parseInputFile" /> <batch:fail on="*" /> </batch:step> 
-		<batch:step id="parseInputFile"> <batch:tasklet throttle-limit="1"> <batch:chunk 
-		reader="parseInputFileReader" processor="" writer="" /> </batch:tasklet> 
-		</batch:step> </batch:job> -->
-
 	<bean id="cityProcessor"
 		class="org.springframework.batch.item.support.CompositeItemProcessor"
 		scope="step">
@@ -738,15 +719,77 @@
 		</property>
 	</bean>
 
+	<bean id="stepExecutionWriter"
+		class="io.github.pbremer.icecreammanager.batch.StepExecutionWriter" />
+
+	<bean id="headerTrailerProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="step">
+		<property name="delegates">
+			<list>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.HeaderValidator">
+									<constructor-arg value="#{jobParameters['input.file.name']}" />
+								</bean>
+							</property>
+						</bean>
+					</property>
+				</bean>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.TrailerValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
 	<batch:job id="processInputFiles">
-		<batch:step id="parseInputFile">
+		<batch:step id="verifyHeaderAndTrailer" next="parseInputFile">
 			<batch:tasklet throttle-limit="1">
-				<batch:chunk commit-interval="10" reader="parseInputFileReader"
-					processor="itemProcessor" writer="itemWriter" />
+				<batch:chunk commit-interval="20"
+					reader="inputFileHeaderAndTrailerItemReader" processor="headerTrailerProcessor"
+					writer="stepExecutionWriter">
+				</batch:chunk>
 				<batch:listeners>
-					<batch:listener ref="parseInputFileReader" />
+					<batch:listener>
+						<bean
+							class="org.springframework.batch.core.listener.ExecutionContextPromotionListener">
+							<property name="keys" value="day" />
+						</bean>
+					</batch:listener>
 				</batch:listeners>
 			</batch:tasklet>
 		</batch:step>
+		<batch:step id="parseInputFile">
+			<batch:tasklet throttle-limit="1">
+				<batch:chunk commit-interval="20" reader="parseInputFileReader"
+					processor="itemProcessor" writer="itemWriter" />
+				<batch:listeners>
+					<batch:listener ref="parseInputFileReader" />
+					<batch:listener>
+						<bean
+							class="io.github.pbremer.icecreammanager.batch.ParseInputFileListener" />
+					</batch:listener>
+				</batch:listeners>
+			</batch:tasklet>
+		</batch:step>
+		<batch:listeners>
+			<batch:listener>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.PromoteStepExitMessage" />
+			</batch:listener>
+		</batch:listeners>
 	</batch:job>
 </beans>
