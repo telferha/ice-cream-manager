@@ -11,6 +11,6 @@ import io.github.pbremer.icecreammanager.entity.IceCream;
  * @author Patrick Bremer
  */
 @Repository
-public interface IceCreamRepository extends IsActiveSerchable<IceCream, Long> {
+public interface IceCreamRepository extends IsActiveSerchable<IceCream, String> {
 
 }

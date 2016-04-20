@@ -3,15 +3,14 @@
  */
 package io.github.pbremer.icecreammanager.service;
 
-
 import org.springframework.stereotype.Service;
 
-import io.github.pbremer.icecreammanager.entity.Driver;
+import io.github.pbremer.icecreammanager.entity.IceCream;
 
 /**
  * @author Matthew Stockert
  */
 @Service
-public interface DriverService extends ActivatableService<Driver, String> {
+public interface IceCreamService extends ActivatableService<IceCream, String> {
 
 }
