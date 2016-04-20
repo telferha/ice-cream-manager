@@ -13,4 +13,5 @@ import io.github.pbremer.icecreammanager.entity.TruckInstance;
 @Service
 public interface TruckInstanceService extends InstanceService<TruckInstance, Long> {
 
+
 }

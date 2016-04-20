@@ -48,8 +48,9 @@ public class FileNameMatchingCompositeItemReader
 
 	Assert.notNull(executionContext,
 	        "Execution context must be set before read");
-
-	Assert.isTrue(resource.isReadable(),
+	Assert.isTrue(resource.getFile().exists(),
+	        resource.getDescription() + " does not exist");
+	Assert.isTrue(resource.getFile().canRead(),
 	        resource.getDescription() + " must be readable.");
 
 	if (reader == null) {

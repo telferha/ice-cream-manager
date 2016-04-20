@@ -10,7 +10,7 @@ import io.github.pbremer.icecreammanager.configuration.EntityConfiguration;
 import io.github.pbremer.icecreammanager.configuration.ServiceConfiguration;
 
 @Configuration
-@PropertySource("classpath:ice-cream-manager.properties")
+@PropertySource("classpath:batch/input-file-descriptor.properties")
 @Import(value = { EntityConfiguration.class, ControllerConfiguration.class,
         ServiceConfiguration.class, BatchJobConfiguration.class })
 public class ApplicationConfiguration {
