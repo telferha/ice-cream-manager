@@ -36,8 +36,8 @@ public class DriverTruckMapperConverter
      */
     @Override
     public TruckInstance convert(DriverTruckFlatFileContainer source) {
-	TruckInstance truck = truckService.getTruckByDayAndTruckNumber(day,
-	        source.getTruckNumber());
+	TruckInstance truck = null;// = truckService.getTruckByDayAndTruckNumber(day,
+	        //source.getTruckNumber());
 	DriverInstance driver = new DriverInstance();
 	driver.setDriver(driverService.getOne(source.getDriverNumber()));
 	driver.setWage(driver.getDriver().getCurrentWage());
