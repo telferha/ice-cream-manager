@@ -90,7 +90,7 @@ public class FileUploadController implements InitializingBean {
 		try {
 		    data.setContents(
 		            IOUtils.toByteArray(file.getInputStream()));
-		    inputFileMetaDataSerice.save(data);
+		    // inputFileMetaDataSerice.save(data);
 
 		    File localFile = new File(FileUtils.getTempDirectory(),
 		            type.getFileName());
