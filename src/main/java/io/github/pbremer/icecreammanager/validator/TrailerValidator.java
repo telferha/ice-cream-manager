@@ -32,7 +32,9 @@ public class TrailerValidator implements Validator {
 	HeaderTrailerContainer arg = (HeaderTrailerContainer) target;
 	if (arg.getFooterNumber() != arg.getActualCount()) {
 	    errors.reject("trailer.invalidCount",
-	            "Count in trailer does not match the actual count");
+	            String.format(
+	                    "Count in trailer(%d) does not match the actual count(%d)",
+	                    arg.getFooterNumber(), arg.getActualCount()));
 	}
     }
 

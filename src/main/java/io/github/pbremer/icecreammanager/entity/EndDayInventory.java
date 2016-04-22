@@ -3,8 +3,6 @@
  */
 package io.github.pbremer.icecreammanager.entity;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,26 +35,8 @@ public class EndDayInventory extends SellableInventory {
     @Column(name = "END_DAY_INVENTORY_ID")
     private long id;
 
-    @Column(name = "SALES_PRICE")
-    private BigDecimal salesPrice;
-
     public long getId() {
 	return id;
-    }
-
-    /**
-     * @return the salesPrice
-     */
-    public BigDecimal getSalesPrice() {
-	return salesPrice;
-    }
-
-    /**
-     * @param salesPrice
-     *            the salesPrice to set
-     */
-    public void setSalesPrice(BigDecimal salesPrice) {
-	this.salesPrice = salesPrice;
     }
 
     @Override

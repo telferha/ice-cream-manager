@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+	<bean class="org.springframework.batch.core.scope.JobScope" />
+
+	<bean id="cityProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean class="io.github.pbremer.icecreammanager.convert.CityConverter"
+							scope="job" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="routeProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean class="io.github.pbremer.icecreammanager.convert.RouteConverter"
+							scope="job" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="truckProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean class="io.github.pbremer.icecreammanager.convert.TruckConverter"
+							scope="job" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="inventoryProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean
+							class="io.github.pbremer.icecreammanager.convert.WarehouseInventoryConverter"
+							scope="job" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="startInventoryProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean
+							class="io.github.pbremer.icecreammanager.convert.BeginDayInventoryConverter"
+							scope="job" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="truckRouteProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean
+							class="io.github.pbremer.icecreammanager.convert.TruckRouteMapperConverter"
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="truckSalesProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean
+							class="io.github.pbremer.icecreammanager.convert.EndDayInventoryConverter"
+							scope="job" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="driverProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean class="io.github.pbremer.icecreammanager.convert.DriverConverter"
+							scope="job" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="routePriceProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean
+							class="io.github.pbremer.icecreammanager.convert.RoutePriceMapperConverter"
+							scope="job" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="costsProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean
+							class="io.github.pbremer.icecreammanager.convert.CostsMapperConverter"
+							scope="job" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="driverTruckProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
+					<property name="converter">
+						<bean
+							class="io.github.pbremer.icecreammanager.convert.DriverTruckMapperConverter"
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="itemProcessor"
+		class="io.github.pbremer.icecreammanager.batch.FileNameMatchingCompositeItemProcessor"
+		scope="job">
+		<property name="delegates">
+			<map>
+				<entry key="${inputfile.city.filename}" value-ref="cityProcessor" />
+				<entry key="${inputfile.route.filename}" value-ref="routeProcessor" />
+				<entry key="${inputfile.truck.filename}" value-ref="truckProcessor" />
+				<entry key="${inputfile.inventory.filename}" value-ref="inventoryProcessor" />
+				<entry key="${inputfile.loadtruck.filename}" value-ref="startInventoryProcessor" />
+				<entry key="${inputfile.truckroute.filename}" value-ref="truckRouteProcessor" />
+				<entry key="${inputfile.trucksales.filename}" value-ref="truckSalesProcessor" />
+				<entry key="${inputfile.driver.filename}" value-ref="driverProcessor" />
+				<entry key="${inputfile.routeprice.filename}" value-ref="routePriceProcessor" />
+				<entry key="${inputfile.costs.filename}" value-ref="costsProcessor" />
+				<entry key="${inputfile.drivertruck.filename}" value-ref="driverTruckProcessor" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="headerTrailerProcessor"
+		class="org.springframework.batch.item.support.CompositeItemProcessor"
+		scope="step">
+		<property name="delegates">
+			<list>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.HeaderValidator">
+									<constructor-arg value="#{jobParameters['input.file.name']}" />
+								</bean>
+							</property>
+						</bean>
+					</property>
+				</bean>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.TrailerValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+</beans>

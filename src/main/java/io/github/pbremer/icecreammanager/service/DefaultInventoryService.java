@@ -11,6 +11,7 @@ import io.github.pbremer.icecreammanager.entity.DefaultInventory;
  * @author Matthew Stockert
  */
 @Service
-public interface DefaultInventoryService extends ActivatableService<DefaultInventory, String> {
+public interface DefaultInventoryService
+        extends ActivatableService<DefaultInventory, Long> {
 
 }

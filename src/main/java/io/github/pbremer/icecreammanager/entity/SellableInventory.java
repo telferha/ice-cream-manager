@@ -3,6 +3,10 @@
  */
 package io.github.pbremer.icecreammanager.entity;
 
+import java.math.BigDecimal;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,12 +29,15 @@ public abstract class SellableInventory extends Inventory {
 
     private static final long serialVersionUID = 227387652797682003L;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "truckInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
     private TruckInstance truckInstance;
+
+    @Column(name = "SALES_PRICE")
+    private BigDecimal price;
 
     public TruckInstance getTruckInstance() {
 	return truckInstance;
@@ -38,6 +45,21 @@ public abstract class SellableInventory extends Inventory {
 
     public void setTruckInstance(TruckInstance truckInstance) {
 	this.truckInstance = truckInstance;
+    }
+
+    /**
+     * @return the price
+     */
+    public BigDecimal getPrice() {
+	return price;
+    }
+
+    /**
+     * @param price
+     *            the price to set
+     */
+    public void setPrice(BigDecimal price) {
+	this.price = price;
     }
 
     @Override

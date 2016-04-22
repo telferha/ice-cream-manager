@@ -5,6 +5,7 @@ package io.github.pbremer.icecreammanager.convert;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 
@@ -18,7 +19,8 @@ import io.github.pbremer.icecreammanager.service.TruckInstanceService;
  * @author Patrick Bremer
  */
 public class DriverTruckMapperConverter
-        implements Converter<DriverTruckFlatFileContainer, TruckInstance> {
+        implements Converter<DriverTruckFlatFileContainer, DriverInstance>,
+        InitializingBean {
 
     @Autowired
     private TruckInstanceService truckService;
@@ -26,7 +28,7 @@ public class DriverTruckMapperConverter
     @Autowired
     private DriverService driverService;
 
-    private Date day;
+    private long ms;
 
     /*
      * (non-Javadoc)
@@ -35,19 +37,30 @@ public class DriverTruckMapperConverter
      * Object)
      */
     @Override
-    public TruckInstance convert(DriverTruckFlatFileContainer source) {
-	TruckInstance truck = null;// = truckService.getTruckByDayAndTruckNumber(day,
-	        //source.getTruckNumber());
+    public DriverInstance convert(DriverTruckFlatFileContainer source) {
+	Date day = new Date(ms);
+	TruckInstance truck = truckService.getTruckByDayAndTruckNumber(day,
+	        source.getTruckNumber());
 	DriverInstance driver = new DriverInstance();
 	driver.setDriver(driverService.getOne(source.getDriverNumber()));
 	driver.setWage(driver.getDriver().getCurrentWage());
 	driver.setDay(day);
-	truck.setDriverInstance(driver);
-	return truck;
+	driver.setTruckInstance(truck);
+	return driver;
     }
 
-    public void setDay(Date day) {
-	this.day = day;
+    public void setMs(long ms) {
+	this.ms = ms;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+	// Assert.notNull(day, "Day must be set");
     }
 
 }
