@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -22,28 +24,50 @@ public class InputFileMetaData extends EntitySupport {
     private static final long serialVersionUID = 9145706372486551880L;
 
     public enum FileType {
-	ROUTE, TRUCK, CITY, INVENTORY, TRUCK_ROUTE, DRIVER_TRUCK, ROUTE_PRICE
+	ROUTE("routeUpload.txt", "^[ACD].*"),
+	TRUCK("truckUpload.txt", "^[0-9].*"),
+	CITY("cityUpload.txt", "^(?!T\\s)(?!HD\\s).*"),
+	WAREHOUSE("dailyInventory.txt", "^[0-9].*"),
+	DRIVER("driverUpload.txt", "^[0-9].*"),
+	TRUCK_ROUTE("truckRouteUpload.txt", "^[0-9].*"),
+	DRIVER_TRUCK("driverTruck.txt", "^[0-9].*"),
+	LOAD_TRUCK("loadTruck.txt", "^[0-9].*"),
+	TRUCK_SALES("dailySales.txt", "^[0-9].*"),
+	COSTS("cost.txt", "^[0-9].*"),
+	ROUTE_PRICE("routePrice.txt", "^[0-9].*");
+
+	private String fileName;
+	private String regexCount;
+
+	private FileType(final String fileName, final String regexCount) {
+	    this.fileName = fileName;
+	    this.regexCount = regexCount;
+	}
+
+	public String getFileName() {
+	    return fileName;
+	}
+
+	public String getRegexCount() {
+	    return regexCount;
+	}
     }
 
     public enum Status {
-	READY, WAITING, PROCESSED, NOT_READY
+	READY, WAITING, PROCESSED, NOT_READY, ERROR
     }
 
     @Id
     @Column(name = "FILE_TYPE")
+    @Enumerated(EnumType.STRING)
     private FileType fileType;
-
-    @Column(name = "FILE_NAME")
-    private String fileName;
-
-    @Column(name = "FILE_SIZE")
-    private long fileSize;
 
     @Column(name = "FILE_CONTENTS")
     @Lob
-    private byte[] contents;
+    private byte[] contents = new byte[0];
 
     @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Column(name = "SEQUENCE_NUMBER")
@@ -53,32 +77,7 @@ public class InputFileMetaData extends EntitySupport {
     @Temporal(TemporalType.DATE)
     private Date day;
 
-    @Column(name = "AMMOUNT_OF_DATA")
-    private int ammountOfData;
-
-    private int parsedAmmountOfData;
-
-    public InputFileMetaData() {
-	fileSize = 0L;
-	contents = new byte[0];
-	ammountOfData = 0;
-    }
-
-    public String getFileName() {
-	return fileName;
-    }
-
-    public void setFileName(String fileName) {
-	this.fileName = fileName;
-    }
-
-    public long getFileSize() {
-	return fileSize;
-    }
-
-    public void setFileSize(long fileSize) {
-	this.fileSize = fileSize;
-    }
+    private transient int parsedAmmountOfData;
 
     public byte[] getContents() {
 	return contents;
@@ -118,14 +117,6 @@ public class InputFileMetaData extends EntitySupport {
 
     public void setDay(Date day) {
 	this.day = day;
-    }
-
-    public int getAmmountOfData() {
-	return ammountOfData;
-    }
-
-    public void setAmmountOfData(int ammountOfData) {
-	this.ammountOfData = ammountOfData;
     }
 
     public int getParsedAmmountOfData() {

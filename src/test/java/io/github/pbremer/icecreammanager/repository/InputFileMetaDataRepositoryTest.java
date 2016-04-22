@@ -3,7 +3,6 @@
  */
 package io.github.pbremer.icecreammanager.repository;
 
-import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.apache.commons.lang3.RandomUtils.nextBytes;
 import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -57,7 +56,6 @@ public class InputFileMetaDataRepositoryTest {
 	InputFileMetaData data = new InputFileMetaData();
 	for (InputFileMetaData.FileType fileType : fileTypes) {
 	    data.setFileType(fileType);
-	    data.setFileName(random(20));
 	    data.setContents(nextBytes(nextInt(10, 20)));
 	    data.setStatus(statuses.get(nextInt(0, statuses.size())));
 	    repository.save(data);

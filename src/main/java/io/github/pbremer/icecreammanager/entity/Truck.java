@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Entity
 @Table(name = "TRUCK")
 @JsonInclude(Include.NON_EMPTY)
-public class Truck extends EntitySupport {
+public class Truck extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = -4092699031897866819L;
 

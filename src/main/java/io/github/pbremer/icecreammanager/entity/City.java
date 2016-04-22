@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -23,16 +24,16 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name = "CITY")
 @JsonInclude(Include.NON_EMPTY)
-public class City extends EntitySupport {
+public class City extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = -9099709758530437246L;
 
     @Id
-    @Column(name = "CITY_NAME", updatable = false)
+    @Column(name = "CITY_NAME")
     private String cityName;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,
-            mappedBy = "city")
+            mappedBy = "city", fetch = FetchType.EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "zoneName")
     @JsonIdentityReference(alwaysAsId = true)

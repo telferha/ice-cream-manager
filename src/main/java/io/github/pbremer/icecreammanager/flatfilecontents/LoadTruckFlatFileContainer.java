@@ -1,5 +1,6 @@
 package io.github.pbremer.icecreammanager.flatfilecontents;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,6 +16,11 @@ public class LoadTruckFlatFileContainer extends AbstractFlatFileContainer {
     private String truckNumber;
     private List<LoadTruckFlatFileContainer.ItemAdjustmentFlatFileContainer> itemAdjustments;
     private String adjustmentRowNumber;
+
+    public LoadTruckFlatFileContainer() {
+	itemAdjustments =
+	        new ArrayList<LoadTruckFlatFileContainer.ItemAdjustmentFlatFileContainer>();
+    }
 
     /**
      * @return the truckNumber
@@ -48,6 +54,10 @@ public class LoadTruckFlatFileContainer extends AbstractFlatFileContainer {
 	this.itemAdjustments = itemAdjustments;
     }
 
+    public void addAdjustment(ItemAdjustmentFlatFileContainer adjustment) {
+	itemAdjustments.add(adjustment);
+    }
+
     /**
      * @return the adjustmentRowNumber
      */
@@ -61,16 +71,6 @@ public class LoadTruckFlatFileContainer extends AbstractFlatFileContainer {
      */
     public void setAdjustmentRowNumber(String adjustmentRowNumber) {
 	this.adjustmentRowNumber = adjustmentRowNumber;
-    }
-
-    @Override
-    public boolean containsValueInErrorColumn() {
-	boolean containsValueInErrorColumn = false;
-	for (LoadTruckFlatFileContainer.ItemAdjustmentFlatFileContainer itemAdjustmentContainer : itemAdjustments) {
-	    containsValueInErrorColumn = containsValueInErrorColumn
-	            || itemAdjustmentContainer.containsValueInErrorColumn();
-	}
-	return super.containsValueInErrorColumn();
     }
 
     @Override

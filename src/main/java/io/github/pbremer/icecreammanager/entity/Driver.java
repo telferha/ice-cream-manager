@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Entity
 @Table(name = "DRIVER")
 @JsonInclude(Include.NON_EMPTY)
-public class Driver extends EntitySupport {
+public class Driver extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = -4384329683864675619L;
 
@@ -33,8 +33,8 @@ public class Driver extends EntitySupport {
             mappedBy = "driver")
     private List<DriverInstance> driverInstances;
 
-    @Column(name = "WAGE")
-    private BigDecimal wage;
+    @Column(name = "CURRENT_WAGE")
+    private BigDecimal currentWage;
 
     public String getDriverId() {
 	return driverId;
@@ -52,12 +52,12 @@ public class Driver extends EntitySupport {
 	this.driverInstances = driverInstances;
     }
 
-    public BigDecimal getWage() {
-	return wage;
+    public BigDecimal getCurrentWage() {
+	return currentWage;
     }
 
-    public void setWage(BigDecimal wage) {
-	this.wage = wage;
+    public void setCurrentWage(BigDecimal wage) {
+	this.currentWage = wage;
     }
 
     @Override

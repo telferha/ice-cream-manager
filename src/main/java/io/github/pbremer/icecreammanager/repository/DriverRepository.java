@@ -1,6 +1,5 @@
 package io.github.pbremer.icecreammanager.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import io.github.pbremer.icecreammanager.entity.Driver;
@@ -12,6 +11,6 @@ import io.github.pbremer.icecreammanager.entity.Driver;
  * @author Patrick Bremer
  */
 @Repository
-public interface DriverRepository extends JpaRepository<Driver, String> {
+public interface DriverRepository extends IsActiveSerchable<Driver, String> {
 
 }

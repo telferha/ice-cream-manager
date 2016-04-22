@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+	<bean id="cityWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="cityRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+
+	<bean id="routeWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="routeRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+
+	<bean id="truckWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="truckRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+
+	<bean id="inventoryWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="warehouseRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+	
+	<bean id="driverWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="driverRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+	
+	<bean id="truckInstanceWriter"
+		class="org.springframework.batch.item.data.RepositoryItemWriter">
+		<property name="repository" ref="truckInstanceRepository" />
+		<property name="methodName" value="save" />
+	</bean>
+
+	<bean id="itemWriter"
+		class="io.github.pbremer.icecreammanager.batch.FileNameMatchingCompositeItemWriter"
+		scope="step">
+		<property name="delegates">
+			<map>
+				<entry key="${inputfile.city.filename}" value-ref="cityWriter" />
+				<entry key="${inputfile.route.filename}" value-ref="routeWriter" />
+				<entry key="${inputfile.truck.filename}" value-ref="truckWriter" />
+				<entry key="${inputfile.inventory.filename}" value-ref="inventoryWriter" />
+				<entry key="${inputfile.driver.filename}" value-ref="driverWriter" />
+				<entry key="${inputfile.drivertruck.filename}" value-ref="truckInstanceWriter" />
+				<entry key="${inputfile.truckroute.filename}" value-ref="truckInstanceWriter" /><!-- 
+					<entry key="${inputfile.loadtruck.filename}" value-ref="loadTruckItemReader" 
+					/> <entry key="${inputfile.trucksales.filename}" value-ref="truckSalesItemReader" 
+					/>  <entry key="${inputfile.routeprice.filename}" value-ref="routePriceItemReader" 
+					/> <entry key="${inputfile.costs.filename}" value-ref="costsItemReader" /> 
+					<entry key="${inputfile.drivertruck.filename}" value-ref="driverTruckItemReader" 
+					/> -->
+			</map>
+		</property>
+	</bean>
+
+	<bean id="stepExecutionWriter"
+		class="io.github.pbremer.icecreammanager.batch.StepExecutionWriter" />
+
+</beans>

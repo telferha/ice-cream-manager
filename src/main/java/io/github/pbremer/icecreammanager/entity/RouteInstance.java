@@ -1,10 +1,10 @@
 package io.github.pbremer.icecreammanager.entity;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,8 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -32,9 +30,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "ROUTE_INSTANCE", uniqueConstraints = @UniqueConstraint(
-        columnNames = { "ROUTE_DAY", "ROUTE_ID" }))
+        columnNames = { "DAY", "ROUTE_ID" }))
 @JsonInclude(Include.NON_EMPTY)
-public class RouteInstance extends EntitySupport {
+public class RouteInstance extends InstanceEntitySupport {
 
     private static final long serialVersionUID = 6686558272033820280L;
 
@@ -43,18 +41,14 @@ public class RouteInstance extends EntitySupport {
     @Column(name = "ROUTE_INSTANCE_ID")
     private long routeInstanceId;
 
-    @Column(name = "ROUTE_DAY", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date routeDay;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ROUTE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "routeId")
     @JsonIdentityReference(alwaysAsId = true)
     private Route route;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "ROUTE_ZONES",
             joinColumns = @JoinColumn(name = "ROUTE_INSTANCE_ID"),
             inverseJoinColumns = @JoinColumn(name = "ZONE_NAME"))
@@ -62,7 +56,7 @@ public class RouteInstance extends EntitySupport {
             "lastModifiedDate" })
     private List<Zone> zones;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "truckInstanceId")
@@ -71,14 +65,6 @@ public class RouteInstance extends EntitySupport {
 
     public long getRouteInstanceId() {
 	return routeInstanceId;
-    }
-
-    public Date getRouteDay() {
-	return routeDay;
-    }
-
-    public void setRouteDay(Date routeDay) {
-	this.routeDay = routeDay;
     }
 
     public Route getRoute() {
