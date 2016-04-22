@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -62,9 +61,9 @@ public class InputFileMetaData extends EntitySupport {
     @Enumerated(EnumType.STRING)
     private FileType fileType;
 
-    @Column(name = "FILE_CONTENTS")
-    @Lob
-    private byte[] contents = new byte[0];
+    // @Column(name = "FILE_CONTENTS")
+    // @Lob
+    private transient byte[] contents = new byte[0];
 
     @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)

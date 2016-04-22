@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -64,7 +65,8 @@ public class TruckInstance extends InstanceEntitySupport {
     private RouteInstance routeInstance;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "DRIVER_INSTANCE_ID")
+    // @JoinColumn(name = "DRIVER_INSTANCE_ID")
+    @PrimaryKeyJoinColumn
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "dirverInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
