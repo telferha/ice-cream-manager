@@ -13,22 +13,22 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class TruckRouteFlatFileContainer extends AbstractFlatFileContainer {
 
-    private String truckNumeber;
+    private String truckNumber;
     private String routeNumber;
 
     /**
      * @return the truckNumeber
      */
-    public String getTruckNumeber() {
-	return truckNumeber;
+    public String getTruckNumber() {
+	return truckNumber;
     }
 
     /**
      * @param truckNumeber
      *            the truckNumeber to set
      */
-    public void setTruckNumeber(String truckNumeber) {
-	this.truckNumeber = truckNumeber;
+    public void setTruckNumber(String truckNumeber) {
+	this.truckNumber = truckNumeber;
     }
 
     /**

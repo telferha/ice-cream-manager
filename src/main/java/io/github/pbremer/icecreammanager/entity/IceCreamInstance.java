@@ -1,18 +1,16 @@
 package io.github.pbremer.icecreammanager.entity;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -28,9 +26,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "ICE_CREAM_INSTANCE", uniqueConstraints = @UniqueConstraint(
-        columnNames = { "ICE_CREAM_DAY", "ICE_CREAM_NAME" }))
+        columnNames = { "DAY", "ICE_CREAM_NAME" }))
 @JsonInclude(Include.NON_EMPTY)
-public class IceCreamInstance extends EntitySupport {
+public class IceCreamInstance extends InstanceEntitySupport {
 
     private static final long serialVersionUID = -3761916152395485693L;
 
@@ -39,17 +37,10 @@ public class IceCreamInstance extends EntitySupport {
     @Column(name = "ICE_CREAM_INSTANCE_ID")
     private long iceCreamInstanceId;
 
-    @Column(name = "SALES_PRICE")
-    private BigDecimal salesPrice;
-
     @Column(name = "SUPPLIER_PRICE")
     private BigDecimal supplierPrice;
 
-    @Column(name = "ICE_CREAM_DAY", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date iceCreamDay;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ICE_CREAM_NAME")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "iceCreamName")
@@ -64,28 +55,12 @@ public class IceCreamInstance extends EntitySupport {
 	this.iceCreamInstanceId = iceCreamInstanceId;
     }
 
-    public BigDecimal getSalesPrice() {
-	return salesPrice;
-    }
-
-    public void setSalesPrice(BigDecimal salesPrice) {
-	this.salesPrice = salesPrice;
-    }
-
     public BigDecimal getSupplierPrice() {
 	return supplierPrice;
     }
 
     public void setSupplierPrice(BigDecimal supplierPrice) {
 	this.supplierPrice = supplierPrice;
-    }
-
-    public Date getIceCreamDay() {
-	return iceCreamDay;
-    }
-
-    public void setIceCreamDay(Date iceCreamDay) {
-	this.iceCreamDay = iceCreamDay;
     }
 
     public IceCream getIceCream() {
