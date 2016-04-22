@@ -55,11 +55,11 @@ public class FileUploadController implements InitializingBean {
     public @ResponseBody String upload(@RequestParam("file") MultipartFile file
     /* RedirectAttributes redirectAttributes */) throws Exception {
 
-	log.debug("Got file: {}", file.getOriginalFilename());
+	log.info("Got file: {}", file.getOriginalFilename());
 
 	if (!jobExplorer.findRunningJobExecutions("processInputFiles")
 	        .isEmpty()) {
-	    log.debug("There is a batch job already running");
+	    log.info("There is a batch job already running");
 	    // redirectAttributes.addFlashAttribute("errorMessage",
 	    // "System is already processing a file. Please wait");
 	    // return "redirect:/upload";
@@ -67,7 +67,7 @@ public class FileUploadController implements InitializingBean {
 	}
 
 	if (file.isEmpty()) {
-	    log.debug("File {} is empty", file.getOriginalFilename());
+	    log.info("File {} is empty", file.getOriginalFilename());
 	    // redirectAttributes.addFlashAttribute("errorMessage", String
 	    // .format("File %s is empty", file.getOriginalFilename()));
 	    // return "redirect:/upload";
@@ -83,7 +83,7 @@ public class FileUploadController implements InitializingBean {
 	}
 
 	for (FileType type : EnumSet.allOf(FileType.class)) {
-	    log.debug("Checking: {}", type.getFileName());
+	    log.info("Checking: {}", type.getFileName());
 	    if (type.getFileName()
 	            .equalsIgnoreCase(file.getOriginalFilename())) {
 		InputFileMetaData data = inputFileMetaDataSerice.getOne(type);
