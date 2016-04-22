@@ -37,7 +37,9 @@ import io.github.pbremer.icecreammanager.entity.InputFileMetaData.FileType;
 import io.github.pbremer.icecreammanager.entity.InputFileMetaData.Status;
 import io.github.pbremer.icecreammanager.repository.InputFileMetaDataRepository;
 import io.github.pbremer.icecreammanager.service.CityService;
+import io.github.pbremer.icecreammanager.service.DriverService;
 import io.github.pbremer.icecreammanager.service.RouteService;
+import io.github.pbremer.icecreammanager.service.TruckInstanceService;
 import io.github.pbremer.icecreammanager.service.TruckService;
 import io.github.pbremer.icecreammanager.service.WarehouseInventoryService;
 import io.github.pbremer.icecreammanager.service.ZoneService;
@@ -79,6 +81,12 @@ public class BatchJobTest {
 
     @Autowired
     private WarehouseInventoryService warehouseInventoryService;
+
+    @Autowired
+    private DriverService driverService;
+
+    @Autowired
+    private TruckInstanceService truckInstanceService;
 
     @Before
     public void setup() {
@@ -153,6 +161,23 @@ public class BatchJobTest {
 	assertThat("Truck data is not stored",
 	        truckService.existsAndIsActive("0110"), equalTo(true));
 
+	log.info("Starting driver job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/driver/driverUpload.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting driver job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Driver data not stored",
+	        driverService.existsAndIsActive("0023"), equalTo(true));
+	assertThat("Driver data not stored",
+	        driverService.existsAndIsActive("0345"), equalTo(true));
+
 	log.info("Starting warehouse inventory job");
 	jobExecution = launcher.run(job,
 	        new JobParametersBuilder()
@@ -166,7 +191,39 @@ public class BatchJobTest {
 	        jobExecution.getExitStatus().getExitCode(),
 	        equalTo(ExitStatus.COMPLETED.getExitCode()));
 	assertThat("Warehouse inventory data is not stored",
-	        warehouseInventoryService.findAll().size(), equalTo(1));
+	        warehouseInventoryService.findWhereIsActiveEquals(true).size(),
+	        equalTo(1));
+
+	log.info("Starting truck-route mapping job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/truck-route/truckRouteUpload.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting driver-truck mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Truck-route data is not stored",
+	        truckInstanceService.findAll().size(), equalTo(1));
+
+	// log.info("Starting driver-truck mapping job");
+	// jobExecution = launcher.run(job,
+	// new JobParametersBuilder()
+	// .addLong("time", System.currentTimeMillis())
+	// .addString("input.file.name",
+	// "classpath:input-files/driver-truck/driverTruck.txt")
+	// .addString("input.file.countablerow.regex", "^[0-9].*")
+	// .toJobParameters());
+	// log.info("Starting driver-truck mapping job validation");
+	// assertThat("Exit status is not COMEPLETE",
+	// jobExecution.getExitStatus().getExitCode(),
+	// equalTo(ExitStatus.COMPLETED.getExitCode()));
+	// assertThat("Driver-truck data is not stored",
+	// truckInstanceService.findAll().size(), equalTo(1));
+
     }
 
 }

@@ -2,6 +2,7 @@ package io.github.pbremer.icecreammanager.entity;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,7 +38,7 @@ public class DriverInstance extends InstanceEntitySupport {
     @Column(name = "DRIVER_INSTANCE_ID")
     private long driverInstanceId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "truckInstanceId")
