@@ -116,26 +116,29 @@
                             
                                 </div><br></br>
                         <script>
-                        $.ajax({
-                      	  url: '/api/truck/getTruckIds',
-                      	  method: 'GET'
-                      	}).then(function(data) {
-                      	  console.log(data);
-                      	  var dropDown ='<select class="combobox form-control"><option value=""></option>';
-                      	  var node = document.getElementById("trucks");
-                      	  $.each(data, function(key,value) {
-                      		  dropDown = dropDown +'<option value="'+value+'">'+value+'</option>';
-                      	  })
-                      	  dropDown = dropDown + '</select>';
-                      	  node.innerHTML = dropDown;
-                      	});
-      }
+                        
+                        	
+	                        $.ajax({
+	                      	  url: '/api/truck/getTruckIds',
+	                      	  method: 'GET'
+	                      	}).then(function(data) {
+	                      	  console.log(data);
+	                      	  var dropDown ='<select class="combobox form-control"><option value=""></option>';
+	                      	  var node = document.getElementById("trucks");
+	                      	  $.each(data, function(key,value) {
+	                      		  dropDown = dropDown +'<option value="'+value+'">'+value+'</option>';
+	                      	  });
+	                      	  dropDown = dropDown + '</select>';
+	                      	  node.innerHTML = dropDown;
+	                      	});
+                        
+                           
               
 
                                 //$.getJSON("http://intense-coast-8680.herokuapp.com/api/truck/getTruckIds", function(result){
 									/*var test =['0001', '0002', '0004']
                                     var stuff = '<select class="combobox form-control"><option value=""></option>';
-                                    var node = document.getElementById("test");
+                                    var node = document.getElementById("trucks");
                                     $.each(test, function(key, value) {
                                         stuff=stuff + '<option value="'+value+'">'+value+'</option>';
 
@@ -175,10 +178,12 @@
              
       </div>
 
-      <script th:src="@{/webjars/patternfly/2.8.0/components/bootstrap-combobox/js/bootstrap-combobox.js}" type="text/javascript"></script>
+      <script type="text/javascript" th:src="@{/webjars/patternfly/2.8.0/components/bootstrap-combobox/js/bootstrap-combobox.js}" ></script>
       <script>
           // Initialize Boostrap-Combobox
-          $('.combobox').combobox();
+          $(window).load(function() {
+        	  $('.combobox').combobox();
+          });
       </script>
       <Script>
         function myFunction() {
@@ -186,6 +191,7 @@
                         var node = document.getElementById("table");
                         
                         node.innerHTML = stuff;
+        }
                         
         </Script>
             

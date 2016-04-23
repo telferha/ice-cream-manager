@@ -30,9 +30,9 @@ public class TruckController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public @ResponseBody List<String> getTruckIds() {
 	List<String> truckIds = new ArrayList<String>();
-	truckIds.add("0001");
-	truckIds.add("0002");
-	truckIds.add("0040");
+	truckIds.add("0001T");
+	truckIds.add("0002T");
+	truckIds.add("0040T");
 	return truckIds;
     }
 
