@@ -15,8 +15,8 @@ public class SimpleGreetingController {
             
     @RequestMapping("/")
     public String hello() {
-        LOGGER.debug("At index");
+        LOGGER.debug("At dashboard");
         // return HELLO;
-        return "public/index";
+        return "public/dashboard";
     }
 }
