@@ -23,25 +23,25 @@ import io.github.pbremer.icecreammanager.entity.IceCreamInstance;
  * @author Patrick Bremer
  */
 @RestController
-@RequestMapping("/api/truck")
-public class TruckController {
+@RequestMapping("/api/route")
+public class RouteController {
 
-    @RequestMapping(path = "/getTruckIds", method = RequestMethod.GET,
+    @RequestMapping(path = "/getRouteIds", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public @ResponseBody List<String> getTruckIds() {
-	List<String> truckIds = new ArrayList<String>();
-	truckIds.add("0001T");
-	truckIds.add("0002T");
-	truckIds.add("0040T");
-	return truckIds;
+    public @ResponseBody List<String> getRouteIds() {
+	List<String> routeIds = new ArrayList<String>();
+	routeIds.add("0001R");
+	routeIds.add("0002R");
+	routeIds.add("0040R");
+	return routeIds;
     }
 
     //@CrossOrigin
-    @RequestMapping(path = "/getTruckInventory/{truckId}",
+    @RequestMapping(path = "/getRouteInventory/{routeId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public @ResponseBody List<BeginDayInventory>
-            getTruckInventory(@PathVariable("truckId") String truckId) {
+            getRouteInventory(@PathVariable("routeId") String routeId) {
 	List<BeginDayInventory> inventory = new ArrayList<BeginDayInventory>();
 	BeginDayInventory inv = new BeginDayInventory();
 	inv.setAmmount(8);
