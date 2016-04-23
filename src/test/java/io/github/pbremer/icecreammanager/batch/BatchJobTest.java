@@ -40,6 +40,7 @@ import io.github.pbremer.icecreammanager.service.BeginDayInventoryService;
 import io.github.pbremer.icecreammanager.service.CityService;
 import io.github.pbremer.icecreammanager.service.DriverInstanceService;
 import io.github.pbremer.icecreammanager.service.DriverService;
+import io.github.pbremer.icecreammanager.service.EndDayInventoryService;
 import io.github.pbremer.icecreammanager.service.RouteService;
 import io.github.pbremer.icecreammanager.service.TruckInstanceService;
 import io.github.pbremer.icecreammanager.service.TruckService;
@@ -95,6 +96,9 @@ public class BatchJobTest {
 
     @Autowired
     private BeginDayInventoryService beginDayInventoryService;
+
+    @Autowired
+    private EndDayInventoryService endDayInventoryService;
 
     @Before
     public void setup() {
@@ -248,6 +252,21 @@ public class BatchJobTest {
 	        equalTo(ExitStatus.COMPLETED.getExitCode()));
 	assertThat("Begin day inventory data is not stored",
 	        beginDayInventoryService.findAll().size(), equalTo(1));
+
+	log.info("Starting daily sales job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/truck-sales/dailySales.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting daily sales mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("End day inventory data is not stored",
+	        endDayInventoryService.findAll().size(), equalTo(1));
 
     }
 

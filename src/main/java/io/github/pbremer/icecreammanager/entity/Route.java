@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
@@ -39,7 +40,8 @@ public class Route extends ActivatableEntitySupport {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "ASSIGNED_ROUTE_ZONES",
             joinColumns = @JoinColumn(name = "ROUTE_INSTANCE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ZONE_NAME"))
+            inverseJoinColumns = @JoinColumn(name = "ZONE_NAME"),
+            indexes = { @Index(columnList = "ZONE_NAME") })
     @JsonIgnoreProperties({ "routeInstances", "createdDate",
             "lastModifiedDate" })
     private List<Zone> zones;
