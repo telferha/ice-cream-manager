@@ -1,0 +1,184 @@
+<html lang="en-us">
+<!--<![endif]-->
+  <head>
+    <title>Basic - PatternFly</title>
+<meta charset="UTF-8">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.0/d3.min.js"></script>
+      <Script>
+        var test = ["0001","0002","0040"];
+      </Script>
+
+
+      <script src="https://rawgit.com/patternfly/patternfly/master/dist/js/patternfly.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+      <link rel="stylesheet" href="https://rawgit.com/patternfly/patternfly/master/dist/css/patternfly.min.css" >
+<link rel="stylesheet" href="https://rawgit.com/patternfly/patternfly/master/dist/css/patternfly-additions.min.css" >
+
+
+
+  </head>
+  <body class="cards-pf">
+   <nav class="navbar navbar-default navbar-pf" role="navigation">
+      <div class="navbar-header">
+      
+        <a class="navbar-brand" href="research.html">
+            <div class="card-pf-title"> Formally Known As Team Six <br> Ice Cream Manager<br> <br>
+            </div>
+            <img src="easymozaLR.jpg" style="position: absolute; top: 0; right: 0; border: 0;"/>
+        </a>
+      </div>
+      <div class="collapse navbar-collapse navbar-collapse-1">
+          
+        <ul class="nav navbar-nav navbar-primary">
+          <li>
+            <a href="dashboard.html">Dashboard</a>
+          </li>
+          <li>
+            <a href="alter.html">Alter</a>
+          </li>
+            <li>
+            <a href="upload.html">Upload</a>
+          </li> 
+        </ul>
+      </div>
+    </nav>
+      
+      
+      <div class="container-fluid container-cards-pf">
+         <div class="row row-cards-pf">
+                <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                    <label>WAREHOUSE INVENTORY</label>
+                      <table class="table table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th>ITEM ID</th>
+                              <th>QUANTITY</th>
+                              <th>PRICE</th>
+                              <th>DESCRIPTION</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>001</td>
+                              <td>45</td>
+                              <td>1.99</td>
+                              <td>This is a filler, it is a great description, use this in production</td>
+                            </tr>
+                            <tr>
+                              <td>002</td>
+                              <td>56</td>
+                              <td>5.99</td>
+                              <td>This is a filler, it is a great description, use this in production</td>
+                            </tr>
+                            <tr>
+                              <td>003</td>
+                              <td>56</td>
+                              <td>8.99</td>
+                              <td>This is a filler, it is a great description, use this in production</td>
+                            </tr>
+                             <tr>
+                              <td>001</td>
+                              <td>45</td>
+                              <td>1.99</td>
+                              <td>This is a filler, it is a great description, use this in production</td>
+                            </tr>
+                            <tr>
+                              <td>002</td>
+                              <td>56</td>
+                              <td>5.99</td>
+                              <td>This is a filler, it is a great description, use this in production</td>
+                            </tr>
+                            <tr>
+                              <td>003</td>
+                              <td>56</td>
+                              <td>8.99</td>
+                              <td>This is a filler, it is a great description, use this in production</td>
+                            </tr>                             
+                          </tbody>
+                        </table><Br>
+                </div>
+          </div>
+             
+         <div class="row row-cards-pf">
+                <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                            <label>TRUCK INVENTORY</label>
+                            <div id="test">
+                            
+                               
+                            
+                                </div><br>
+                        <script>
+            
+              
+
+                                //$.getJSON("http://intense-coast-8680.herokuapp.com/api/truck/getTruckIds", function(result){
+
+                                    var stuff = '<select class="combobox form-control"><option value""></option>';
+                                    var node = document.getElementById("test");
+                                    $.each(test, function(key, value) {
+                                        stuff=stuff + '<option value="'+value+'">'+value+'</option>';
+
+                                        });
+                                    stuff=stuff+ '</select>';
+                                    node.innerHTML = stuff;
+                                    //$.each(test, function(value){
+                                        //stuff=stuff + '<option value="'+value+'">'+value+'</option>';
+                                       // $("test").append(stuff);
+                                   // });
+
+
+                               // });
+                                   /* $.each(result, function(data){
+                                        var items =[];
+                                        $.each(data, function(value) {
+                                            items.push("'<option value='"+data+"'>"+data+"</option>'");
+                                        });
+                                        var htmlString ="";
+                                        $.each(items, function(value) {
+                                            htmlString = htmlString + items;
+                                        });
+
+                                        var node = document.getElementById("testSelect");
+                                        node.innerHTML = htmlString;
+                                    });*/
+                               // });
+
+            
+                        </script>
+                                <div class="col-sm-12">
+                <center><button class="btn btn-default" type="button"  onclick="myFunction()">&emsp;&emsp;&emsp;&emsp;&emsp;GO&emsp;&emsp;&emsp;&emsp;&emsp;</button></center>
+            </div><br><br>
+                      <table class="table table-striped table-bordered" id="table">
+                      
+                            </Tbody>
+                        </table><Br>
+                </div>
+          </div>             
+             
+      </div>
+
+      <script src="combobox.js"></script>
+      <script>
+          // Initialize Boostrap-Combobox
+          $('.combobox').combobox();
+      </script>
+      <Script>
+        function myFunction() {
+             var stuff = '<thead><tr><th>ITEM ID</th><th>QUANTITY</th><th>PRICE</th><th>DESCRIPTION</th></tr></thead><Tbody>';
+                        var node = document.getElementById("table");
+                        stuff=stuff+'<td>001</td><td>45</td><td>1.99</td><td>it is a great description</td></tr>';
+                        stuff=stuff+ '</Tbody>';
+                        node.innerHTML = stuff;
+            
+        }
+        </Script>
+            
+
+             
+    </body>
+    
+</html>
