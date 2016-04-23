@@ -110,17 +110,30 @@
          <div class="row row-cards-pf">
                 <div class="card-pf card-pf-accented card-pf-aggregate-status">
                             <label>TRUCK INVENTORY</label>
-                            <div id="test">
+                            <div id="trucks">
                             
                                
                             
                                 </div><br></br>
                         <script>
-            
+                        $.ajax({
+                      	  url: '/api/truck/getTruckIds',
+                      	  method: 'GET'
+                      	}).then(function(data) {
+                      	  console.log(data);
+                      	  var dropDown ='<select class="combobox form-control"><option value=""></option>';
+                      	  var node = document.getElementById("trucks");
+                      	  $.each(data, function(key,value) {
+                      		  dropDown = dropDown +'<option value="'+value+'">'+value+'</option>';
+                      	  })
+                      	  dropDown = dropDown + '</select>';
+                      	  node.innerHTML = dropDown;
+                      	});
+      }
               
 
                                 //$.getJSON("http://intense-coast-8680.herokuapp.com/api/truck/getTruckIds", function(result){
-									var test =['0001', '0002', '0004']
+									/*var test =['0001', '0002', '0004']
                                     var stuff = '<select class="combobox form-control"><option value=""></option>';
                                     var node = document.getElementById("test");
                                     $.each(test, function(key, value) {
@@ -128,7 +141,7 @@
 
                                         });
                                     stuff=stuff+ '</select>';
-                                    node.innerHTML = stuff;
+                                    node.innerHTML = stuff;*/
                                     //$.each(test, function(value){
                                         //stuff=stuff + '<option value="'+value+'">'+value+'</option>';
                                        // $("test").append(stuff);
@@ -173,8 +186,7 @@
                         var node = document.getElementById("table");
                         
                         node.innerHTML = stuff;
-            
-        }
+                        
         </Script>
             
 
