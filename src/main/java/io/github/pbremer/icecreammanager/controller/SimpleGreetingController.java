@@ -13,14 +13,14 @@ public class SimpleGreetingController {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SimpleGreetingController.class);
             
-    @RequestMapping("/")
+    //@RequestMapping("/")
     public String hello() {
         LOGGER.debug("At index");
         // return HELLO;
         return "public/index";
     }
     
-    @RequestMapping("/dashboard")
+    @RequestMapping(path={"/dashboard", "/"})
     public String dashboard() {
         LOGGER.debug("At dashboard");
         // return HELLO;
