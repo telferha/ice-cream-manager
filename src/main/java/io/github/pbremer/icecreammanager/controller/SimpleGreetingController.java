@@ -40,4 +40,10 @@ public class SimpleGreetingController {
         // return HELLO;
         return "public/inventory";
     }
+    @RequestMapping("/uploadfile")
+    public String uploadfile() {
+        LOGGER.debug("At uploadfile");
+        // return HELLO;
+        return "public/uploadfile";
+    }
 }
