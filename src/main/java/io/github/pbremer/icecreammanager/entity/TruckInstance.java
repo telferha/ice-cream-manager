@@ -1,10 +1,12 @@
 package io.github.pbremer.icecreammanager.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -55,21 +57,29 @@ public class TruckInstance extends InstanceEntitySupport {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "truckInstance")
     private List<InventoryLoss> inventoryLoss;
 
-    @OneToOne
-    @JoinColumn(name = "ROUTE_INSTANCE_ID")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "truckInstance")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "routeInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
     private RouteInstance routeInstance;
 
-    @OneToOne
-    @JoinColumn(name = "DRIVER_INSTANCE_ID")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "truckInstance")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "dirverInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
     private DriverInstance driverInstance;
 
+    @Column(name = "HOURS_OUT")
+    private BigDecimal hoursOut;
+
+    @Column(name = "GAS_SPENT")
+    private BigDecimal gasSpent;
+
     public long getTruckInstanceId() {
+	return truckInstanceId;
+    }
+
+    public long getId() {
 	return truckInstanceId;
     }
 
@@ -134,6 +144,36 @@ public class TruckInstance extends InstanceEntitySupport {
 
     public void setDriverInstance(DriverInstance driverInstance) {
 	this.driverInstance = driverInstance;
+    }
+
+    /**
+     * @return the hoursOut
+     */
+    public BigDecimal getHoursOut() {
+	return hoursOut;
+    }
+
+    /**
+     * @param hoursOut
+     *            the hoursOut to set
+     */
+    public void setHoursOut(BigDecimal hoursOut) {
+	this.hoursOut = hoursOut;
+    }
+
+    /**
+     * @return the gasSpent
+     */
+    public BigDecimal getGasSpent() {
+	return gasSpent;
+    }
+
+    /**
+     * @param gasSpent
+     *            the gasSpent to set
+     */
+    public void setGasSpent(BigDecimal gasSpent) {
+	this.gasSpent = gasSpent;
     }
 
     @Override

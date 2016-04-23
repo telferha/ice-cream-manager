@@ -3,6 +3,8 @@
  */
 package io.github.pbremer.icecreammanager.batch.reader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
@@ -17,6 +19,9 @@ import io.github.pbremer.icecreammanager.flatfilecontents.LoadTruckFlatFileConta
  */
 public class LoadTruckInputFileReader
         extends MultilineFlatFileItemReader<LoadTruckFlatFileContainer> {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(LoadTruckFlatFileContainer.class);
 
     /*
      * (non-Javadoc)
@@ -37,19 +42,20 @@ public class LoadTruckInputFileReader
 		        "Truck header record encountered twice without a closing adjustment row");
 		loadTruck = new LoadTruckFlatFileContainer();
 		loadTruck.setTruckNumber(line.readString("Truck Number"));
-	    } else if ("SR".equalsIgnoreCase(prefix)) {
+	    } else if ("IR".equalsIgnoreCase(prefix)) {
 		Assert.notNull(loadTruck,
 		        "Adjustment count row encountered without a truck header row");
 		loadTruck.setAdjustmentRowNumber(
 		        line.readString("Adjustment Number"));
 		return loadTruck;
 	    } else if (prefix.matches("^[0-9]+")) {
+		log.debug(line.toString());
 		Assert.notNull(loadTruck,
 		        "Encountered item row without seeing truck number");
 		ItemAdjustmentFlatFileContainer inventoryAdjustment =
 		        loadTruck.new ItemAdjustmentFlatFileContainer();
 		inventoryAdjustment
-		        .setAdjustmentQuantity(line.readString("Item Number"));
+		        .setItemNumber(line.readString("Item Number"));
 		inventoryAdjustment.setAdjustmentQuantity(
 		        line.readString("Adjustment Quantity"));
 		loadTruck.addAdjustment(inventoryAdjustment);

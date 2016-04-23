@@ -3,6 +3,8 @@
  */
 package io.github.pbremer.icecreammanager.service;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Service;
 
 import io.github.pbremer.icecreammanager.entity.WarehouseInventory;
@@ -14,4 +16,5 @@ import io.github.pbremer.icecreammanager.entity.WarehouseInventory;
 public interface WarehouseInventoryService
         extends ActivatableService<WarehouseInventory, Long> {
 
+    public BigDecimal getPrice(String iceCreamId);
 }

@@ -3,6 +3,8 @@
  */
 package io.github.pbremer.icecreammanager.service.impl;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,16 @@ public class WharehouseInventoryServiceImpl
     public WharehouseInventoryServiceImpl(WarehouseRepository repository) {
 	super(repository);
 	this.repository = repository;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see io.github.pbremer.icecreammanager.service.WarehouseInventoryService#
+     * getPrice(long)
+     */
+    @Override
+    public BigDecimal getPrice(String iceCreamId) {
+	return repository.getCurrentPrice(iceCreamId, true);
     }
 
 }

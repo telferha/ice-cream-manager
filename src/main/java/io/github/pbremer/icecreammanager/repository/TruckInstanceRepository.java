@@ -18,7 +18,11 @@ import io.github.pbremer.icecreammanager.entity.TruckInstance;
 public interface TruckInstanceRepository
         extends DateRangeSearchable<TruckInstance, Long> {
 
-    @Query("SELECT t FROM TruckInstance t WHERE t.day = :day and t.truck = :truckNumber")
+    @Query("SELECT ti FROM TruckInstance ti JOIN ti.truck t WHERE ti.day = :day and t.truckNumber = :truckNumber")
     public TruckInstance findByDayAndTruckNumber(@Param("day") Date day,
             @Param("truckNumber") String truckNumber);
+
+    @Query("SELECT t FROM TruckInstance t WHERE t.day = :day and t.routeInstance = :routeNumber")
+    public TruckInstance findByDayAndRouteNumber(@Param("day") Date day,
+            @Param("routeNumber") String routeNumber);
 }

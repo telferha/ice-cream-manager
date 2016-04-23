@@ -61,7 +61,8 @@ public class InputFileHeaderAndTrailerItemReader
 		        .setDay(line.readDate("Date", dateFormat));
 		log.debug("Date: {}", new SimpleDateFormat(dateFormat)
 		        .format(headerTrailerContainer.getDay()));
-	    } else if ("T".equalsIgnoreCase(prefix)) {
+	    } else if ("T".equalsIgnoreCase(prefix)
+	            && line.getFieldCount() > 1) {
 		log.debug(line.toString());
 		Assert.notNull(headerTrailerContainer,
 		        "Encountered trailer record before the header record");
@@ -71,6 +72,7 @@ public class InputFileHeaderAndTrailerItemReader
 		log.debug("Returning: {}", returnContainer.toString());
 		return returnContainer;
 	    } else if (prefix.matches(countableRowRegex)) {
+		log.debug(line.toString());
 		headerTrailerContainer.incrimentCount();
 		log.debug("Current actual count: {}",
 		        headerTrailerContainer.getActualCount());

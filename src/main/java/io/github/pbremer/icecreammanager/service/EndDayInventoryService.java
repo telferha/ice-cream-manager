@@ -11,6 +11,6 @@ import io.github.pbremer.icecreammanager.entity.EndDayInventory;
  * @author Matthew Stockert
  */
 @Service
-public interface EndDayInventoryService extends InstanceService<EndDayInventory, Long> {
-
+public interface EndDayInventoryService
+        extends InstanceService<EndDayInventory, Long> {
 }
