@@ -36,7 +36,7 @@ public class TruckController {
 	return truckIds;
     }
 
-    
+    //@CrossOrigin
     @RequestMapping(path = "/getTruckInventory/{truckId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
