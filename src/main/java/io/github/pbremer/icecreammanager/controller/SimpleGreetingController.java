@@ -26,4 +26,11 @@ public class SimpleGreetingController {
         // return HELLO;
         return "public/dashboard";
     }
+    
+    @RequestMapping("/alter")
+    public String alter() {
+        LOGGER.debug("At alter");
+        // return HELLO;
+        return "public/alter";
+    }
 }
