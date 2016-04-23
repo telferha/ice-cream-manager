@@ -2,6 +2,7 @@ package io.github.pbremer.icecreammanager.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -48,7 +49,7 @@ public class RouteInstance extends InstanceEntitySupport {
     @JsonIdentityReference(alwaysAsId = true)
     private Route route;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "ROUTE_ZONES",
             joinColumns = @JoinColumn(name = "ROUTE_INSTANCE_ID"),
             inverseJoinColumns = @JoinColumn(name = "ZONE_NAME"))
@@ -56,12 +57,19 @@ public class RouteInstance extends InstanceEntitySupport {
             "lastModifiedDate" })
     private List<Zone> zones;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "truckInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
     private TruckInstance truckInstance;
+
+    @SuppressWarnings("unused")
+    private transient long truckInstanceId;
+
+    public void setTruckInstanceId(long truckInstanceId) {
+	this.truckInstanceId = truckInstanceId;
+    }
 
     public long getRouteInstanceId() {
 	return routeInstanceId;

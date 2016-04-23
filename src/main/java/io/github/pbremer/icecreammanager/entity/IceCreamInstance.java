@@ -38,7 +38,7 @@ public class IceCreamInstance extends InstanceEntitySupport {
     private long iceCreamInstanceId;
 
     @Column(name = "SUPPLIER_PRICE")
-    private BigDecimal supplierPrice;
+    private BigDecimal supplierPrice = new BigDecimal(0);
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ICE_CREAM_NAME")
