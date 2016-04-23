@@ -46,6 +46,7 @@ public class TruckRouteMapperConverter
 	route.setRoute(routeService.getOne(source.getRouteNumber()));
 	route.setDay(day);
 	truck.setRouteInstance(route);
+	route.setTruckInstance(truck);
 
 	return truck;
     }

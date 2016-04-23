@@ -34,8 +34,8 @@ public class WharehouseInventoryServiceImpl
      * getPrice(long)
      */
     @Override
-    public BigDecimal getPrice(long iceCreamId) {
-	return repository.getCurrentPrice(iceCreamId);
+    public BigDecimal getPrice(String iceCreamId) {
+	return repository.getCurrentPrice(iceCreamId, true);
     }
 
 }

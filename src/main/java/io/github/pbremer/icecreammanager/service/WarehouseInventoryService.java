@@ -16,5 +16,5 @@ import io.github.pbremer.icecreammanager.entity.WarehouseInventory;
 public interface WarehouseInventoryService
         extends ActivatableService<WarehouseInventory, Long> {
 
-    public BigDecimal getPrice(long iceCreamId);
+    public BigDecimal getPrice(String iceCreamId);
 }

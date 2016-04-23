@@ -36,7 +36,9 @@ import io.github.pbremer.icecreammanager.entity.InputFileMetaData;
 import io.github.pbremer.icecreammanager.entity.InputFileMetaData.FileType;
 import io.github.pbremer.icecreammanager.entity.InputFileMetaData.Status;
 import io.github.pbremer.icecreammanager.repository.InputFileMetaDataRepository;
+import io.github.pbremer.icecreammanager.service.BeginDayInventoryService;
 import io.github.pbremer.icecreammanager.service.CityService;
+import io.github.pbremer.icecreammanager.service.DriverInstanceService;
 import io.github.pbremer.icecreammanager.service.DriverService;
 import io.github.pbremer.icecreammanager.service.RouteService;
 import io.github.pbremer.icecreammanager.service.TruckInstanceService;
@@ -87,6 +89,12 @@ public class BatchJobTest {
 
     @Autowired
     private TruckInstanceService truckInstanceService;
+
+    @Autowired
+    private DriverInstanceService driverInstanceService;
+
+    @Autowired
+    private BeginDayInventoryService beginDayInventoryService;
 
     @Before
     public void setup() {
@@ -209,20 +217,37 @@ public class BatchJobTest {
 	assertThat("Truck-route data is not stored",
 	        truckInstanceService.findAll().size(), equalTo(1));
 
-	// log.info("Starting driver-truck mapping job");
-	// jobExecution = launcher.run(job,
-	// new JobParametersBuilder()
-	// .addLong("time", System.currentTimeMillis())
-	// .addString("input.file.name",
-	// "classpath:input-files/driver-truck/driverTruck.txt")
-	// .addString("input.file.countablerow.regex", "^[0-9].*")
-	// .toJobParameters());
-	// log.info("Starting driver-truck mapping job validation");
-	// assertThat("Exit status is not COMEPLETE",
-	// jobExecution.getExitStatus().getExitCode(),
-	// equalTo(ExitStatus.COMPLETED.getExitCode()));
-	// assertThat("Driver-truck data is not stored",
-	// truckInstanceService.findAll().size(), equalTo(1));
+	log.info("Starting driver-truck mapping job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/driver-truck/driverTruck.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting driver-truck mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Driver-truck data is not stored",
+	        truckInstanceService.findAll().size(), equalTo(1));
+	assertThat("Driver-truck data is not stored",
+	        driverInstanceService.findAll().size(), equalTo(1));
+
+	log.info("Starting load truck job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/load-truck/loadTruck.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting driver-truck mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Begin day inventory data is not stored",
+	        beginDayInventoryService.findAll().size(), equalTo(1));
 
     }
 

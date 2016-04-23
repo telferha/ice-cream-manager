@@ -39,12 +39,15 @@ public class DriverInstance extends InstanceEntitySupport {
     @Column(name = "DRIVER_INSTANCE_ID")
     private long driverInstanceId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "truckInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
     private TruckInstance truckInstance;
+
+    @SuppressWarnings("unused")
+    private transient long truckInstanceId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DRIVER_ID")
@@ -61,6 +64,10 @@ public class DriverInstance extends InstanceEntitySupport {
 
     public long getDriverInstanceId() {
 	return driverInstanceId;
+    }
+
+    public void setTruckInstanceId(long truckInstanceId) {
+	this.truckInstanceId = truckInstanceId;
     }
 
     public TruckInstance getTruckInstance() {

@@ -29,13 +29,13 @@
 		<property name="repository" ref="warehouseRepository" />
 		<property name="methodName" value="save" />
 	</bean>
-	
+
 	<bean id="driverWriter"
 		class="org.springframework.batch.item.data.RepositoryItemWriter">
 		<property name="repository" ref="driverRepository" />
 		<property name="methodName" value="save" />
 	</bean>
-	
+
 	<bean id="truckInstanceWriter"
 		class="org.springframework.batch.item.data.RepositoryItemWriter">
 		<property name="repository" ref="truckInstanceRepository" />
@@ -53,10 +53,11 @@
 				<entry key="${inputfile.inventory.filename}" value-ref="inventoryWriter" />
 				<entry key="${inputfile.driver.filename}" value-ref="driverWriter" />
 				<entry key="${inputfile.drivertruck.filename}" value-ref="truckInstanceWriter" />
-				<entry key="${inputfile.truckroute.filename}" value-ref="truckInstanceWriter" /><!-- 
+				<entry key="${inputfile.truckroute.filename}" value-ref="truckInstanceWriter" />
+				<entry key="${inputfile.loadtruck.filename}" value-ref="truckInstanceWriter" /><!-- 
 					<entry key="${inputfile.loadtruck.filename}" value-ref="loadTruckItemReader" 
 					/> <entry key="${inputfile.trucksales.filename}" value-ref="truckSalesItemReader" 
-					/>  <entry key="${inputfile.routeprice.filename}" value-ref="routePriceItemReader" 
+					/> <entry key="${inputfile.routeprice.filename}" value-ref="routePriceItemReader" 
 					/> <entry key="${inputfile.costs.filename}" value-ref="costsItemReader" /> 
 					<entry key="${inputfile.drivertruck.filename}" value-ref="driverTruckItemReader" 
 					/> -->
