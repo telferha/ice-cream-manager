@@ -26,6 +26,7 @@ public class ControllerConfiguration extends WebMvcAutoConfigurationAdapter {
      * #addCorsMappings(org.springframework.web.servlet.config.annotation.
      * CorsRegistry)
      */
+    
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 	registry.addMapping("/**");

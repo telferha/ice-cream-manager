@@ -12,29 +12,63 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.0/d3.min.js"></script>
 <script src="https://rawgit.com/patternfly/patternfly/master/dist/js/patternfly.min.js"></script>
   </head>
-  <body style="background-color:grey;">
-<div class="container-fluid" style="background-color:grey;">
-    <div class="column">
-        <div class="col-sm-10">
-            <h1 class="text-center">UPLOAD</h1>
-            <p class="text-center">ICE CREAM MANAGER</p>
-        </div>
-        <div class="col-sm-2">
-            <h1 class="text-center">image</h1>
-            <p class="text-center">Resize</p>
-        </div>
-
-    </div>
+  <body class="cards-pf">
+   <nav class="navbar navbar-default navbar-pf" role="navigation">
+      <div class="navbar-header">
+      
+        <a class="navbar-brand" href="research.html">
+            <div class="card-pf-title"> Formally Known As Team Six <br> Ice Cream Manager<br> <br>
+            </div>
+            <img src="easymozaLR.jpg" style="position: absolute; top: 0; right: 0; border: 0;"/>
+        </a>
       </div>
-    <div class="col-sm-12" style="background-color:grey; border-top-style:solid; border-bottom-style:solid; border-width:2px;" >
-       <button type="button" id="dashboard_button" class="btn btn-primary" style="width: 49%;">DASHBOARD</button>
+      <div class="collapse navbar-collapse navbar-collapse-1">
+          
+        <ul class="nav navbar-nav navbar-primary">
+          <li>
+            <a href="dashboard.html">Dashboard</a>
+          </li>
+          <li>
+            <a href="alter.html">Alter</a>
+          </li>
+            <li>
+            <a href="inventory.html">Inventory</a>
+          </li>          
+        </ul>
+      </div>
+    </nav> 
     
-        
-        <button type="button" id="alter_button" class="btn btn-primary" style="width: 49%;">ALTER DATA</button>
-</div> 
-      <div class="col-sm-1"></div>
-      <div class="col-sm-10" style="background-color:white; border-style:solid; border-width:2px; height:83%;">
-        
+      <div id="div1" class="container-fluid container-cards-pf">
+          
+            <div id="upload">
+                  <div class="col-sm-12">
+                      <Center>
+                          <form method="POST" action="/upload">
+                              <input class="btn btn-primary" type="file" name="file" for="my-file-selector">  </input>
+                                    <br><br>
+                              <input type="submit"  class="btn btn-primary" onclick="myfunction();"></input>
+                                <!--<input id="my-file-selector" type="file">-->
+                            </form>
+                      </Center>
+                    <br><br>
+                  </div>
+            </div>
+     
       </div>
-    </body>
-    </html>
+      
+      <script>
+        function myfunction() {
+            var parent = document.getElementById("div1");
+            var child = document.getElementById("upload");
+            var number = 12;
+            var MB = 14.6
+            parent.removeChild(child);
+            var node = document.createElement("col-sm-12");                 // Create a <li> node
+            node.innerHTML = '<div class="progress-description"><div class="spinner spinner-xs spinner-inline"></div> <strong>Downloading:</strong>  Product Repositories</div><div class="progress progress-label-top-right"><div class="progress-bar" role="progressbar" aria-valuenow="'+number+'%" aria-valuemin="0" aria-valuemax="100" style="width: '+number+'%;"><span>'+number+'% ('+MB+' of 82MB)</span></div></div>';         // Create a text node
+            //node.appendChild(textnode);                              // Append the text to <li>
+            document.getElementById("div1").appendChild(node);
+        }
+      </script>
+      
+</body>
+</html>

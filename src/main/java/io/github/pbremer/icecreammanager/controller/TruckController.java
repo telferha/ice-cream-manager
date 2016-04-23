@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
+//import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,7 +36,7 @@ public class TruckController {
 	return truckIds;
     }
 
-    @CrossOrigin
+    //@CrossOrigin
     @RequestMapping(path = "/getTruckInventory/{truckId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -56,4 +56,5 @@ public class TruckController {
 	inventory.add(inv);
 	return inventory;
     }
+    
 }

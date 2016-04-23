@@ -19,4 +19,25 @@ public class SimpleGreetingController {
         // return HELLO;
         return "public/index";
     }
+    
+    @RequestMapping("/dashboard")
+    public String dashboard() {
+        LOGGER.debug("At dashboard");
+        // return HELLO;
+        return "public/dashboard";
+    }
+    
+    @RequestMapping("/alter")
+    public String alter() {
+        LOGGER.debug("At alter");
+        // return HELLO;
+        return "public/alter";
+    }
+    
+    @RequestMapping("/inventory")
+    public String inventory() {
+        LOGGER.debug("At inventory");
+        // return HELLO;
+        return "public/inventory";
+    }
 }
