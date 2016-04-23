@@ -15,7 +15,7 @@ public class SimpleGreetingController {
             
     @RequestMapping("/")
     public String hello() {
-        LOGGER.debug("At dashboard");
+        LOGGER.debug("At index");
         // return HELLO;
         return "public/index";
     }
@@ -25,5 +25,19 @@ public class SimpleGreetingController {
         LOGGER.debug("At dashboard");
         // return HELLO;
         return "public/dashboard";
+    }
+    
+    @RequestMapping("/alter")
+    public String alter() {
+        LOGGER.debug("At alter");
+        // return HELLO;
+        return "public/alter";
+    }
+    
+    @RequestMapping("/inventory")
+    public String inventory() {
+        LOGGER.debug("At inventory");
+        // return HELLO;
+        return "public/inventory";
     }
 }
