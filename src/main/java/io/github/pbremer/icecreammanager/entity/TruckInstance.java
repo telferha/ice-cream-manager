@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -57,16 +57,13 @@ public class TruckInstance extends InstanceEntitySupport {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "truckInstance")
     private List<InventoryLoss> inventoryLoss;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ROUTE_INSTANCE_ID")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "truckInstance")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "routeInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
     private RouteInstance routeInstance;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    // @JoinColumn(name = "DRIVER_INSTANCE_ID")
-    @PrimaryKeyJoinColumn
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "truckInstance")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "dirverInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
@@ -82,8 +79,8 @@ public class TruckInstance extends InstanceEntitySupport {
 	return truckInstanceId;
     }
 
-    public void setTruckInstanceId(long truckInstanceId) {
-	this.truckInstanceId = truckInstanceId;
+    public long getId() {
+	return truckInstanceId;
     }
 
     public Truck getTruck() {

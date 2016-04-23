@@ -23,10 +23,10 @@
 						</property>
 						<property name="lineTokenizer">
 							<bean
-								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
+								class="io.github.pbremer.icecreammanager.batch.item.file.transform.RegexMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
-										<entry key="HD*">
+										<entry key="^(HD\s).*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.header.names}" />
@@ -34,7 +34,7 @@
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
-										<entry key="T*">
+										<entry key="^(T\s).*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.trailer.names}" />
@@ -42,7 +42,7 @@
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
-										<entry key="*">
+										<entry key=".*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="columns" value="${inputfile.process.columns}" />
