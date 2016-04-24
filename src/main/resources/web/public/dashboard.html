@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="all">
   <head>
     <title>Basic - PatternFly</title>
 <meta charset="UTF-8"/>
@@ -104,6 +104,8 @@
           	                      	  dropDown = dropDown + '</select>';
           	                      	  node.innerHTML = dropDown;
           	                      	$('#eiCB1').combobox();
+          	                      	var code = document.getElementsByTagName('html')[0].innerHTML;
+          	                      	console.log(code);
           	                      	});
                                 	}
                                 	
@@ -147,11 +149,13 @@
                         <div class="row row-cards-pf">
                             <div class="col-sm-5">
                                 <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                                	<div class="card-pf">
                                     <div class="card-pf-heading">
                                         <h2 class="card-pf-title">Super Detailed Title</h2>
                                     </div>
                                     <div class="card-pf-body">
                                         <div id="verticalBarChart"></div>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

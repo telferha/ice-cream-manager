@@ -57,7 +57,7 @@
                           <center><form th:action="@{/upload}" method="POST" enctype="multipart/form-data">
                               <input class="btn btn-primary" type="file" name="file" id="file"></input>
                                     <br></br><br></br>
-                              <input type="submit"  class="btn btn-primary" onclick="myfunction();"></input>
+                              <input type="submit"  class="btn btn-primary"></input>
                                 <!--<input id="my-file-selector" type="file">-->
                             </form></center>
                       
@@ -67,19 +67,7 @@
      
       </div>
       
-      <script>
-        function myfunction() {
-            var parent = document.getElementById("div1");
-            var child = document.getElementById("upload");
-            var number = 12;
-            var MB = 14.6
-            parent.removeChild(child);
-            var node = document.createElement("col-sm-12");                 
-            node.innerHTML = '<div class="progress-description"><div class="spinner spinner-xs spinner-inline"></div> <strong>Downloading:</strong>  Product Repositories</div><div class="progress progress-label-top-right"><div class="progress-bar" role="progressbar" aria-valuenow="'+number+'%" aria-valuemin="0" aria-valuemax="100" style="width: '+number+'%;"><span>'+number+'% ('+MB+' of 82MB)</span></div></div>';         // Create a text node
-            //node.appendChild(textnode);                              
-            parent.appendChild(node);
-        }
-      </script>
+
       
 </body>
 </html>
