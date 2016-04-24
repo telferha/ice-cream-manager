@@ -1,6 +1,7 @@
 package io.github.pbremer.icecreammanager.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,14 +23,14 @@ public interface TruckInstanceRepository
     public TruckInstance findByDayAndTruckNumber(@Param("day") Date day,
             @Param("truckNumber") String truckNumber);
 
-    // @Query(value = "SELECT * FROM TRUCK_INSTANCE t "
-    // + "INNER JOIN ROUTE_INSTANCE ri "
-    // + "ON t.TRUCK_INSTANCE_ID = ri.TRUCK_INSTANCE_ID "
-    // + "INNER JOIN ROUTE r ON ri.ROUTE_ID = r.ROUTE_ID "
-    // + "WHERE t.DAY = :day and r.ROUTE_ID = :routeNumber",
-    // nativeQuery = true)
     @Query("SELECT t FROM TruckInstance t JOIN t.routeInstance ri JOIN ri.route r "
             + "WHERE t.day = :day AND r.routeId = :routeNumber")
     public TruckInstance findByDayAndRouteNumber(@Param("day") Date day,
             @Param("routeNumber") String routeNumber);
+
+    @Query("SELECT MAX(t.day) FROM TruckInstance t")
+    public Date getCurrentDate();
+
+    @Query("SELECT t.truckNumber FROM TruckInstance ti JOIN ti.truck t WHERE ti.day = :day")
+    public List<String> getTrucksOn(@Param("day") Date day);
 }
