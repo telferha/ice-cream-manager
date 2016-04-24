@@ -50,6 +50,7 @@ public class RoutePriceInputFileReader
 		priceAdjustment.setItemNumber(line.readString("Item Number"));
 		priceAdjustment.setPriceAdjustment(
 		        line.readString("Price Adjustment"));
+		routePrice.addPriceAdjustment(priceAdjustment);
 	    }
 
 	}
