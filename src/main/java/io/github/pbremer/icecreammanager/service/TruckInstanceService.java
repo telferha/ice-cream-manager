@@ -4,6 +4,7 @@
 package io.github.pbremer.icecreammanager.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -26,4 +27,8 @@ public interface TruckInstanceService
      */
     public TruckInstance getTruckByDayAndRouteNumber(Date day,
             String routeNumber);
+
+    public TruckInstance getLatestTruck(String truckNumber);
+
+    public List<String> getListOfLatestTrucks();
 }
