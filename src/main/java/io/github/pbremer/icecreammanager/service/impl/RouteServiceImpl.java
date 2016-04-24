@@ -56,7 +56,6 @@ public class RouteServiceImpl extends AbstractActivatableService<Route, String>
 	for (Route route : routes) {
 	    evictedRoute = getOne(route.getRouteId());
 	    evictedRoute.getZones().clear();
-	    route.setActive(false);
 	}
 	batchSave(evictedRoutes);
     }
