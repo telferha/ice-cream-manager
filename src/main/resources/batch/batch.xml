@@ -55,7 +55,7 @@
 		</batch:step>
 		<batch:step id="parseInputFile">
 			<batch:tasklet throttle-limit="1">
-				<batch:chunk commit-interval="10" reader="parseInputFileReader"
+				<batch:chunk commit-interval="#{maxSkips}" reader="parseInputFileReader"
 					processor="itemProcessor" writer="itemWriter" skip-limit="#{maxSkips}"
 					retry-limit="1">
 					<batch:skippable-exception-classes>
