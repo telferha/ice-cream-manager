@@ -37,13 +37,13 @@ public class PromoteStepExitMessage implements JobExecutionListener {
     @Override
     public void afterJob(JobExecution jobExecution) {
 	for (StepExecution stepExecution : jobExecution.getStepExecutions()) {
-	    logger.debug("Adding exit message: {}",
-	            stepExecution.getExitStatus().getExitDescription());
+	    logger.debug("Adding exit message: {}", stepExecution
+	            .getExecutionContext().getString("error.msg", ""));
 	    jobExecution.setExitStatus(jobExecution.getExitStatus()
 	            .and(new ExitStatus(
 	                    jobExecution.getExitStatus().getExitCode(),
-	                    stepExecution.getExitStatus()
-	                            .getExitDescription())));
+	                    stepExecution.getExecutionContext()
+	                            .getString("error.msg", ""))));
 	}
 	logger.debug("Job Exit Status: {}",
 	        jobExecution.getExitStatus().toString());

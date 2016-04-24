@@ -13,10 +13,7 @@
 	</bean>
 
 	<bean id="routeWriter"
-		class="org.springframework.batch.item.data.RepositoryItemWriter">
-		<property name="repository" ref="routeRepository" />
-		<property name="methodName" value="save" />
-	</bean>
+		class="io.github.pbremer.icecreammanager.batch.RouteItemWriter" />
 
 	<bean id="truckWriter"
 		class="org.springframework.batch.item.data.RepositoryItemWriter">
