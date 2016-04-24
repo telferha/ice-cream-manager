@@ -14,6 +14,7 @@ import org.springframework.core.convert.converter.Converter;
 import io.github.pbremer.icecreammanager.entity.Route;
 import io.github.pbremer.icecreammanager.entity.Zone;
 import io.github.pbremer.icecreammanager.flatfilecontents.RouteFlatFileContainer;
+import io.github.pbremer.icecreammanager.service.RouteService;
 import io.github.pbremer.icecreammanager.service.ZoneService;
 
 /**
@@ -27,6 +28,9 @@ public class RouteConverter
 
     @Autowired
     private ZoneService service;
+
+    @Autowired
+    private RouteService routeService;
 
     /*
      * (non-Javadoc)
@@ -44,6 +48,10 @@ public class RouteConverter
 	    for (String zoneNum : source.getCityLabel()) {
 		Zone zone = service.getOne(zoneNum);
 		zones.add(zone);
+	    }
+	    if ("C".equalsIgnoreCase(source.getActionCode())) {
+		zones.addAll(
+		        routeService.getOne(route.getRouteId()).getZones());
 	    }
 	    route.setZones(zones);
 	}
