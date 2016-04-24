@@ -20,7 +20,7 @@ import io.github.pbremer.icecreammanager.entity.IceCream;
 import io.github.pbremer.icecreammanager.entity.IceCreamInstance;
 
 /**
- * @author Patrick Bremer
+ ** @author Patrick Bremer
  */
 @RestController
 @RequestMapping("/api/driver")
