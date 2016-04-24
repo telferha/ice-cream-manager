@@ -152,6 +152,7 @@ public class BatchJobTest {
 	                        "classpath:input-files/route/routeUpload.txt")
 	                .addString("input.file.countablerow.regex", "^[ACD].*")
 	                .toJobParameters());
+	String je = jobExecution.getExitStatus().getExitDescription();
 	log.info("Starting route job validation");
 	assertThat("Exit status is not COMEPLETE",
 	        jobExecution.getExitStatus().getExitCode(),
@@ -310,6 +311,7 @@ public class BatchJobTest {
 	        truckInstanceService.findAll().get(0).getHoursOut(),
 	        equalTo(new BigDecimal("8.58")));
 
+	System.out.println(je);
     }
 
 }

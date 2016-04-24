@@ -3,10 +3,11 @@
  */
 package io.github.pbremer.icecreammanager.validator;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.util.Assert;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import io.github.pbremer.icecreammanager.entity.Zone;
 import io.github.pbremer.icecreammanager.flatfilecontents.RouteFlatFileContainer;
 import io.github.pbremer.icecreammanager.service.RouteService;
 import io.github.pbremer.icecreammanager.service.ZoneService;
@@ -29,8 +31,8 @@ public class RouteValidator implements Validator, InitializingBean {
     @Autowired
     private ZoneService zoneService;
 
-    private Map<String, List<String>> zonesCache;
-    private Map<String, List<String>> routesCache;
+    private static Map<String, List<String>> zonesCache;
+    private static Map<String, List<String>> routesCache;
 
     /*
      * (non-Javadoc)
@@ -66,39 +68,44 @@ public class RouteValidator implements Validator, InitializingBean {
     private void deleteRoute(RouteFlatFileContainer arg, Errors errors) {
 	if (!arg.getCityLabel().isEmpty()) {
 	    errors.reject("route.actioncode.delete",
-	            "Deleting a route must not have any zones listed");
+	            String.format(
+	                    "Deleting route \"%s\" must not have any zones listed",
+	                    arg.getRouteNumber()));
 	    return;
 	}
 	if (!routeService.existsAndIsActive(arg.getRouteNumber())) {
-	    errors.reject("route.routenumber.dne", "Route cannot be removed");
+	    errors.reject("route.routenumber.dne", String.format(
+	            "Route \"%s\" cannot be removed", arg.getRouteNumber()));
 	    return;
 	}
-	for (String zone : arg.getCityLabel()) {
-	    if (!isZoneAvailable(zone)) {
-		errors.reject("route.citylabel.dne", String
-		        .format("City label \"%s\" cannot be removed", zone));
-		return;
-	    }
+
+	List<String> availableZones = new ArrayList<String>();
+	for (Zone zone : routeService.getOne(arg.getRouteNumber()).getZones()) {
+	    availableZones.add(zone.getZoneName());
 	}
 	cacheRoute("available", arg.getRouteNumber());
-	cacheZone("available", arg.getCityLabel());
+	cacheZone("available", availableZones);
     }
 
     private void createRoute(RouteFlatFileContainer arg, Errors errors) {
 	if (arg.getCityLabel().isEmpty()) {
 	    errors.reject("route.actioncode.add-create",
-	            "Route must have at least one zone to be created");
+	            String.format(
+	                    "Route \"%s\" must have at least one zone to be created",
+	                    arg.getRouteNumber()));
 	    return;
 	}
-	if (isRouteAvailable(arg.getRouteNumber())) {
-	    errors.reject("route.routenumber.dne", "Route already exists");
+	if (!isRouteAvailable(arg.getRouteNumber())) {
+	    errors.reject("route.routenumber.dne", String.format(
+	            "Route \"%s\" already exists", arg.getRouteNumber()));
 	    return;
 	}
 	for (String zone : arg.getCityLabel()) {
 	    if (!isZoneAvailable(zone)) {
 		errors.reject("route.zonenumber.dne",
-		        String.format("City Label \"%s\" cannot be added",
-		                arg.getRouteNumber()));
+		        String.format(
+		                "City label \"%s\" cannot be added to route \"%s\"",
+		                zone, arg.getRouteNumber()));
 		return;
 	    }
 	}
@@ -110,29 +117,48 @@ public class RouteValidator implements Validator, InitializingBean {
     private void addToRoute(RouteFlatFileContainer arg, Errors errors) {
 	if (arg.getCityLabel().isEmpty()) {
 	    errors.reject("route.actioncode.add-create",
-	            "At least one zone must be added");
+	            String.format(
+	                    "At least one zone must be added for route \"%s\"",
+	                    arg.getRouteNumber()));
 	    return;
 	}
-	if (!isRouteAvailable(arg.getRouteNumber())) {
-	    errors.reject("route.actioncode.add.dne", "Route not available");
+	if (routesCache.get("available").contains(arg.getRouteNumber())
+	        || !routeService.existsAndIsActive(arg.getRouteNumber())) {
+	    errors.reject("route.actioncode.add.dne",
+	            String.format(
+	                    "Route \"%s\" not available for appending routes",
+	                    arg.getRouteNumber()));
 	    return;
 	}
-	if (routeService.countZones(arg.getRouteNumber()) > 10) {
-	    errors.reject("route.actioncode.add.zonecount",
-	            "A route can only have at most 10 zones");
+	int zCount = routeService.countZones(arg.getRouteNumber());
+	if (zCount + arg.getCityLabel().size() > 10) {
+	    errors.reject("route.actioncode.add.zonecount", String.format(
+	            "Route \"%s\" cannot add %d more City Labels because there are already %d assigned",
+	            arg.getRouteNumber(), arg.getCityLabel().size(), zCount));
 	    return;
+	}
+	for (String zone : arg.getCityLabel()) {
+	    if (!isZoneAvailable(zone)) {
+		errors.reject("route.zonenumber.dne",
+		        String.format(
+		                "City label \"%s\" cannot be added to route \"%s\"",
+		                zone, arg.getRouteNumber()));
+		return;
+	    }
 	}
 	occupyZones(arg.getCityLabel());
     }
 
     private boolean isRouteAvailable(String routeNumber) {
-	return zonesCache.get("available").contains(routeNumber)
-	        || !zoneService.existsAndIsActive(routeNumber);
+	return (routesCache.get("available").contains(routeNumber)
+	        && !routesCache.get("occupied").contains(routeNumber))
+	        || !routeService.existsAndIsActive(routeNumber);
     }
 
     private boolean isZoneAvailable(String zone) {
-	return zonesCache.get("available").contains(zone)
-	        || !zoneService.existsAndIsActive(zone);
+	return (zonesCache.get("available").contains(zone)
+	        && !zonesCache.get("occupied").contains(zone))
+	        || zoneService.existsAndIsActive(zone);
     }
 
     private void cacheRoute(String status, String routeNumber) {
@@ -162,13 +188,16 @@ public class RouteValidator implements Validator, InitializingBean {
 	Assert.notNull(routeService, "routeService must be set");
 	Assert.notNull(zoneService, "zoneService must be set");
 
-	zonesCache = new HashMap<String, List<String>>();
-	zonesCache.put("occupied", new Vector<String>());
-	zonesCache.put("available", new Vector<String>());
-
-	routesCache = new HashMap<String, List<String>>();
-	routesCache.put("occupied", new Vector<String>());
-	routesCache.put("available", new Vector<String>());
+	if (zonesCache == null) {
+	    zonesCache = new ConcurrentHashMap<String, List<String>>();
+	    zonesCache.put("occupied", new Vector<String>());
+	    zonesCache.put("available", new Vector<String>());
+	}
+	if (routesCache == null) {
+	    routesCache = new ConcurrentHashMap<String, List<String>>();
+	    routesCache.put("occupied", new Vector<String>());
+	    routesCache.put("available", new Vector<String>());
+	}
     }
 
 }

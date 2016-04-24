@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
 	<bean class="org.springframework.batch.core.scope.StepScope" />
-	
+
 	<bean id="customEditorConfigurer"
 		class="org.springframework.beans.factory.config.CustomEditorConfigurer">
 		<property name="customEditors">
@@ -17,17 +17,17 @@
 			</map>
 		</property>
 	</bean>
-	
+
 	<import resource="reader/reader.xml" />
 	<import resource="processor/processor.xml" />
 	<import resource="writer/writer.xml" />
-	
-	<util:constant id="maxSkips" static-field="java.lang.Integer.MAX_VALUE"/>
+
+	<util:constant id="maxSkips" static-field="java.lang.Integer.MAX_VALUE" />
 
 	<batch:job id="processInputFiles">
 		<batch:step id="verifyHeaderAndTrailer" next="parseInputFile">
 			<batch:tasklet throttle-limit="1">
-				<batch:chunk commit-interval="10"
+				<batch:chunk commit-interval="1"
 					reader="inputFileHeaderAndTrailerItemReader" processor="headerTrailerProcessor"
 					writer="stepExecutionWriter" retry-limit="3">
 					<batch:retryable-exception-classes>
@@ -36,6 +36,10 @@
 					</batch:retryable-exception-classes>
 				</batch:chunk>
 				<batch:listeners>
+					<batch:listener>
+						<bean
+							class="io.github.pbremer.icecreammanager.batch.ParseInputFileListener" />
+					</batch:listener>
 					<batch:listener>
 						<bean
 							class="org.springframework.batch.core.listener.ExecutionContextPromotionListener">
@@ -53,7 +57,7 @@
 			<batch:tasklet throttle-limit="1">
 				<batch:chunk commit-interval="10" reader="parseInputFileReader"
 					processor="itemProcessor" writer="itemWriter" skip-limit="#{maxSkips}"
-					retry-limit="3">
+					retry-limit="1">
 					<batch:skippable-exception-classes>
 						<batch:include
 							class="org.springframework.batch.item.validator.ValidationException" />
