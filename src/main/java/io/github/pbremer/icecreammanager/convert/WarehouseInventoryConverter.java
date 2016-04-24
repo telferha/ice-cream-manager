@@ -3,6 +3,7 @@
  */
 package io.github.pbremer.icecreammanager.convert;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.converter.Converter;
 
 import io.github.pbremer.icecreammanager.entity.IceCream;
@@ -28,7 +29,9 @@ public class WarehouseInventoryConverter implements
 	inventory.setQuantity(Long.valueOf(source.getWareHouseQuantity()));
 	IceCream iceCream = new IceCream();
 	iceCream.setIceCreamName(source.getItemNumber());
-	iceCream.setDescription(source.getDescription());
+	if (StringUtils.trimToEmpty(source.getDescription()).isEmpty()) {
+	    iceCream.setDescription(source.getDescription());
+	}
 	inventory.setSalesPrice(
 	        NumberHelper.convertPenniesStringToDecimal(source.getPrice()));
 	inventory.setIceCream(iceCream);
