@@ -26,8 +26,10 @@ public class WarehouseInventoryConverter implements
     @Override
     public WarehouseInventory convert(LoadInventoryFlatFileContainer source) {
 	WarehouseInventory inventory = new WarehouseInventory();
+	inventory.setActive(true);
 	inventory.setQuantity(Long.valueOf(source.getWareHouseQuantity()));
 	IceCream iceCream = new IceCream();
+	iceCream.setActive(true);
 	iceCream.setIceCreamName(source.getItemNumber());
 	if (StringUtils.trimToEmpty(source.getDescription()).isEmpty()) {
 	    iceCream.setDescription(source.getDescription());

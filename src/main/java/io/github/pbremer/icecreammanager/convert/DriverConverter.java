@@ -27,6 +27,7 @@ public class DriverConverter
 	driver.setCurrentWage(NumberHelper
 	        .convertPenniesStringToDecimal(source.getHourlyWage()));
 	driver.setDriverId(source.getDriverNumber());
+	driver.setActive(true);
 	return driver;
     }
 
