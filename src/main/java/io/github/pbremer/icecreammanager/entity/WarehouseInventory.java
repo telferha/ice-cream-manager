@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author Patrick Bremer
  */
 @Entity
-@Table(name = "WAREHOUSE_INVENTORY_ID", uniqueConstraints = @UniqueConstraint(
+@Table(name = "WAREHOUSE_INVENTORY", uniqueConstraints = @UniqueConstraint(
         columnNames = { "ICE_CREAM_NAME" }))
 @JsonInclude(Include.NON_EMPTY)
 public class WarehouseInventory extends ActivatableEntitySupport {

@@ -13,9 +13,7 @@ import java.util.TreeMap;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.util.Assert;
 
 import io.github.pbremer.icecreammanager.entity.BeginDayInventory;
 import io.github.pbremer.icecreammanager.entity.TruckInstance;
@@ -37,8 +35,7 @@ public class RoutePriceMapperConverter
     @Autowired
     private TruckInstanceService truckService;
 
-    @Value("#{new Date(#{jobExecutionContext['day']})}")
-    private Date day;
+    private long ms;
 
     /*
      * (non-Javadoc)
@@ -48,6 +45,7 @@ public class RoutePriceMapperConverter
      */
     @Override
     public TruckInstance convert(RoutePriceFlatFileContainer source) {
+	Date day = new Date(ms);
 	TruckInstance truck = truckService.getTruckByDayAndRouteNumber(day,
 	        source.getRouteNumber());
 
@@ -60,14 +58,6 @@ public class RoutePriceMapperConverter
 	}
 
 	return truck;
-    }
-
-    public void setDay(Date day) {
-	this.day = day;
-    }
-
-    public void setDay(long ms) {
-	this.day = new Date(ms);
     }
 
     private Map<String, BigDecimal> createMap(
@@ -83,6 +73,10 @@ public class RoutePriceMapperConverter
 	return map;
     }
 
+    public void setMs(long ms) {
+	this.ms = ms;
+    }
+
     /*
      * (non-Javadoc)
      * @see
@@ -90,7 +84,7 @@ public class RoutePriceMapperConverter
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-	Assert.notNull(day, "Day must be set");
+	// Assert.notNull(day, "Day must be set");
     }
 
 }

@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
-	
+
 	<bean class="org.springframework.batch.core.scope.JobScope" />
 
 	<bean id="cityProcessor"
@@ -13,6 +13,17 @@
 		scope="job">
 		<property name="delegates">
 			<list>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.CityValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
 				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
@@ -30,6 +41,17 @@
 		<property name="delegates">
 			<list>
 				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.RouteValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
+				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
 						<bean class="io.github.pbremer.icecreammanager.convert.RouteConverter"
@@ -45,6 +67,17 @@
 		scope="job">
 		<property name="delegates">
 			<list>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.TruckValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
 				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
@@ -84,7 +117,7 @@
 						<bean
 							class="io.github.pbremer.icecreammanager.convert.BeginDayInventoryConverter"
 							scope="job">
-							<property name="ms" value="#{jobExecutionContext['day']}"/>
+							<property name="ms" value="#{jobExecutionContext['day']}" />
 						</bean>
 					</property>
 				</bean>
@@ -121,7 +154,9 @@
 					<property name="converter">
 						<bean
 							class="io.github.pbremer.icecreammanager.convert.EndDayInventoryConverter"
-							scope="job" />
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
 					</property>
 				</bean>
 			</list>
@@ -154,7 +189,9 @@
 					<property name="converter">
 						<bean
 							class="io.github.pbremer.icecreammanager.convert.RoutePriceMapperConverter"
-							scope="job" />
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
 					</property>
 				</bean>
 			</list>
@@ -171,7 +208,9 @@
 					<property name="converter">
 						<bean
 							class="io.github.pbremer.icecreammanager.convert.CostsMapperConverter"
-							scope="job" />
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
 					</property>
 				</bean>
 			</list>

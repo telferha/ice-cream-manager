@@ -14,6 +14,7 @@ import io.github.pbremer.icecreammanager.entity.TruckInstance;
 import io.github.pbremer.icecreammanager.flatfilecontents.TruckRouteFlatFileContainer;
 import io.github.pbremer.icecreammanager.service.RouteService;
 import io.github.pbremer.icecreammanager.service.TruckService;
+import io.github.pbremer.icecreammanager.service.ZoneService;
 
 /**
  * @author Patrick Bremer
@@ -27,6 +28,9 @@ public class TruckRouteMapperConverter
 
     @Autowired
     private RouteService routeService;
+
+    @Autowired
+    private ZoneService zoneService;
 
     private long ms;
 

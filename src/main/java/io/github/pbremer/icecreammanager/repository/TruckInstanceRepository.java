@@ -22,7 +22,14 @@ public interface TruckInstanceRepository
     public TruckInstance findByDayAndTruckNumber(@Param("day") Date day,
             @Param("truckNumber") String truckNumber);
 
-    @Query("SELECT t FROM TruckInstance t WHERE t.day = :day and t.routeInstance = :routeNumber")
+    // @Query(value = "SELECT * FROM TRUCK_INSTANCE t "
+    // + "INNER JOIN ROUTE_INSTANCE ri "
+    // + "ON t.TRUCK_INSTANCE_ID = ri.TRUCK_INSTANCE_ID "
+    // + "INNER JOIN ROUTE r ON ri.ROUTE_ID = r.ROUTE_ID "
+    // + "WHERE t.DAY = :day and r.ROUTE_ID = :routeNumber",
+    // nativeQuery = true)
+    @Query("SELECT t FROM TruckInstance t JOIN t.routeInstance ri JOIN ri.route r "
+            + "WHERE t.day = :day AND r.routeId = :routeNumber")
     public TruckInstance findByDayAndRouteNumber(@Param("day") Date day,
             @Param("routeNumber") String routeNumber);
 }

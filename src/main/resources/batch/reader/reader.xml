@@ -465,9 +465,9 @@
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names"
-													value="${inputfile.routeprice.itemrow.names}" />
+													value="${inputfile.routeprice.countrow.names}" />
 												<property name="columns"
-													value="${inputfile.routeprice.itemrow.columns}" />
+													value="${inputfile.routeprice.countrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
@@ -475,9 +475,9 @@
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names"
-													value="${inputfile.routeprice.countrow.names}" />
+													value="${inputfile.routeprice.itemrow.names}" />
 												<property name="columns"
-													value="${inputfile.routeprice.countrow.columns}" />
+													value="${inputfile.routeprice.itemrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
@@ -509,7 +509,7 @@
 								class="org.springframework.batch.item.file.transform.PatternMatchingCompositeLineTokenizer">
 								<property name="tokenizers">
 									<map>
-										<entry key="R*">
+										<entry key="TR*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names" value="${inputfile.costs.truckrow.names}" />
@@ -518,20 +518,20 @@
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
-										<entry key="C*">
+										<entry key="SR*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="names" value="${inputfile.costs.itemrow.names}" />
-												<property name="columns" value="${inputfile.costs.itemrow.columns}" />
+												<property name="names" value="${inputfile.costs.countrow.names}" />
+												<property name="columns"
+													value="${inputfile.costs.countrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
 										<entry key="*">
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-												<property name="names" value="${inputfile.costs.countrow.names}" />
-												<property name="columns"
-													value="${inputfile.costs.countrow.columns}" />
+												<property name="names" value="${inputfile.costs.itemrow.names}" />
+												<property name="columns" value="${inputfile.costs.itemrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
