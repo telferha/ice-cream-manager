@@ -66,8 +66,9 @@ public class CostsMapperConverter implements
 		        .setAmmount(map.get(beginInventory.getIceCreamInstance()
 		                .getIceCream().getIceCreamName()));
 		lostInventory.setPrice(beginInventory.getPrice());
-		inventoryList.add(lostInventory);
 		lostInventory.setTruckInstance(truck);
+		lostInventory.setDay(day);
+		inventoryList.add(lostInventory);
 	    }
 	}
 

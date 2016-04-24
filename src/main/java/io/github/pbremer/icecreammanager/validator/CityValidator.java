@@ -29,7 +29,7 @@ public class CityValidator implements Validator {
      */
     @Override
     public void validate(Object target, Errors errors) {
-	CityFlatFileContainer arg = (CityFlatFileContainer) target;
+	CityFlatFileContainer city = (CityFlatFileContainer) target;
 
     }
 
