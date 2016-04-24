@@ -40,16 +40,17 @@ public class CostsInputFileReader
 		costs.setHoursOut(line.readString("Hours Out"));
 		costs.setGasSpent(line.readString("Gas Cost"));
 	    } else if ("SR".equalsIgnoreCase(prefix)) {
-		Assert.notNull(costs, "Encountered count row before rout row");
+		Assert.notNull(costs, "Encountered count row before truck row");
 		costs.setLostCount(line.readString("Count"));
 		return costs;
 	    } else if (prefix.matches("^[0-9].*")) {
 		Assert.notNull(costs,
-		        "Encountered inventory row before route row");
+		        "Encountered inventory row before truck row");
 		InventoryLossFlatFileContainer loss =
 		        costs.new InventoryLossFlatFileContainer();
 		loss.setItemNumber(line.readString("Item Number"));
 		loss.setQuantityLost(line.readString("Amount Lost"));
+		costs.addLoss(loss);
 	    }
 
 	}

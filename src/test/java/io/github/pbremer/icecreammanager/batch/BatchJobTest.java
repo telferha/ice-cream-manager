@@ -42,6 +42,7 @@ import io.github.pbremer.icecreammanager.service.CityService;
 import io.github.pbremer.icecreammanager.service.DriverInstanceService;
 import io.github.pbremer.icecreammanager.service.DriverService;
 import io.github.pbremer.icecreammanager.service.EndDayInventoryService;
+import io.github.pbremer.icecreammanager.service.InventoryLossService;
 import io.github.pbremer.icecreammanager.service.RouteService;
 import io.github.pbremer.icecreammanager.service.TruckInstanceService;
 import io.github.pbremer.icecreammanager.service.TruckService;
@@ -100,6 +101,9 @@ public class BatchJobTest {
 
     @Autowired
     private EndDayInventoryService endDayInventoryService;
+
+    @Autowired
+    private InventoryLossService inventoryLossService;
 
     @Before
     public void setup() {
@@ -284,6 +288,27 @@ public class BatchJobTest {
 	        equalTo(ExitStatus.COMPLETED.getExitCode()));
 	assertThat("End day inventory data is not stored",
 	        endDayInventoryService.findAll().size(), equalTo(1));
+
+	log.info("Starting costs job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/cost/cost.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting daily sales mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Inventory loss data is not stored",
+	        inventoryLossService.findAll().size(), equalTo(1));
+	assertThat("Truck gas data is not stored",
+	        truckInstanceService.findAll().get(0).getGasSpent(),
+	        equalTo(new BigDecimal("72.00")));
+	assertThat("Truck hours out data is not stored",
+	        truckInstanceService.findAll().get(0).getHoursOut(),
+	        equalTo(new BigDecimal("8.58")));
 
     }
 
