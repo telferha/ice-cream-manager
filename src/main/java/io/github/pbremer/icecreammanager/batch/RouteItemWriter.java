@@ -35,7 +35,11 @@ public class RouteItemWriter implements ItemWriter<Route> {
 		inactiveRoutes.add(route);
 	    }
 	}
-	routeService.batchSave(activeRoutes);
+	if (!activeRoutes.isEmpty())
+	    routeService.batchSave(activeRoutes);
+
+	if (!inactiveRoutes.isEmpty())
+	    routeService.inactivateRoutes(inactiveRoutes);
     }
 
 }
