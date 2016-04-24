@@ -64,15 +64,15 @@
             <label>Entity Type</label>
                 <select id="etCB1" class="combobox form-control" onchange="entity1Function()" >
                     <option value=""></option>
-                    <option value="Truck">TRUCK</option>
-                    <option value="Driver">DRIVER</option>
-                    <option value="Route">ROUTE</option>
+                    <option value="Truck">Truck</option>
+                    <option value="Driver">Driver</option>
+                    <option value="Route">Route</option>
                 </select>
               </div>
 
                <div class="col-sm-6">
                    <label>Entity ID</label>
-                   <div id="route">
+                   <div id="ei1">
                        <select id="eiCB1" class="combobox form-control">
                             <option value=""></option>
                        </select>
@@ -81,13 +81,23 @@
           </div>
                         <script>
                                 function entity1Function() {
+                                	var etValue = document.getElementById("etCB1");
+                                	var strValue = etValue.options[etValue.selectedIndex].text;
+                                	var strValueL = strValue.toLowerCase();
+                                	var urlForEI = '/api/'+strValueL+'/get'+strValue+'Ids';
+                                	if(strValue == '') {
+                                		;
+                                	}
+                                	else {
+                                		
+                                	
                                 	$.ajax({
-          	                      	  url: '/api/route/getRouteIds',
+          	                      	  url: urlForEI,
           	                      	  method: 'GET'
           	                      	}).then(function(data) {
           	                      	  console.log(data);
           	                      	  var dropDown ='<select id="eiCB1" class="combobox form-control"><option value=""></option>';
-          	                      	  var node = document.getElementById("route");
+          	                      	  var node = document.getElementById("ei1");
           	                      	  $.each(data, function(key,value) {
           	                      		  dropDown = dropDown +'<option value="'+value+'">'+value+'</option>';
           	                      	  });
@@ -95,47 +105,9 @@
           	                      	  node.innerHTML = dropDown;
           	                      	$('#eiCB1').combobox();
           	                      	});
+                                	}
                                 	
-                                    /*var conceptName = $('#Select1').find(":selected").text();
-                                    var truckIds = ["0001","0002","0040"];
-
-                                //$.getJSON("http://intense-coast-8680.herokuapp.com/api/truck/getTruckIds", function(result){
-                                    var subTruck="";
-                                    if(conceptName == "TRUCK")
-                                    {
-                                        subTruck="T";
-                                    }
-                                    var html = '<select class="combobox form-control"><option value=""></option>';
-                                    var node = document.getElementById("entity1");
-                                    var number = 1;
-                                    $.each(truckIds, function(key, value) {
-                                        html=html + '<option value="'+value+subTruck+'">'+value+subTruck+'</option>';
-                                        number = number+1;
-                                        });
-                                    html=html+ '</select>';
-                                    node.innerHTML = html;*/
-                                    //$.each(test, function(value){
-                                        //stuff=stuff + '<option value="'+value+'">'+value+'</option>';
-                                       // $("test").append(stuff);
-                                   // });
-
-
-                               // });
-                                   /* $.each(result, function(data){
-                                        var items =[];
-                                        $.each(data, function(value) {
-                                            items.push("'<option value='"+data+"'>"+data+"</option>'");
-                                        });
-                                        var htmlString ="";
-                                        $.each(items, function(value) {
-                                            htmlString = htmlString + items;
-                                        });
-
-                                        var node = document.getElementById("testSelect");
-                                        node.innerHTML = htmlString;
-                                    });*/
-                               // });
-                               		 
+                       
 							        	  
 							          
                                 }
@@ -212,16 +184,16 @@
                         <label>Entity Type</label>
                                 <select id="etCB2" class="combobox form-control" onchange="entity2Function()">
                                     <option value=""></option>
-                                    <option value="TRUCK">TRUCK</option>
-                                    <option value="ROUTE">ROUTE</option>
-                                    <option value="DRIVER">DRIVER</option>
+                                    <option value="TRUCK">Truck</option>
+                                    <option value="ROUTE">Route</option>
+                                    <option value="DRIVER">Driver</option>
                                 </select>
                             </div>
                         
                            <div class="col-sm-6">
 
                         <label>Entity ID</label>
-                            <div id="entity2">
+                            <div id="ei2">
                                 <select id ="eiCB2" class="combobox form-control" >
                                     <option value="">select a type first</option>
                                 </select>
@@ -299,48 +271,32 @@
           </div>
         </div>
 <script>
-                                function entity2Function() {
-                                    var conceptName = $('#Select2').find(":selected").text();
-                                    var truckIds = ["0001","0002","0040"];
-
-                                //$.getJSON("http://intense-coast-8680.herokuapp.com/api/truck/getTruckIds", function(result){
-                                    var subTruck="";
-                                    if(conceptName == "TRUCK")
-                                    {
-                                        subTruck="T";
-                                    }
-                                    var html = '<select class="combobox form-control"><option value=""></option>';
-                                    var node = document.getElementById("entity2");
-                                    var number = 1;
-                                    $.each(truckIds, function(key, value) {
-                                        html=html + '<option value="'+value+subTruck+'">'+value+subTruck+'</option>';
-                                        number = number+1;
-                                        });
-                                    html=html+ '</select>';
-                                    node.innerHTML = html;
-                                    //$.each(test, function(value){
-                                        //stuff=stuff + '<option value="'+value+'">'+value+'</option>';
-                                       // $("test").append(stuff);
-                                   // });
-
-
-                               // });
-                                   /* $.each(result, function(data){
-                                        var items =[];
-                                        $.each(data, function(value) {
-                                            items.push("'<option value='"+data+"'>"+data+"</option>'");
-                                        });
-                                        var htmlString ="";
-                                        $.each(items, function(value) {
-                                            htmlString = htmlString + items;
-                                        });
-
-                                        var node = document.getElementById("testSelect");
-                                        node.innerHTML = htmlString;
-                                    });*/
-                               // });
+function entity2Function() {
+	var etValue = document.getElementById("etCB2");
+	var strValue = etValue.options[etValue.selectedIndex].text;
+	var strValueL = strValue.toLowerCase();
+	var urlForEI = '/api/'+strValueL+'/get'+strValue+'Ids';
+	if(strValue == '') {
+		;
+	}
+	else {
+	$.ajax({
+    	  url: urlForEI,
+    	  method: 'GET'
+    	}).then(function(data) {
+    	  console.log(data);
+    	  var dropDown ='<select id="eiCB2" class="combobox form-control"><option value=""></option>';
+    	  var node = document.getElementById("ei2");
+    	  $.each(data, function(key,value) {
+    		  dropDown = dropDown +'<option value="'+value+'">'+value+'</option>';
+    	  });
+    	  dropDown = dropDown + '</select>';
+    	  node.innerHTML = dropDown;
+    	$('#eiCB2').combobox();
+    	});
+	}
                                     
-                                }
+}            
             
                         </script>
       
@@ -388,6 +344,10 @@ var c3ChartDefaults = $().c3ChartDefaults();
           ['data4', 10, 340, 30, 290, 35, 20],
           ['data5', 90, 150, 160, 165, 180, 5]
           ];
+          var next = ['data6', 1, 1, 1, 1, 300, 25];
+          console.log(lineChartDataColumns);
+          lineChartDataColumns.push(next);
+          console.log(lineChartDataColumns);
           var lineChartConfig = c3ChartDefaults.getDefaultLineConfig();
           lineChartConfig.bindto = '#lineChart';
           lineChartConfig.data = {
