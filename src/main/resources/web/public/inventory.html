@@ -22,7 +22,8 @@
 		rel="stylesheet" media="screen" />
 		
 
-
+ <script type="text/javascript" th:src="@{/webjars/patternfly/2.8.0/components/bootstrap-combobox/js/bootstrap-combobox.js}" ></script>
+      
 
   </head>
   <body class="cards-pf">
@@ -116,55 +117,20 @@
                             
                                 </div><br></br>
                         <script>
-                        $.ajax({
-                      	  url: '/api/truck/getTruckIds',
-                      	  method: 'GET'
-                      	}).then(function(data) {
-                      	  console.log(data);
-                      	  var dropDown ='<select class="combobox form-control"><option value=""></option>';
-                      	  var node = document.getElementById("trucks");
-                      	  $.each(data, function(key,value) {
-                      		  dropDown = dropDown +'<option value="'+value+'">'+value+'</option>';
-                      	  })
-                      	  dropDown = dropDown + '</select>';
-                      	  node.innerHTML = dropDown;
-                      	});
-      }
-              
-
-                                //$.getJSON("http://intense-coast-8680.herokuapp.com/api/truck/getTruckIds", function(result){
-									/*var test =['0001', '0002', '0004']
-                                    var stuff = '<select class="combobox form-control"><option value=""></option>';
-                                    var node = document.getElementById("test");
-                                    $.each(test, function(key, value) {
-                                        stuff=stuff + '<option value="'+value+'">'+value+'</option>';
-
-                                        });
-                                    stuff=stuff+ '</select>';
-                                    node.innerHTML = stuff;*/
-                                    //$.each(test, function(value){
-                                        //stuff=stuff + '<option value="'+value+'">'+value+'</option>';
-                                       // $("test").append(stuff);
-                                   // });
-
-
-                               // });
-                                   /* $.each(result, function(data){
-                                        var items =[];
-                                        $.each(data, function(value) {
-                                            items.push("'<option value='"+data+"'>"+data+"</option>'");
-                                        });
-                                        var htmlString ="";
-                                        $.each(items, function(value) {
-                                            htmlString = htmlString + items;
-                                        });
-
-                                        var node = document.getElementById("testSelect");
-                                        node.innerHTML = htmlString;
-                                    });*/
-                               // });
-
-            
+	                        $.ajax({
+	                      	  url: '/api/truck/getTruckIds',
+	                      	  method: 'GET'
+	                      	}).then(function(data) {
+	                      	  console.log(data);
+	                      	  var dropDown ='<select class="combobox form-control"><option value=""></option>';
+	                      	  var node = document.getElementById("trucks");
+	                      	  $.each(data, function(key,value) {
+	                      		  dropDown = dropDown +'<option value="'+value+'">'+value+'</option>';
+	                      	  });
+	                      	  dropDown = dropDown + '</select>';
+	                      	  node.innerHTML = dropDown;
+	                      	$('.combobox').combobox();
+	                      	});
                         </script>
                                 <div class="col-sm-12">
                 <button class="btn btn-default" type="button"  onclick="myFunction()">&emsp;&emsp;&emsp;&emsp;&emsp;GO&emsp;&emsp;&emsp;&emsp;&emsp;</button>
@@ -175,17 +141,14 @@
              
       </div>
 
-      <script th:src="@{/webjars/patternfly/2.8.0/components/bootstrap-combobox/js/bootstrap-combobox.js}" type="text/javascript"></script>
-      <script>
-          // Initialize Boostrap-Combobox
-          $('.combobox').combobox();
-      </script>
+
       <Script>
         function myFunction() {
              var stuff = '<thead><tr><th>ITEM ID</th><th>QUANTITY</th><th>PRICE</th><th>DESCRIPTION</th></tr></thead><tbody><tr><td>001</td><td>45</td><td>1.99</td><td>it is a great description</td></tr></tbody>';
                         var node = document.getElementById("table");
                         
                         node.innerHTML = stuff;
+        }
                         
         </Script>
             
