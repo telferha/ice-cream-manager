@@ -64,7 +64,6 @@
 		scope="step">
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
-				<property name="linesToSkip" value="1" />
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
 				<property name="lineMapper">
 					<bean
@@ -137,7 +136,6 @@
 		scope="step">
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
-				<property name="linesToSkip" value="1" />
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
 				<property name="lineMapper">
 					<bean
@@ -174,7 +172,6 @@
 		scope="step">
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
-				<property name="linesToSkip" value="1" />
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
 				<property name="lineMapper">
 					<bean
@@ -327,7 +324,6 @@
 		scope="step">
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
-				<property name="linesToSkip" value="1" />
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
 				<property name="lineMapper">
 					<bean
@@ -364,7 +360,6 @@
 		scope="step">
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
-				<property name="linesToSkip" value="1" />
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
 				<property name="lineMapper">
 					<bean
@@ -401,7 +396,6 @@
 		scope="step">
 		<property name="delegate">
 			<bean class="org.springframework.batch.item.file.FlatFileItemReader">
-				<property name="linesToSkip" value="1" />
 				<property name="resource" value="#{jobParameters['input.file.name']}" />
 				<property name="lineMapper">
 					<bean
