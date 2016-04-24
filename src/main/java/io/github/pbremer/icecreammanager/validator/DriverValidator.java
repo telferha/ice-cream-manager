@@ -38,7 +38,7 @@ public class DriverValidator implements Validator, InitializingBean {
 	DriverFlatFileContainer arg = (DriverFlatFileContainer) target;
 	if (driverCahce.contains(arg.getDriverNumber())) {
 	    errors.reject("truck.trucknumber.occupied",
-	            new StringBuffer("Truck ").append(arg.getDriverNumber())
+	            new StringBuffer("Driver ").append(arg.getDriverNumber())
 	                    .append(" already exists").toString());
 	    return;
 	}

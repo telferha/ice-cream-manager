@@ -14,6 +14,8 @@
 		<property name="delegates">
 			<list>
 				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.DeactivateCity" />
+				<bean
 					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
 					<property name="validator">
 						<bean class="org.springframework.batch.item.validator.SpringValidator">
@@ -68,6 +70,8 @@
 		<property name="delegates">
 			<list>
 				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.DeactivateStagingDriver" />
+				<bean
 					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
 					<property name="validator">
 						<bean class="org.springframework.batch.item.validator.SpringValidator">
@@ -95,6 +99,17 @@
 		<property name="delegates">
 			<list>
 				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.LoadInventoryValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
+				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
 						<bean
@@ -111,6 +126,17 @@
 		scope="job">
 		<property name="delegates">
 			<list>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.LoadTruckValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
 				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
@@ -179,6 +205,8 @@
 		scope="job">
 		<property name="delegates">
 			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.DeactivateStagingDriver" />
 				<bean
 					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
 					<property name="validator">
@@ -317,6 +345,10 @@
 							</property>
 						</bean>
 					</property>
+				</bean>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.IncrimentCountStaging">
+					<constructor-arg value="#{jobParameters['input.file.name']}" />
 				</bean>
 			</list>
 		</property>

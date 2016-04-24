@@ -29,7 +29,7 @@
 			<batch:tasklet throttle-limit="1">
 				<batch:chunk commit-interval="1"
 					reader="inputFileHeaderAndTrailerItemReader" processor="headerTrailerProcessor"
-					writer="stepExecutionWriter" retry-limit="3">
+					writer="stepExecutionWriter" retry-limit="3" processor-transactional="true">
 					<batch:retryable-exception-classes>
 						<batch:include
 							class="org.springframework.dao.RecoverableDataAccessException" />
@@ -57,7 +57,7 @@
 			<batch:tasklet throttle-limit="1">
 				<batch:chunk commit-interval="#{maxSkips}" reader="parseInputFileReader"
 					processor="itemProcessor" writer="itemWriter" skip-limit="#{maxSkips}"
-					retry-limit="1">
+					retry-limit="1" processor-transactional="true">
 					<batch:skippable-exception-classes>
 						<batch:include
 							class="org.springframework.batch.item.validator.ValidationException" />

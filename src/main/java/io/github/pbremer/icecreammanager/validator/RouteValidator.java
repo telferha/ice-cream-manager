@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -24,6 +26,9 @@ import io.github.pbremer.icecreammanager.service.ZoneService;
  * @author Patrick Bremer
  */
 public class RouteValidator implements Validator, InitializingBean {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(RouteValidator.class);
 
     @Autowired
     private RouteService routeService;
@@ -57,10 +62,13 @@ public class RouteValidator implements Validator, InitializingBean {
 	    return;
 	}
 	if ("D".equalsIgnoreCase(arg.getActionCode())) {
+	    logger.info("Delete {}", arg.getRouteNumber());
 	    deleteRoute(arg, errors);
-	} else if ("A".equalsIgnoreCase(arg.getActionCode())) {
+	} else if ("C".equalsIgnoreCase(arg.getActionCode())) {
+	    logger.info("Change {}", arg.getRouteNumber());
 	    addToRoute(arg, errors);
 	} else {
+	    logger.info("Create {}", arg.getRouteNumber());
 	    createRoute(arg, errors);
 	}
     }
