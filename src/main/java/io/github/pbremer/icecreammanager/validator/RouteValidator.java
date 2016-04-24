@@ -58,7 +58,7 @@ public class RouteValidator implements Validator, InitializingBean {
 	}
 	if ("D".equalsIgnoreCase(arg.getActionCode())) {
 	    deleteRoute(arg, errors);
-	} else if ("A".equalsIgnoreCase(arg.getActionCode())) {
+	} else if ("C".equalsIgnoreCase(arg.getActionCode())) {
 	    addToRoute(arg, errors);
 	} else {
 	    createRoute(arg, errors);
