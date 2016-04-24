@@ -465,9 +465,9 @@
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names"
-													value="${inputfile.routeprice.itemrow.names}" />
+													value="${inputfile.routeprice.countrow.names}" />
 												<property name="columns"
-													value="${inputfile.routeprice.itemrow.columns}" />
+													value="${inputfile.routeprice.countrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>
@@ -475,9 +475,9 @@
 											<bean
 												class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
 												<property name="names"
-													value="${inputfile.routeprice.countrow.names}" />
+													value="${inputfile.routeprice.itemrow.names}" />
 												<property name="columns"
-													value="${inputfile.routeprice.countrow.columns}" />
+													value="${inputfile.routeprice.itemrow.columns}" />
 												<property name="strict" value="false" />
 											</bean>
 										</entry>

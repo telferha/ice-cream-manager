@@ -156,7 +156,9 @@
 					<property name="converter">
 						<bean
 							class="io.github.pbremer.icecreammanager.convert.RoutePriceMapperConverter"
-							scope="job" />
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
 					</property>
 				</bean>
 			</list>

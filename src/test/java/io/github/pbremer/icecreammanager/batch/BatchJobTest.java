@@ -7,6 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.EnumSet;
 
@@ -246,12 +247,28 @@ public class BatchJobTest {
 	                        "classpath:input-files/load-truck/loadTruck.txt")
 	                .addString("input.file.countablerow.regex", "^[0-9].*")
 	                .toJobParameters());
-	log.info("Starting driver-truck mapping job validation");
+	log.info("Starting load truck mapping job validation");
 	assertThat("Exit status is not COMEPLETE",
 	        jobExecution.getExitStatus().getExitCode(),
 	        equalTo(ExitStatus.COMPLETED.getExitCode()));
 	assertThat("Begin day inventory data is not stored",
 	        beginDayInventoryService.findAll().size(), equalTo(1));
+
+	log.info("Starting route price job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/route-price/routePrice.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting route price mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Price adjustment data is not stored",
+	        beginDayInventoryService.findAll().get(0).getPrice(),
+	        equalTo(new BigDecimal("4.00")));
 
 	log.info("Starting daily sales job");
 	jobExecution = launcher.run(job,

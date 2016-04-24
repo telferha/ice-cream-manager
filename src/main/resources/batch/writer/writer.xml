@@ -55,7 +55,8 @@
 				<entry key="${inputfile.drivertruck.filename}" value-ref="truckInstanceWriter" />
 				<entry key="${inputfile.truckroute.filename}" value-ref="truckInstanceWriter" />
 				<entry key="${inputfile.loadtruck.filename}" value-ref="truckInstanceWriter" />
-				<entry key="${inputfile.trucksales.filename}" value-ref="truckInstanceWriter" /><!-- 
+				<entry key="${inputfile.trucksales.filename}" value-ref="truckInstanceWriter" />
+				<entry key="${inputfile.routeprice.filename}" value-ref="truckInstanceWriter" /><!-- 
 					<entry key="${inputfile.loadtruck.filename}" value-ref="loadTruckItemReader" 
 					/> <entry key="${inputfile.trucksales.filename}" value-ref="truckSalesItemReader" 
 					/> <entry key="${inputfile.routeprice.filename}" value-ref="routePriceItemReader" 
