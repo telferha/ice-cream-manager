@@ -6,6 +6,8 @@ package io.github.pbremer.icecreammanager.batch;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +18,9 @@ import io.github.pbremer.icecreammanager.service.RouteService;
  * @author Patrick Bremer
  */
 public class RouteItemWriter implements ItemWriter<Route> {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(RouteItemWriter.class);
 
     @Autowired
     private RouteService routeService;
@@ -35,11 +40,14 @@ public class RouteItemWriter implements ItemWriter<Route> {
 		inactiveRoutes.add(route);
 	    }
 	}
-	if (!activeRoutes.isEmpty())
+	if (!activeRoutes.isEmpty()) {
+	    logger.info("Adding {}", activeRoutes.size());
 	    routeService.batchSave(activeRoutes);
-
-	if (!inactiveRoutes.isEmpty())
+	}
+	if (!inactiveRoutes.isEmpty()) {
+	    logger.info("Deactivating {}", inactiveRoutes.size());
 	    routeService.inactivateRoutes(inactiveRoutes);
+	}
     }
 
 }

@@ -6,6 +6,8 @@ package io.github.pbremer.icecreammanager.convert;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 
@@ -19,6 +21,9 @@ import io.github.pbremer.icecreammanager.service.ZoneService;
  */
 public class RouteConverter
         implements Converter<RouteFlatFileContainer, Route> {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(RouteConverter.class);
 
     @Autowired
     private ZoneService service;
@@ -42,6 +47,7 @@ public class RouteConverter
 	    }
 	    route.setZones(zones);
 	}
+	logger.info("{} : {}", route.getRouteId(), route.isActive());
 	return route;
     }
 
