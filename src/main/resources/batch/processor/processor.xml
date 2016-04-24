@@ -245,6 +245,17 @@
 		<property name="delegates">
 			<list>
 				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.DriverTruckValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
+				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
 						<bean
