@@ -70,7 +70,7 @@
 		<property name="delegates">
 			<list>
 				<bean
-					class="io.github.pbremer.icecreammanager.batch.processor.DeactivateStagingDriver" />
+					class="io.github.pbremer.icecreammanager.batch.processor.DeactivateStagingTruck" />
 				<bean
 					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
 					<property name="validator">
