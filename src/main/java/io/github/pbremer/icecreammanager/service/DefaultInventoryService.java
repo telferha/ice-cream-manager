@@ -15,4 +15,6 @@ public interface DefaultInventoryService
         extends ActivatableService<DefaultInventory, Long> {
 
     public void deleteAllInBatch();
+
+    public DefaultInventory delete(long id);
 }
