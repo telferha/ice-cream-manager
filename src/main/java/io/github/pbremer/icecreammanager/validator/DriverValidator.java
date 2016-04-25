@@ -17,7 +17,7 @@ import io.github.pbremer.icecreammanager.flatfilecontents.DriverFlatFileContaine
  */
 public class DriverValidator implements Validator, InitializingBean {
 
-    private static List<String> driverCahce;
+    private List<String> driverCahce;
 
     /*
      * (non-Javadoc)

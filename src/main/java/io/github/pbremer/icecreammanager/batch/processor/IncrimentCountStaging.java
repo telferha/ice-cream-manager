@@ -44,13 +44,13 @@ public class IncrimentCountStaging implements
             throws Exception {
 	for (FileType fileName : EnumSet.allOf(FileType.class)) {
 	    String[] arr = filePath.split(File.separator);
-	    if (filePath.toUpperCase()
-	            .endsWith(fileName.getFileName().toUpperCase())) {
+	    if (filePath.endsWith(fileName.getFileName())) {
 		InputFileMetaData file = service.getOne(fileName);
 		file.setSequenceNumber((file.getSequenceNumber() + 1 < 10000
 		        ? file.getSequenceNumber() + 1 : 0));
 		logger.info("{} now at: {}", fileName.getFileName(),
 		        file.getSequenceNumber());
+		file.setDay(item.getDay());
 		service.save(file);
 		return item;
 	    }

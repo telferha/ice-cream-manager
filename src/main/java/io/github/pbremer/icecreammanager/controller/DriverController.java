@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.MediaType;
-//import org.springframework.web.bind.annotation.CrossOrigin;
+// import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,7 +36,6 @@ public class DriverController {
 	return driverIds;
     }
 
-    //@CrossOrigin
     @RequestMapping(path = "/getDriverInventory/{driverId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -56,5 +55,5 @@ public class DriverController {
 	inventory.add(inv);
 	return inventory;
     }
-    
+
 }
