@@ -7,6 +7,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.github.pbremer.icecreammanager.entity.Route;
+import io.github.pbremer.icecreammanager.entity.Zone;
 import io.github.pbremer.icecreammanager.flatfilecontents.AbstractFlatFileContainer;
 import io.github.pbremer.icecreammanager.service.CityService;
 import io.github.pbremer.icecreammanager.service.RouteService;
@@ -33,7 +34,9 @@ public class DeactivateCity implements
             throws Exception {
 	city.setAllIsActiveFromTo(true, false);
 	for (Route route : routeService.findWhereIsActiveEquals(true)) {
-	    route.getZones().clear();
+	    for (Zone zone : route.getZones()) {
+		zone.setActive(false);
+	    }
 	    routeService.save(route);
 	}
 	routeService.setAllIsActiveFromTo(true, false);
