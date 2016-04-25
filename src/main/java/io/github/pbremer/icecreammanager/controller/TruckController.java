@@ -40,7 +40,7 @@ public class TruckController {
     public @ResponseBody List<String> getTruckIds() {
 	return truckService.getListOfLatestTrucks();
     }
-
+    
     @Transactional
     @RequestMapping(path = "/getTruckInventory/{truckId}",
             method = RequestMethod.GET,
