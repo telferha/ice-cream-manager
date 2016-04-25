@@ -19,8 +19,8 @@ spring:
     
 logging:
   level:
-    root: warn
-    io.github.pbremer.icecreammanager: info
+    root: info
+    io.github.pbremer.icecreammanager: debug
 ---
 spring:
   profiles: debug
