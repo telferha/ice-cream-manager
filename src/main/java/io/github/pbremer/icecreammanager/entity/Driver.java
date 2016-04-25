@@ -10,9 +10,18 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 @Entity
 @Table(name = "DRIVER")
-public class Driver extends EntitySupport {
+@JsonInclude(Include.NON_EMPTY)
+public class Driver extends ActivatableEntitySupport {
 
     private static final long serialVersionUID = -4384329683864675619L;
 
@@ -24,7 +33,48 @@ public class Driver extends EntitySupport {
             mappedBy = "driver")
     private List<DriverInstance> driverInstances;
 
-    @Column(name = "WAGE")
-    private BigDecimal wage;
+    @Column(name = "CURRENT_WAGE")
+    private BigDecimal currentWage;
+
+    public String getDriverId() {
+	return driverId;
+    }
+
+    public void setDriverId(String driverId) {
+	this.driverId = driverId;
+    }
+
+    public List<DriverInstance> getDriverInstances() {
+	return driverInstances;
+    }
+
+    public void setDriverInstances(List<DriverInstance> driverInstances) {
+	this.driverInstances = driverInstances;
+    }
+
+    public BigDecimal getCurrentWage() {
+	return currentWage;
+    }
+
+    public void setCurrentWage(BigDecimal wage) {
+	this.currentWage = wage;
+    }
+
+    @Override
+    public String toString() {
+	return ToStringBuilder
+	        .reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE)
+	        .toString();
+    }
+
+    @Override
+    public int hashCode() {
+	return HashCodeBuilder.reflectionHashCode(this, false);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	return EqualsBuilder.reflectionEquals(this, obj, false);
+    }
 
 }

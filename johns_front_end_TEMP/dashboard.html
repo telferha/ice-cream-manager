@@ -1,0 +1,254 @@
+<html lang="en-us">
+<!--<![endif]-->
+  <head>
+    <title>Basic - PatternFly</title>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://rawgit.com/patternfly/patternfly/master/dist/css/patternfly.min.css" >
+<link rel="stylesheet" href="https://rawgit.com/patternfly/patternfly/master/dist/css/patternfly-additions.min.css" >
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.0/d3.min.js"></script>
+<script src="https://rawgit.com/patternfly/patternfly/master/dist/js/patternfly.min.js"></script>
+  </head>
+  <body class="cards-pf">
+   <nav class="navbar navbar-default navbar-pf" role="navigation">
+      <div class="navbar-header">
+      
+        <a class="navbar-brand" href="research.html">
+            <div class="card-pf-title"> Formally Known As Team Six <br> Ice Cream Manager<br> <br>
+            </div>
+            <img src="easymozaLR.jpg" style="position: absolute; top: 0; right: 0; border: 0;"/>
+        </a>
+      </div>
+      <div class="collapse navbar-collapse navbar-collapse-1">
+          
+        <ul class="nav navbar-nav navbar-primary">
+          <li>
+            <a href="upload.html">Upload</a>
+          </li>
+          <li>
+            <a href="alter.html">Alter</a>
+          </li>
+          <li>
+            <a href="inventory.html">Inventory</a>
+          </li>
+        </ul>
+      </div>
+    </nav> 
+    
+      <div class="container-fluid container-cards-pf">
+        <div class="col-sm-6">
+        <div class="row row-cards-pf">
+        <label>Entity Type</label>
+            <select class="combobox form-control">
+                <option value="" selected="selected">Select a File</option>
+                <option value="Driver">Driver</option>
+                <option value="City">Truck</option>
+                <option value="Route">Route</option>
+            </select> <br>
+          </div>
+            </div>
+          <div class="col-sm-6">
+        <div class="row row-cards-pf"><label>Pick A Day</label>
+        <div class="input-group date">
+            <input type="text" class="form-control bootstrap-datepicker" readonly><span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+        </div><br>
+        </div>
+            </div>
+        <div class="row row-cards-pf">
+            <div class="col-sm-4"><center>
+            <select class="selectpicker">
+              <option disabled>Unit Of Time</option>
+              <option>Day</option>
+              <option>Week</option>
+              <option>Year</option>
+             
+            </select></center>
+            </div>
+            <div class="col-sm-4">
+                <center><button class="btn btn-default" type="button">&emsp;&emsp;&emsp;&emsp;&emsp;GO&emsp;&emsp;&emsp;&emsp;&emsp;</button></center>
+            </div>
+                        <div class="col-sm-4">
+                <center><button class="btn btn-default" type="button">&emsp;&emsp;&emsp;&emsp;DOWNLOAD&emsp;&emsp;&emsp;&emsp;</button></center>
+            </div>
+        </div><br>
+        <div class="row row-cards-pf">
+            <div class="col-sm-6">
+                <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                    <div class="card-pf-title">Percentage of Animals</div>
+                    <div id="donut-set-of-values-to-a-whole"></div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                    <div class="card-pf-title">Percentage of Animals</div>
+                    <div id="donut-set-of-values-to-a-whole2"></div>
+                </div>
+            </div>
+             
+          </div>
+        <div class="row row-cards-pf">
+            <div class="col-sm-6">
+                <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                <div class="card-pf">
+                    <div class="card-pf-heading">
+                        <h2 class="card-pf-title">Super Detailed Title</h2>
+                    </div>
+                    <div class="card-pf-body">
+                        <div id="lineChart" class="line-chart-pf"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+            <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                <div class="card-pf">
+                    <div class="card-pf-heading">
+                        <h2 class="card-pf-title">Super Detailed Title</h2>
+                    </div>
+                    <div class="card-pf-body">
+                        <div id="singleLineChart" class="line-chart-pf"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <script src="select.js"></script>
+    <script src="datepicker.js"></script>
+    <script>
+      // Initialize Boostrap-datepicker
+      $('.input-group.date').datepicker({
+        autoclose: true,
+        todayBtn: "linked",
+        todayHighlight: true
+      });
+    </script>
+    <script src="combobox.js"></script>
+      <script>
+          // Initialize Boostrap-Combobox
+          $('.combobox').combobox();
+      </script>  
+      <script>
+  var c3ChartDefaults = $().c3ChartDefaults();
+  var singleLineChartDataColumns = [
+    ['data1', 30, 200, 100, 400, 150, 250]
+  ];
+  var singleLineChartConfig = c3ChartDefaults.getDefaultSingleLineConfig();
+  singleLineChartConfig.bindto = '#singleLineChart';
+  singleLineChartConfig.data = {
+    columns: singleLineChartDataColumns,
+    type: 'line'
+  };
+  var singleLineChart = c3.generate(singleLineChartConfig);
+</script>
+      <script>
+var c3ChartDefaults = $().c3ChartDefaults();
+  var lineChartDataColumns = [
+  ['data1', 30, 200, 100, 400, 150, 250],
+  ['data2', 50, 220, 310, 240, 115, 25],
+  ['data3', 70, 100, 390, 295, 170, 220],
+  ['data4', 10, 340, 30, 290, 35, 20],
+  ['data5', 90, 150, 160, 165, 180, 5]
+  ];
+  var lineChartConfig = c3ChartDefaults.getDefaultLineConfig();
+  lineChartConfig.bindto = '#lineChart';
+  lineChartConfig.data = {
+  columns: lineChartDataColumns,
+  type: 'line'
+  };
+  var lineChart = c3.generate(lineChartConfig);
+</script>
+      
+      <script>
+
+  var c3ChartDefaults = $().c3ChartDefaults();
+
+  var donutData = {
+    type : 'donut',
+    colors: {
+      Cats: $.pfPaletteColors.blue,
+      Hamsters: $.pfPaletteColors.green,
+      Fish: $.pfPaletteColors.orange,
+      Dogs: $.pfPaletteColors.red
+    },
+    columns: [
+      ['Dogs', 2],
+      ['Cats', 2],
+      ['Fish', 3],
+      ['Hamsters', 1]
+    ],
+    onclick: function (d, i) { console.log("onclick", d, i); },
+    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+  };
+
+  var donutChartBottomConfig = c3ChartDefaults.getDefaultDonutConfig();
+  donutChartBottomConfig.bindto = '#donut-set-of-values-to-a-whole';
+  donutChartBottomConfig.tooltip = {show: true};
+  donutChartBottomConfig.data = donutData;
+  donutChartBottomConfig.legend = {
+    show: true,
+    position: 'bottom'
+  };
+  donutChartBottomConfig.size = {
+    width: 271,
+    height: 191
+  };
+  donutChartBottomConfig.tooltip = {
+    contents: $().pfDonutTooltipContents
+  };
+
+  var donutChartBottomLegend = c3.generate(donutChartBottomConfig);
+  $().pfSetDonutChartTitle("#donut-set-of-values-to-a-whole", "8", "Animals");
+
+</script>
+            <script>
+
+  var c3ChartDefaults = $().c3ChartDefaults();
+
+  var donutData = {
+    type : 'donut',
+    colors: {
+      Cats: $.pfPaletteColors.blue,
+      Hamsters: $.pfPaletteColors.green,
+      Fish: $.pfPaletteColors.orange,
+      Dogs: $.pfPaletteColors.red
+    },
+    columns: [
+      ['Dogs', 2],
+      ['Cats', 2],
+      ['Fish', 3],
+      ['Hamsters', 1]
+    ],
+    onclick: function (d, i) { console.log("onclick", d, i); },
+    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+  };
+
+  var donutChartBottomConfig = c3ChartDefaults.getDefaultDonutConfig();
+  donutChartBottomConfig.bindto = '#donut-set-of-values-to-a-whole2';
+  donutChartBottomConfig.tooltip = {show: true};
+  donutChartBottomConfig.data = donutData;
+  donutChartBottomConfig.legend = {
+    show: true,
+    position: 'bottom'
+  };
+  donutChartBottomConfig.size = {
+    width: 271,
+    height: 191
+  };
+  donutChartBottomConfig.tooltip = {
+    contents: $().pfDonutTooltipContents
+  };
+
+  var donutChartBottomLegend = c3.generate(donutChartBottomConfig);
+  $().pfSetDonutChartTitle("#donut-set-of-values-to-a-whole2", "8", "Animals");
+
+</script>
+
+</body>
+</html>

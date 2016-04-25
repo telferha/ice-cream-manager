@@ -13,10 +13,37 @@ public class SimpleGreetingController {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SimpleGreetingController.class);
             
-    @RequestMapping("/")
+    //@RequestMapping("/")
     public String hello() {
         LOGGER.debug("At index");
         // return HELLO;
         return "public/index";
+    }
+    
+    @RequestMapping(path={"/dashboard", "/"})
+    public String dashboard() {
+        LOGGER.debug("At dashboard");
+        // return HELLO;
+        return "public/dashboard";
+    }
+    
+    @RequestMapping("/alter")
+    public String alter() {
+        LOGGER.debug("At alter");
+        // return HELLO;
+        return "public/alter";
+    }
+    
+    @RequestMapping("/inventory")
+    public String inventory() {
+        LOGGER.debug("At inventory");
+        // return HELLO;
+        return "public/inventory";
+    }
+    @RequestMapping("/uploadfile")
+    public String uploadfile() {
+        LOGGER.debug("At uploadfile");
+        // return HELLO;
+        return "public/uploadfile";
     }
 }

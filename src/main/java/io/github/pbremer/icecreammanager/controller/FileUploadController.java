@@ -1,120 +1,137 @@
 package io.github.pbremer.icecreammanager.controller;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.EnumSet;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.pbremer.icecreammanager.entity.InputFileMetaData;
+import io.github.pbremer.icecreammanager.entity.InputFileMetaData.FileType;
+import io.github.pbremer.icecreammanager.service.InputFileMetaDataService;
 
 @Controller
-@PropertySource("classpath:ice-cream-manager.properties")
 public class FileUploadController implements InitializingBean {
 
     private static final Logger log =
             LoggerFactory.getLogger(FileUploadController.class);
 
-    private DateFormat dateFormat;
+    @Autowired
+    private InputFileMetaDataService inputFileMetaDataSerice;
 
-    @Value("${dateFormat}")
-    private String dateFormatString;
+    @Autowired
+    private JobExplorer jobExplorer;
 
-    @RequestMapping(path = { "/upload" }, method = { RequestMethod.POST })
-    public String upload(@RequestParam("file") MultipartFile file,
-            RedirectAttributes redirectAttributes) {
+    @Autowired
+    private JobLauncher launcher;
 
-	log.debug("Got file: {}", file.getOriginalFilename());
+    @Autowired
+    private Job job;
+
+    @RequestMapping(path = "/upload", method = RequestMethod.POST,
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    public @ResponseBody String upload(@RequestParam("file") MultipartFile file
+    /* RedirectAttributes redirectAttributes */) throws Exception {
+
+	log.info("Got file: {}", file.getOriginalFilename());
+
+	if (!jobExplorer.findRunningJobExecutions("processInputFiles")
+	        .isEmpty()) {
+	    log.info("There is a batch job already running");
+	    // redirectAttributes.addFlashAttribute("errorMessage",
+	    // "System is already processing a file. Please wait");
+	    // return "redirect:/upload";
+	    return "System is already processing a file. Please wait";
+	}
+
+	if (file.isEmpty()) {
+	    log.info("File {} is empty", file.getOriginalFilename());
+	    // redirectAttributes.addFlashAttribute("errorMessage", String
+	    // .format("File %s is empty", file.getOriginalFilename()));
+	    // return "redirect:/upload";
+	    return String.format("File %s is empty",
+	            file.getOriginalFilename());
+	}
 
 	if (file.getOriginalFilename().contains("/")) {
-	    redirectAttributes.addFlashAttribute("errorMessage",
-	            "Folder seperators not allowed");
-	    return "redirect:upload";
+	    // redirectAttributes.addFlashAttribute("errorMessage",
+	    // "Folder seperators not allowed");
+	    // return "redirect:/upload";
+	    return "Folder seperators not allowed";
 	}
 
-	if (!file.isEmpty()) {
-	    try {
-		InputFileMetaData metaData = parseFileMetaData(file);
-	    } catch (IOException ioe) {
-		log.error(String.format(
-		        "Exception getting byte array from file: %s",
-		        file.getOriginalFilename()), ioe);
+	for (FileType type : EnumSet.allOf(FileType.class)) {
+	    log.info("Checking: {}", type.getFileName());
+	    if (type.getFileName()
+	            .equalsIgnoreCase(file.getOriginalFilename())) {
+		InputFileMetaData data = inputFileMetaDataSerice.getOne(type);
+		try {
+		    data.setContents(
+		            IOUtils.toByteArray(file.getInputStream()));
+		    // inputFileMetaDataSerice.save(data);
 
-		redirectAttributes.addFlashAttribute("errorMessage",
-		        String.format(
-		                "There was an issue uploading %s, please try again",
-		                file.getOriginalFilename()));
-		return "redirect:upload";
-	    } catch (ParseException pe) {
-		log.error(
-		        String.format(
-		                "Exception parsing date from file: %s using format: %s",
-		                file.getOriginalFilename(), dateFormatString),
-		        pe);
-
-		redirectAttributes.addFlashAttribute("errorMessage",
-		        String.format("Date format is not in correct format",
-		                file.getOriginalFilename()));
-		return "redirect:upload";
+		    File localFile = new File(FileUtils.getTempDirectory(),
+		            type.getFileName());
+		    FileUtils.writeByteArrayToFile(localFile,
+		            data.getContents(), false);
+		    JobExecution jobExecution = launcher.run(job,
+		            new JobParametersBuilder()
+		                    .addLong("start",
+		                            System.currentTimeMillis())
+		                    .addString("input.file.name",
+		                            "file://" + localFile
+		                                    .getAbsolutePath())
+		                    .addString("input.file.countablerow.regex",
+		                            type.getRegexCount())
+		                    .toJobParameters());
+		    return jobExecution.getExitStatus().getExitDescription()
+		            .toString();
+		} catch (IOException | JobExecutionAlreadyRunningException
+		        | JobRestartException
+		        | JobInstanceAlreadyCompleteException
+		        | JobParametersInvalidException e) {
+		    log.error("Error processing file", e);
+		    throw e;
+		}
 	    }
-	} else {
-	    log.debug("File {} is empty", file.getOriginalFilename());
-	    redirectAttributes.addFlashAttribute("errorMessage", String
-	            .format("File %s is empty", file.getOriginalFilename()));
-	    return "redirect:upload";
 	}
 
-	return null;
+	// redirectAttributes.addFlashAttribute("errorMessage", String.format(
+	// "File %s is not a valid name", file.getOriginalFilename()));
+	// return "redirect:/upload";
+	return String.format("File %s is not a valid name",
+	        file.getOriginalFilename());
     }
 
-    private InputFileMetaData parseFileMetaData(MultipartFile file)
-            throws IOException, ParseException {
-	InputFileMetaData metaData = new InputFileMetaData();
-	LineNumberReader reader = new LineNumberReader(
-	        new InputStreamReader(file.getInputStream()));
-	metaData.setFileSize(file.getSize());
-	metaData.setFileName(file.getOriginalFilename());
-	metaData.setContents(file.getBytes());
-	String headerRow = reader.readLine();
-	metaData.setSequenceNumber(Integer
-	        .valueOf(StringUtils.trimToEmpty(headerRow.substring(0, 5))));
-	metaData.setDay(dateFormat
-	        .parse(StringUtils.trimToEmpty(headerRow.substring(0, 5))));
-	reader.skip(Long.MAX_VALUE);
-	metaData.setAmmountOfData(
-	        (reader.getLineNumber() == 0 ? 0 : reader.getLineNumber() - 1));
-	if (metaData.getAmmountOfData() != 0) {
-	    metaData.setParsedAmmountOfData(reader.read());
-	}
-	// metaData.setFileType(determineFileType(file));
-
-	return metaData;
-    }
-
-    private InputFileMetaData.FileType determineFileType(MultipartFile file) {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
-	Assert.notNull(dateFormatString, "You must specify the date format");
-	log.info("Date format pattern: {}", dateFormatString);
-	dateFormat = new SimpleDateFormat(dateFormatString);
+	Assert.notNull(inputFileMetaDataSerice);
     }
 }
