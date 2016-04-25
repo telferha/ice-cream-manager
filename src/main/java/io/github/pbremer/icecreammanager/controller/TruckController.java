@@ -40,7 +40,7 @@ public class TruckController {
     public @ResponseBody List<String> getTruckIds() {
 	return truckService.getListOfLatestTrucks();
     }
-    
+
     @Transactional
     @RequestMapping(path = "/getTruckInventory/{truckId}",
             method = RequestMethod.GET,
@@ -55,6 +55,12 @@ public class TruckController {
 	    Hibernate.initialize(bgi.getIceCreamInstance().getIceCream());
 	    Hibernate.initialize(
 	            bgi.getIceCreamInstance().getIceCream().getDescription());
+	    Hibernate.initialize(bgi.getTruckInstance());
+	    Hibernate.initialize(
+	            bgi.getTruckInstance().getDriverInstance().getDriver());
+	    Hibernate.initialize(bgi.getTruckInstance().getRouteInstance());
+	    Hibernate.initialize(
+	            bgi.getTruckInstance().getRouteInstance().getRoute());
 	}
 	return inv;
     }
