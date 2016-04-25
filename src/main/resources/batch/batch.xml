@@ -25,7 +25,7 @@
 	<util:constant id="maxSkips" static-field="java.lang.Integer.MAX_VALUE" />
 
 	<batch:job id="processInputFiles">
-		<batch:step id="verifyHeaderAndTrailer" next="parseInputFile">
+		<batch:step id="verifyHeaderAndTrailer">
 			<batch:tasklet throttle-limit="1">
 				<batch:chunk commit-interval="1"
 					reader="inputFileHeaderAndTrailerItemReader" processor="headerTrailerProcessor"
@@ -52,6 +52,8 @@
 					<batch:include class="java.lang.Exception" />
 				</batch:no-rollback-exception-classes>
 			</batch:tasklet>
+			<batch:next on="COMPLETED" to="parseInputFile"/>
+			<batch:fail on="*"/>
 		</batch:step>
 		<batch:step id="parseInputFile">
 			<batch:tasklet throttle-limit="1">
