@@ -39,6 +39,10 @@
 				<batch:listeners>
 					<batch:listener>
 						<bean
+							class="io.github.pbremer.icecreammanager.batch.ChangeExitStatusOnSkipListener" />
+					</batch:listener>
+					<batch:listener>
+						<bean
 							class="io.github.pbremer.icecreammanager.batch.ParseInputFileListener" />
 					</batch:listener>
 					<batch:listener>
@@ -52,8 +56,8 @@
 					<batch:include class="java.lang.Exception" />
 				</batch:no-rollback-exception-classes>
 			</batch:tasklet>
-			<batch:next on="COMPLETED" to="parseInputFile"/>
-			<batch:fail on="*"/>
+			<batch:next on="COMPLETED" to="parseInputFile" />
+			<batch:fail on="*" />
 		</batch:step>
 		<batch:step id="parseInputFile">
 			<batch:tasklet throttle-limit="1">
