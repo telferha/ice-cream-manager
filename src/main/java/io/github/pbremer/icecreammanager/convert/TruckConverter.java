@@ -23,6 +23,7 @@ public class TruckConverter
     @Override
     public Truck convert(TruckFlatFileContainer source) {
 	Truck truck = new Truck();
+	truck.setActive(true);
 	truck.setTruckNumber(source.getTruckNumber());
 	return truck;
     }

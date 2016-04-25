@@ -18,7 +18,7 @@ public abstract class ActivatableEntitySupport extends EntitySupport {
     }
 
     @Column(name = "ACTIVE")
-    private boolean active = true;
+    private boolean active;
 
     /**
      * @return the isActive

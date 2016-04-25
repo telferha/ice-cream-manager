@@ -13,16 +13,12 @@ import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.listener.StepListenerSupport;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
-
-import io.github.pbremer.icecreammanager.entity.EntitySupport;
-import io.github.pbremer.icecreammanager.flatfilecontents.AbstractFlatFileContainer;
 
 /**
  * @author Patrick Bremer
  */
 public class ParseInputFileListener
-        extends StepListenerSupport<AbstractFlatFileContainer, EntitySupport> {
+        extends StepListenerSupport<Object, Object> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ParseInputFileListener.class);
@@ -47,21 +43,19 @@ public class ParseInputFileListener
      * onSkipInProcess(java.lang.Object, java.lang.Throwable)
      */
     @Override
-    public void onSkipInProcess(AbstractFlatFileContainer item, Throwable t) {
-	super.onSkipInProcess(item, t);
-	logger.warn("{} skipped \n{}", item.toString(),
-	        ExceptionUtils.getStackTrace(t));
+    public void onSkipInProcess(Object item, Throwable t) {
 
-	StringBuffer buffer = new StringBuffer();
-	BindException ex = (BindException) t.getCause();
-	for (ObjectError err : ex.getBindingResult().getAllErrors()) {
-	    buffer.append(err.getDefaultMessage()).append("\n");
-	}
+	logger.warn("Item {} skipped \n{}", item.toString(),
+	        ExceptionUtils.getRootCauseMessage(t));
+
 	executionContext.put("error.msg",
-	        String.format("%s\n%s",
-	                executionContext.getString("error.msg",
-	                        "***** PARSING ERROR LOG *****"),
-	                buffer.toString()));
+	        new StringBuffer(
+	                executionContext.getString("error.msg", ""))
+	                        .append("\n")
+	                        .append(((BindException) ExceptionUtils
+	                                .getRootCause(t)).getAllErrors().get(0)
+	                                        .getDefaultMessage())
+	                        .toString());
 
     }
 
@@ -73,14 +67,15 @@ public class ParseInputFileListener
      */
     @Override
     public void onSkipInRead(Throwable t) {
-	super.onSkipInRead(t);
 	logger.warn("Skipped reading item \n{}",
 	        ExceptionUtils.getStackTrace(t));
-	executionContext.put("error.msg",
-	        String.format("%s\n%s",
-	                executionContext.getString("error.msg",
-	                        "***** PARSING ERROR LOG *****"),
-	                ExceptionUtils.getRootCauseMessage(t)));
+	executionContext
+	        .put("error.msg",
+	                String.format("%s\n%s",
+	                        executionContext.getString("error.msg", ""),
+	                        ((BindException) ExceptionUtils.getRootCause(t))
+	                                .getAllErrors().get(0)
+	                                .getDefaultMessage()));
     }
 
     /*
@@ -91,8 +86,9 @@ public class ParseInputFileListener
      */
     @Override
     public void onReadError(Exception ex) {
-	super.onReadError(ex);
 	logger.error("Error reading input file", ex);
+	executionContext.put("error.msg",
+	        "A fatal server exception has occured. Please contact support");
     }
 
     /*
@@ -101,10 +97,17 @@ public class ParseInputFileListener
      * onProcessError(java.lang.Object, java.lang.Exception)
      */
     @Override
-    public void onProcessError(AbstractFlatFileContainer item, Exception e) {
-	super.onProcessError(item, e);
+    public void onProcessError(Object item, Exception e) {
+	if (ExceptionUtils.getRootCause(e) instanceof BindException) {
+	    executionContext.put("error.msg",
+	            ((BindException) ExceptionUtils.getRootCause(e))
+	                    .getAllErrors().get(0).getDefaultMessage());
+	} else {
+	    executionContext.put("error.msg",
+	            "A fatal server exception has occured. Please contact support");
+	}
 	logger.error("Error processing {}\n{}", item.toString(),
-	        ExceptionUtils.getStackTrace(e));
+	        ExceptionUtils.getRootCauseMessage(e));
     }
 
     /*
@@ -115,10 +118,11 @@ public class ParseInputFileListener
      */
     @Override
     public void onWriteError(Exception exception,
-            List<? extends EntitySupport> items) {
-	super.onWriteError(exception, items);
+            List<? extends Object> items) {
 	logger.error("Error writing {}\n{}", items.toString(),
 	        ExceptionUtils.getStackTrace(exception));
+	executionContext.put("error.msg",
+	        "A fatal server exception has occured. Please contact support");
     }
 
     /*
@@ -129,8 +133,12 @@ public class ParseInputFileListener
      */
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
-	return stepExecution.getExitStatus().addExitDescription(executionContext
-	        .getString("error.msg", "***** PARSING ERROR LOG *****\nNone"));
+	logger.debug("After Step {} with exit description:\n{}",
+	        stepExecution.getStepName(),
+	        executionContext.getString("error.msg", ""));
+	return new ExitStatus(stepExecution.getExitStatus().getExitCode())
+	        .addExitDescription(
+	                executionContext.getString("error.msg", ""));
     }
 
 }

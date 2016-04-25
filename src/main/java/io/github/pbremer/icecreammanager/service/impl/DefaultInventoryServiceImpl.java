@@ -23,4 +23,27 @@ public class DefaultInventoryServiceImpl
 	super(repository);
 	this.repository = repository;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see io.github.pbremer.icecreammanager.service.DefaultInventoryService#
+     * deleteAllInBatch()
+     */
+    @Override
+    public void deleteAllInBatch() {
+	repository.deleteAllInBatch();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * io.github.pbremer.icecreammanager.service.DefaultInventoryService#delete(
+     * long)
+     */
+    @Override
+    public DefaultInventory delete(long id) {
+	DefaultInventory inv = repository.findOne(id);
+	repository.delete(inv);
+	return inv;
+    }
 }

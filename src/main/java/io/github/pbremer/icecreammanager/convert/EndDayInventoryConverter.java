@@ -11,9 +11,7 @@ import java.util.TreeMap;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.util.Assert;
 
 import io.github.pbremer.icecreammanager.entity.BeginDayInventory;
 import io.github.pbremer.icecreammanager.entity.EndDayInventory;
@@ -36,8 +34,7 @@ public class EndDayInventoryConverter
     @Autowired
     private TruckInstanceService truckService;
 
-    @Value("#{new Date(#{jobExecutionContext['day']})}")
-    private Date day;
+    private long ms;
 
     /*
      * (non-Javadoc)
@@ -47,8 +44,9 @@ public class EndDayInventoryConverter
      */
     @Override
     public TruckInstance convert(TruckSalesFlatFileContainer source) {
-	TruckInstance truck =
-	        truckService.getOne(Long.valueOf(source.getTruckNumber()));
+	Date day = new Date(ms);
+	TruckInstance truck = truckService.getTruckByDayAndTruckNumber(day,
+	        source.getTruckNumber());
 	List<BeginDayInventory> beginInventoryList =
 	        inventoryService.findByTruckInstance(truck);
 	Map<String, Integer> map = createMap(source.getEndOfDayInventory());
@@ -88,12 +86,8 @@ public class EndDayInventoryConverter
 	return map;
     }
 
-    public void setDay(Date day) {
-	this.day = day;
-    }
-
-    public void setDay(long ms) {
-	this.day = new Date(ms);
+    public void setMs(long ms) {
+	this.ms = ms;
     }
 
     /*
@@ -103,7 +97,7 @@ public class EndDayInventoryConverter
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-	Assert.notNull(day, "Day must be set");
+	// Assert.notNull(day, "Day must be set");
     }
 
 }

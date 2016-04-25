@@ -4,6 +4,7 @@
 package io.github.pbremer.icecreammanager.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,22 @@ public class TruckInstanceServiceImpl
     public TruckInstance getTruckByDayAndRouteNumber(Date day,
             String routeNumber) {
 	return repository.findByDayAndRouteNumber(day, routeNumber);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see io.github.pbremer.icecreammanager.service.TruckInstanceService#
+     * getLatestTruck(java.lang.String)
+     */
+    @Override
+    public TruckInstance getLatestTruck(String truckNumber) {
+	Date day = repository.getCurrentDate();
+	return getTruckByDayAndTruckNumber(day, truckNumber);
+    }
+
+    @Override
+    public List<String> getListOfLatestTrucks() {
+	return repository.getTrucksOn(repository.getCurrentDate());
     }
 
 }

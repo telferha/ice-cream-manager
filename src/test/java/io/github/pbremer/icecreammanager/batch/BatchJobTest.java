@@ -7,6 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.EnumSet;
 
@@ -36,8 +37,12 @@ import io.github.pbremer.icecreammanager.entity.InputFileMetaData;
 import io.github.pbremer.icecreammanager.entity.InputFileMetaData.FileType;
 import io.github.pbremer.icecreammanager.entity.InputFileMetaData.Status;
 import io.github.pbremer.icecreammanager.repository.InputFileMetaDataRepository;
+import io.github.pbremer.icecreammanager.service.BeginDayInventoryService;
 import io.github.pbremer.icecreammanager.service.CityService;
+import io.github.pbremer.icecreammanager.service.DriverInstanceService;
 import io.github.pbremer.icecreammanager.service.DriverService;
+import io.github.pbremer.icecreammanager.service.EndDayInventoryService;
+import io.github.pbremer.icecreammanager.service.InventoryLossService;
 import io.github.pbremer.icecreammanager.service.RouteService;
 import io.github.pbremer.icecreammanager.service.TruckInstanceService;
 import io.github.pbremer.icecreammanager.service.TruckService;
@@ -88,6 +93,18 @@ public class BatchJobTest {
     @Autowired
     private TruckInstanceService truckInstanceService;
 
+    @Autowired
+    private DriverInstanceService driverInstanceService;
+
+    @Autowired
+    private BeginDayInventoryService beginDayInventoryService;
+
+    @Autowired
+    private EndDayInventoryService endDayInventoryService;
+
+    @Autowired
+    private InventoryLossService inventoryLossService;
+
     @Before
     public void setup() {
 	for (FileType type : EnumSet.allOf(FileType.class)) {
@@ -135,6 +152,7 @@ public class BatchJobTest {
 	                        "classpath:input-files/route/routeUpload.txt")
 	                .addString("input.file.countablerow.regex", "^[ACD].*")
 	                .toJobParameters());
+	jobExecution.getExitStatus().getExitDescription();
 	log.info("Starting route job validation");
 	assertThat("Exit status is not COMEPLETE",
 	        jobExecution.getExitStatus().getExitCode(),
@@ -209,21 +227,89 @@ public class BatchJobTest {
 	assertThat("Truck-route data is not stored",
 	        truckInstanceService.findAll().size(), equalTo(1));
 
-	// log.info("Starting driver-truck mapping job");
-	// jobExecution = launcher.run(job,
-	// new JobParametersBuilder()
-	// .addLong("time", System.currentTimeMillis())
-	// .addString("input.file.name",
-	// "classpath:input-files/driver-truck/driverTruck.txt")
-	// .addString("input.file.countablerow.regex", "^[0-9].*")
-	// .toJobParameters());
-	// log.info("Starting driver-truck mapping job validation");
-	// assertThat("Exit status is not COMEPLETE",
-	// jobExecution.getExitStatus().getExitCode(),
-	// equalTo(ExitStatus.COMPLETED.getExitCode()));
-	// assertThat("Driver-truck data is not stored",
-	// truckInstanceService.findAll().size(), equalTo(1));
+	log.info("Starting driver-truck mapping job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/driver-truck/driverTruck.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting driver-truck mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Driver-truck data is not stored",
+	        truckInstanceService.findAll().size(), equalTo(1));
+	assertThat("Driver-truck data is not stored",
+	        driverInstanceService.findAll().size(), equalTo(1));
 
+	log.info("Starting load truck job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/load-truck/loadTruck.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting load truck mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Begin day inventory data is not stored",
+	        beginDayInventoryService.findAll().size(), equalTo(1));
+
+	log.info("Starting route price job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/route-price/routePrice.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting route price mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Price adjustment data is not stored",
+	        beginDayInventoryService.findAll().get(0).getPrice(),
+	        equalTo(new BigDecimal("4.00")));
+
+	log.info("Starting daily sales job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/truck-sales/dailySales.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting daily sales mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("End day inventory data is not stored",
+	        endDayInventoryService.findAll().size(), equalTo(1));
+
+	log.info("Starting costs job");
+	jobExecution = launcher.run(job,
+	        new JobParametersBuilder()
+	                .addLong("time", System.currentTimeMillis())
+	                .addString("input.file.name",
+	                        "classpath:input-files/cost/cost.txt")
+	                .addString("input.file.countablerow.regex", "^[0-9].*")
+	                .toJobParameters());
+	log.info("Starting daily sales mapping job validation");
+	assertThat("Exit status is not COMEPLETE",
+	        jobExecution.getExitStatus().getExitCode(),
+	        equalTo(ExitStatus.COMPLETED.getExitCode()));
+	assertThat("Inventory loss data is not stored",
+	        inventoryLossService.findAll().size(), equalTo(1));
+	assertThat("Truck gas data is not stored",
+	        truckInstanceService.findAll().get(0).getGasSpent(),
+	        equalTo(new BigDecimal("72.00")));
+	assertThat("Truck hours out data is not stored",
+	        truckInstanceService.findAll().get(0).getHoursOut(),
+	        equalTo(new BigDecimal("8.58")));
     }
 
 }

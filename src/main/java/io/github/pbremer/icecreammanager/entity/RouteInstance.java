@@ -2,6 +2,7 @@ package io.github.pbremer.icecreammanager.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,8 +19,6 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -48,7 +47,7 @@ public class RouteInstance extends InstanceEntitySupport {
     @JsonIdentityReference(alwaysAsId = true)
     private Route route;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "ROUTE_ZONES",
             joinColumns = @JoinColumn(name = "ROUTE_INSTANCE_ID"),
             inverseJoinColumns = @JoinColumn(name = "ZONE_NAME"))
@@ -56,12 +55,19 @@ public class RouteInstance extends InstanceEntitySupport {
             "lastModifiedDate" })
     private List<Zone> zones;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "TRUCK_INSTANCE_ID")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "truckInstanceId")
     @JsonIdentityReference(alwaysAsId = true)
     private TruckInstance truckInstance;
+
+    @SuppressWarnings("unused")
+    private transient long truckInstanceId;
+
+    public void setTruckInstanceId(long truckInstanceId) {
+	this.truckInstanceId = truckInstanceId;
+    }
 
     public long getRouteInstanceId() {
 	return routeInstanceId;
@@ -91,11 +97,14 @@ public class RouteInstance extends InstanceEntitySupport {
 	this.truckInstance = truckInstance;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
-	return ToStringBuilder
-	        .reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE)
-	        .toString();
+	return "RouteInstance [routeInstanceId=" + routeInstanceId + ", route="
+	        + route + ", zones=" + zones + "]";
     }
 
     @Override

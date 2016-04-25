@@ -14,6 +14,19 @@
 		<property name="delegates">
 			<list>
 				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.DeactivateCity" />
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.CityValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
+				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
 						<bean class="io.github.pbremer.icecreammanager.convert.CityConverter"
@@ -29,6 +42,17 @@
 		scope="job">
 		<property name="delegates">
 			<list>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.RouteValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
 				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
@@ -46,6 +70,19 @@
 		<property name="delegates">
 			<list>
 				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.DeactivateStagingTruck" />
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.TruckValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
+				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
 						<bean class="io.github.pbremer.icecreammanager.convert.TruckConverter"
@@ -61,6 +98,17 @@
 		scope="job">
 		<property name="delegates">
 			<list>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.LoadInventoryValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
 				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
@@ -79,11 +127,24 @@
 		<property name="delegates">
 			<list>
 				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.LoadTruckValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
+				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
 						<bean
 							class="io.github.pbremer.icecreammanager.convert.BeginDayInventoryConverter"
-							scope="job" />
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
 					</property>
 				</bean>
 			</list>
@@ -95,6 +156,17 @@
 		scope="job">
 		<property name="delegates">
 			<list>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.TruckRouteValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
 				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
@@ -119,7 +191,9 @@
 					<property name="converter">
 						<bean
 							class="io.github.pbremer.icecreammanager.convert.EndDayInventoryConverter"
-							scope="job" />
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
 					</property>
 				</bean>
 			</list>
@@ -131,6 +205,19 @@
 		scope="job">
 		<property name="delegates">
 			<list>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.DeactivateStagingDriver" />
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.DriverValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
 				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
@@ -152,7 +239,9 @@
 					<property name="converter">
 						<bean
 							class="io.github.pbremer.icecreammanager.convert.RoutePriceMapperConverter"
-							scope="job" />
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
 					</property>
 				</bean>
 			</list>
@@ -169,7 +258,9 @@
 					<property name="converter">
 						<bean
 							class="io.github.pbremer.icecreammanager.convert.CostsMapperConverter"
-							scope="job" />
+							scope="job">
+							<property name="ms" value="#{jobExecutionContext['day']}" />
+						</bean>
 					</property>
 				</bean>
 			</list>
@@ -181,6 +272,17 @@
 		scope="job">
 		<property name="delegates">
 			<list>
+				<bean
+					class="org.springframework.batch.item.validator.ValidatingItemProcessor">
+					<property name="validator">
+						<bean class="org.springframework.batch.item.validator.SpringValidator">
+							<property name="validator">
+								<bean
+									class="io.github.pbremer.icecreammanager.validator.DriverTruckValidator" />
+							</property>
+						</bean>
+					</property>
+				</bean>
 				<bean
 					class="io.github.pbremer.icecreammanager.batch.processor.TransformingItemProcessor">
 					<property name="converter">
@@ -243,6 +345,10 @@
 							</property>
 						</bean>
 					</property>
+				</bean>
+				<bean
+					class="io.github.pbremer.icecreammanager.batch.processor.IncrimentCountStaging">
+					<constructor-arg value="#{jobParameters['input.file.name']}" />
 				</bean>
 			</list>
 		</property>

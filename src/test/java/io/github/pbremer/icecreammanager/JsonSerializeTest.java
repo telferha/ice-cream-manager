@@ -27,7 +27,7 @@ public class JsonSerializeTest {
 	mapper = new ObjectMapper();
     }
 
-    // @Test
+    //@Test
     public void testJsonSeralize() throws JsonProcessingException {
 	City city = new City();
 	city.setCityName("Royal Oak");

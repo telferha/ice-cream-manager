@@ -16,7 +16,8 @@ import io.github.pbremer.icecreammanager.entity.WarehouseInventory;
 public interface WarehouseRepository
         extends IsActiveSerchable<WarehouseInventory, Long> {
 
-    @Query("SELECT w.salesPrice FROM WarehouseInventory w WHERE w.iceCream = :inventoryId "
-            + "AND w.active = true")
-    public BigDecimal getCurrentPrice(@Param("inventoryId") long inventoryId);
+    @Query("SELECT w.salesPrice FROM WarehouseInventory w JOIN w.iceCream ic "
+            + "WHERE ic.iceCreamName = :inventoryId AND w.active = :active")
+    public BigDecimal getCurrentPrice(@Param("inventoryId") String inventoryId,
+            @Param("active") boolean active);
 }

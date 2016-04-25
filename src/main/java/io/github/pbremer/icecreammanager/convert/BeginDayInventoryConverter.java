@@ -11,7 +11,6 @@ import java.util.TreeMap;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 
 import io.github.pbremer.icecreammanager.entity.BeginDayInventory;
@@ -43,7 +42,7 @@ public class BeginDayInventoryConverter implements
     @Autowired
     private WarehouseInventoryService warehouseService;
 
-    @Value("#{jobExecutionContext['day']}")
+    // @Value("#{jobExecutionContext['day']}")
     private long ms;
 
     /*
@@ -83,15 +82,19 @@ public class BeginDayInventoryConverter implements
 		beginInventory.setAmmount(
 		        Integer.valueOf(flatInventory.getAdjustmentQuantity()));
 	    }
-	    beginInventory.setPrice(warehouseService
-	            .getPrice(Long.valueOf(flatInventory.getItemNumber())));
+	    beginInventory.setPrice(
+	            warehouseService.getPrice(flatInventory.getItemNumber()));
+	    beginInventory.setDay(day);
+	    iceCreamInstance.setDay(day);
 	    beginInventory.setIceCreamInstance(iceCreamInstance);
+	    beginInventory.setTruckInstance(truck);
 	}
 
 	for (String key : map.keySet()) {
 	    iceCreamInstance.setIceCream(map.get(key).getIceCream());
 	    beginInventory.setAmmount(map.get(key).getAmmount());
 	    beginInventory.setIceCreamInstance(iceCreamInstance);
+	    beginInventory.setTruckInstance(truck);
 	}
 
 	inventoryList.add(beginInventory);
@@ -110,6 +113,10 @@ public class BeginDayInventoryConverter implements
 	}
 
 	return map;
+    }
+
+    public void setMs(long ms) {
+	this.ms = ms;
     }
 
     /*

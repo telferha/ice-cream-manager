@@ -27,9 +27,11 @@ public class CityConverter implements Converter<CityFlatFileContainer, City> {
     public City convert(CityFlatFileContainer source) {
 	// if (source.isValid()) {
 	City city = new City();
+	city.setActive(true);
 	city.setCityName(source.getCityName());
 	List<Zone> zoneList = new ArrayList<Zone>();
 	Zone zone = new Zone();
+	zone.setActive(true);
 	zone.setZoneName(source.getCityLabel());
 	zone.setCity(city);
 	zoneList.add(zone);
