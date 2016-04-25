@@ -3,12 +3,17 @@
  */
 package io.github.pbremer.icecreammanager.convert;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.batch.core.annotation.BeforeWrite;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 
 import io.github.pbremer.icecreammanager.entity.IceCream;
 import io.github.pbremer.icecreammanager.entity.WarehouseInventory;
 import io.github.pbremer.icecreammanager.flatfilecontents.LoadInventoryFlatFileContainer;
+import io.github.pbremer.icecreammanager.repository.WarehouseRepository;
 import io.github.pbremer.icecreammanager.utils.NumberHelper;
 
 /**
@@ -16,6 +21,9 @@ import io.github.pbremer.icecreammanager.utils.NumberHelper;
  */
 public class WarehouseInventoryConverter implements
         Converter<LoadInventoryFlatFileContainer, WarehouseInventory> {
+
+    @Autowired
+    private WarehouseRepository warehouse;
 
     /*
      * (non-Javadoc)
@@ -38,6 +46,11 @@ public class WarehouseInventoryConverter implements
 	        NumberHelper.convertPenniesStringToDecimal(source.getPrice()));
 	inventory.setIceCream(iceCream);
 	return inventory;
+    }
+
+    @BeforeWrite
+    public void beforeWrite(List<? extends WarehouseInventory> items) {
+	warehouse.deleteAll();
     }
 
 }

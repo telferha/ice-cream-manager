@@ -36,8 +36,8 @@ public class RouteValidator implements Validator, InitializingBean {
     @Autowired
     private ZoneService zoneService;
 
-    private static Map<String, List<String>> zonesCache;
-    private static Map<String, List<String>> routesCache;
+    private Map<String, List<String>> zonesCache;
+    private Map<String, List<String>> routesCache;
 
     /*
      * (non-Javadoc)

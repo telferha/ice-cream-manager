@@ -13,4 +13,5 @@ import io.github.pbremer.icecreammanager.entity.Route;
 @Repository
 public interface RouteRepository extends IsActiveSerchable<Route, String> {
 
+    // @Query("UPDATE r ")
 }

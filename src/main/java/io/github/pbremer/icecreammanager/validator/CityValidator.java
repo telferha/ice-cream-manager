@@ -17,7 +17,7 @@ import io.github.pbremer.icecreammanager.flatfilecontents.CityFlatFileContainer;
  */
 public class CityValidator implements Validator, InitializingBean {
 
-    private static List<String> zoneCahce;
+    private List<String> zoneCahce;
 
     /*
      * (non-Javadoc)

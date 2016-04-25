@@ -48,14 +48,14 @@ public class ParseInputFileListener
 	logger.warn("Item {} skipped \n{}", item.toString(),
 	        ExceptionUtils.getRootCauseMessage(t));
 
-	executionContext.put("error.msg",
-	        new StringBuffer(
-	                executionContext.getString("error.msg", ""))
-	                        .append("\n")
-	                        .append(((BindException) ExceptionUtils
-	                                .getRootCause(t)).getAllErrors().get(0)
-	                                        .getDefaultMessage())
-	                        .toString());
+	executionContext
+	        .put("error.msg",
+	                new StringBuffer(
+	                        executionContext.getString("error.msg", ""))
+	                                .append("\n")
+	                                .append(ExceptionUtils
+	                                        .getRootCauseMessage(t))
+	                                .toString());
 
     }
 
@@ -103,6 +103,7 @@ public class ParseInputFileListener
 	            ((BindException) ExceptionUtils.getRootCause(e))
 	                    .getAllErrors().get(0).getDefaultMessage());
 	} else {
+	    logger.error("", e);
 	    executionContext.put("error.msg",
 	            "A fatal server exception has occured. Please contact support");
 	}

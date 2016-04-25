@@ -17,7 +17,7 @@ import io.github.pbremer.icecreammanager.flatfilecontents.TruckFlatFileContainer
  */
 public class TruckValidator implements Validator, InitializingBean {
 
-    private static List<String> truckCahce;
+    private List<String> truckCahce;
 
     /*
      * (non-Javadoc)
