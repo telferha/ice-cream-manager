@@ -49,7 +49,7 @@
 				</batch:listeners>
 				<batch:no-rollback-exception-classes>
 					<batch:include
-						class="org.springframework.batch.item.validator.ValidationException" />
+						class="java.lang.Exception" />
 				</batch:no-rollback-exception-classes>
 			</batch:tasklet>
 		</batch:step>
@@ -76,7 +76,7 @@
 				</batch:listeners>
 				<batch:no-rollback-exception-classes>
 					<batch:include
-						class="org.springframework.batch.item.validator.ValidationException" />
+						class="java.lang.Exception" />
 				</batch:no-rollback-exception-classes>
 			</batch:tasklet>
 		</batch:step>

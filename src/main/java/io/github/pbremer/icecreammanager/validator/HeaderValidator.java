@@ -53,8 +53,8 @@ public class HeaderValidator implements Validator {
 	HeaderTrailerContainer arg = (HeaderTrailerContainer) target;
 	InputFileMetaData metaData = null;
 	for (FileType type : EnumSet.allOf(FileType.class)) {
-	    if (fileName.toUpperCase()
-	            .contains(type.getFileName().toUpperCase())) {
+	    if (fileName.endsWith(type.getFileName())) {
+		logger.info("Using: {}", type.toString());
 		metaData = service.getOne(type);
 		int expecedSequenceNumber =
 		        metaData.getSequenceNumber() + 1 > 9999 ? 1
