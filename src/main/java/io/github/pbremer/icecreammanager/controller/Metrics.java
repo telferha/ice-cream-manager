@@ -27,7 +27,7 @@ public class Metrics {
     @Autowired
     private TruckInstanceService tiService;
 
-    @RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<TruckInstance> getMetrics(
             @RequestParam(value = "from", required = true) Long from,
             @RequestParam(value = "to", required = false) Long to) {
@@ -40,7 +40,6 @@ public class Metrics {
 	for (TruckInstance t : truckInstnaceList) {
 	    Hibernate.initialize(t.getDriverInstance());
 	    Hibernate.initialize(t.getRouteInstance());
-	    Hibernate.initialize(t.getDriverInstance());
 	    Hibernate.initialize(t.getBeginDayInventory());
 	    Hibernate.initialize(t.getEndDayInventory());
 	    Hibernate.initialize(t.getInventoryLoss());
