@@ -14,4 +14,5 @@ import io.github.pbremer.icecreammanager.entity.DefaultInventory;
 public interface DefaultInventoryService
         extends ActivatableService<DefaultInventory, Long> {
 
+    public void deleteAllInBatch();
 }
