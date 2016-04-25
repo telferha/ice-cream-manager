@@ -29,7 +29,8 @@
 			<batch:tasklet throttle-limit="1">
 				<batch:chunk commit-interval="1"
 					reader="inputFileHeaderAndTrailerItemReader" processor="headerTrailerProcessor"
-					writer="stepExecutionWriter" retry-limit="3" processor-transactional="true">
+					writer="stepExecutionWriter" retry-limit="3"
+					processor-transactional="true">
 					<batch:retryable-exception-classes>
 						<batch:include
 							class="org.springframework.dao.RecoverableDataAccessException" />
@@ -48,8 +49,7 @@
 					</batch:listener>
 				</batch:listeners>
 				<batch:no-rollback-exception-classes>
-					<batch:include
-						class="java.lang.Exception" />
+					<batch:include class="java.lang.Exception" />
 				</batch:no-rollback-exception-classes>
 			</batch:tasklet>
 		</batch:step>
@@ -75,8 +75,7 @@
 					</batch:listener>
 				</batch:listeners>
 				<batch:no-rollback-exception-classes>
-					<batch:include
-						class="java.lang.Exception" />
+					<batch:include class="java.lang.Exception" />
 				</batch:no-rollback-exception-classes>
 			</batch:tasklet>
 		</batch:step>
