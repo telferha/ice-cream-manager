@@ -57,54 +57,26 @@
          <div class="row row-cards-pf">
                 <div class="card-pf card-pf-accented card-pf-aggregate-status">
                     <label>WAREHOUSE INVENTORY</label>
-                      <table class="table table-striped table-bordered">
-                          <thead>
-                            <tr>
-                              <th>ITEM ID</th>
-                              <th>QUANTITY</th>
-                              <th>PRICE</th>
-                              <th>DESCRIPTION</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>001</td>
-                              <td>45</td>
-                              <td>1.99</td>
-                              <td>This is a filler, it is a great description, use this in production</td>
-                            </tr>
-                            <tr>
-                              <td>002</td>
-                              <td>56</td>
-                              <td>5.99</td>
-                              <td>This is a filler, it is a great description, use this in production</td>
-                            </tr>
-                            <tr>
-                              <td>003</td>
-                              <td>56</td>
-                              <td>8.99</td>
-                              <td>This is a filler, it is a great description, use this in production</td>
-                            </tr>
-                             <tr>
-                              <td>001</td>
-                              <td>45</td>
-                              <td>1.99</td>
-                              <td>This is a filler, it is a great description, use this in production</td>
-                            </tr>
-                            <tr>
-                              <td>002</td>
-                              <td>56</td>
-                              <td>5.99</td>
-                              <td>This is a filler, it is a great description, use this in production</td>
-                            </tr>
-                            <tr>
-                              <td>003</td>
-                              <td>56</td>
-                              <td>8.99</td>
-                              <td>This is a filler, it is a great description, use this in production</td>
-                            </tr>                             
-                          </tbody>
+                      <table class="table table-striped table-bordered" id="table1">
+                         
                         </table><br></br>
+                        <script>
+                        var urlForEI = '/api/warehouse/';
+                        $.ajax({
+	                      	  url: urlForEI,
+	                      	  method: 'GET'
+	                      	}).then(function(data) {
+	                      	  console.log(data);
+	                      	  var tableData ='<thead><tr><th>ITEM ID</th><th>QUANTITY</th><th>PRICE</th></tr></thead><tbody>';
+	                      	  var node = document.getElementById("table1");
+	                      	  $.each(data, function(key,value) {
+	                      		  tableData = tableData +'<tr><td>'+this.iceCream.iceCreamName+'</td><td>'+this.quantity+'</td><td>'+this.salesPrice+'</td></tr>';
+	                      	  });
+	                      	  tableData = tableData + '</tbody>';
+	                      	  node.innerHTML = tableData;
+	                      	
+	                      	});
+                        </script>
                 </div>
           </div>
              
@@ -137,7 +109,7 @@
                 <button class="btn btn-default" type="button"  onclick="myFunction()">&emsp;&emsp;&emsp;&emsp;&emsp;GO&emsp;&emsp;&emsp;&emsp;&emsp;</button>
             </div><br></br><br></br>
             
-                      <table class="table table-striped table-bordered" id="table"></table><br></br>
+                      <table class="table table-striped table-bordered" id="table2"></table><br></br>
                 </div>
           </div>             
              
@@ -162,7 +134,7 @@
 	                      	}).then(function(data) {
 	                      	  console.log(data);
 	                      	  var tableData ='<thead><tr><th>ITEM ID</th><th>QUANTITY</th><th>PRICE</th></tr></thead><tbody>';
-	                      	  var node = document.getElementById("table");
+	                      	  var node = document.getElementById("table2");
 	                      	  $.each(data, function(key,value) {
 	                      		  tableData = tableData +'<tr><td>'+this.iceCreamInstance.iceCream+'</td><td>'+this.ammount+'</td><td>'+this.price+'</td></tr>';
 	                      	  });
